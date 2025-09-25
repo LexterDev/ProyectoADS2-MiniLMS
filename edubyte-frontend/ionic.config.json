@@ -1,0 +1,7 @@
+{
+  "name": "edubyte-frontend",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
