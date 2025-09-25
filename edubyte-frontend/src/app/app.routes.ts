@@ -1,8 +1,15 @@
 import { Routes } from '@angular/router';
 
+import { LandingComponent } from './pages/landing/landing.component';
+import { LoginComponent } from './auth/login/login.component';
+
 export const routes: Routes = [
   {
     path: '',
-    loadChildren: () => import('./tabs/tabs.routes').then((m) => m.routes),
+    component: LandingComponent
   },
+  {
+    path: 'login',
+    component: LoginComponent
+  }
 ];
