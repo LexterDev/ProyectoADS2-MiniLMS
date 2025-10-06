@@ -1,2 +1,11 @@
 // For information on how to create your own theme, please see:
 // http://ionicframework.com/docs/theming/
+:root {
+  /** Color personalizado EduByte **/
+  --ion-color-edubyte: #c01169 !important;
+  --ion-color-edubyte-rgb: 99, 102, 241;
+  --ion-color-edubyte-contrast: #ffffff;
+  --ion-color-edubyte-contrast-rgb: 255, 255, 255;
+  --ion-color-edubyte-shade: #5759d4;
+  --ion-color-edubyte-tint: #7477f2;
+}

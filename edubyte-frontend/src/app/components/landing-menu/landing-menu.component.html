@@ -1,0 +1,78 @@
+<!-- header.component.html -->
+<ion-header class="ion-no-border">
+  <ion-toolbar class="custom-header">
+    <div class="header-container">
+      
+      <!-- Logo -->
+      <div class="logo-section" (click)="navigateTo('/home')">
+        <div class="logo-icon">
+          <img src="assets/images/Edubyte_logo.png" alt="Logo" class="logo-image">
+        </div>
+      </div>
+
+      <!-- Navigation Menu (Desktop) -->
+      <nav class="desktop-nav">
+        <ion-button 
+          *ngFor="let item of menuItems" 
+          fill="clear" 
+          class="nav-item"
+          [class.active]="item.active"
+          (click)="navigateTo(item.route)">
+          {{ item.label }}
+        </ion-button>
+      </nav>
+
+      <!-- Action Button & Mobile Menu Toggle -->
+      <div class="header-actions">
+        <!-- Create Account Button (Desktop) -->
+        <ion-button 
+          class="create-account-btn desktop-only" 
+          fill="solid"
+          shape="round"
+          (click)="createAccount()"
+          color="primary"
+          >
+          <span class="text-white">Create an Account</span>
+          <ion-icon name="arrow-forward" slot="end" class="text-white"></ion-icon>
+        </ion-button>
+
+        <!-- Mobile Menu Toggle -->
+        <ion-button 
+          class="mobile-menu-toggle mobile-only" 
+          fill="clear"
+          (click)="toggleMenu()"
+          color="primary">
+          <ion-icon [name]="isMenuOpen ? 'close' : 'menu'"></ion-icon>
+        </ion-button>
+      </div>
+
+    </div>
+  </ion-toolbar>
+
+  <!-- Mobile Navigation Menu -->
+  <div class="mobile-nav" [class.open]="isMenuOpen">
+    <div class="mobile-nav-content">
+      <ion-button 
+        *ngFor="let item of menuItems" 
+        fill="clear" 
+        expand="full"
+        class="mobile-nav-item"
+        [class.active]="item.active"
+        (click)="navigateTo(item.route)">
+        {{ item.label }}
+      </ion-button>
+      
+      <ion-button 
+        class="mobile-create-account-btn ion-color-light" 
+        fill="solid"
+        expand="block"
+        shape="round"
+        (click)="createAccount()"
+        >
+        Create A Account
+        <ion-icon name="arrow-forward" slot="end"></ion-icon>
+      </ion-button>
+    </div>
+  </div>
+
+</ion-header>
