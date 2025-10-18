@@ -9,8 +9,9 @@ import java.util.List;
 public interface ComentarioRepository extends JpaRepository<Comentario, Long> {
 
     /**
-     * Encuentra todos los comentarios de una lección, mostrando los más nuevos primero.
-     * Ideal para cargar el foro o la sección de preguntas de una lección.
+     * CORREGIDO: Encuentra todos los comentarios de una lección, buscando por el ID de la entidad Leccion.
+     * Ordena los resultados por el campo 'creadoEn'.
      */
-    List<Comentario> findByLeccionIdOrderByFechaCreacionDesc(Long leccionId);
+    List<Comentario> findByLeccionIdOrderByCreadoEnDesc(Long leccionId);
 }
+

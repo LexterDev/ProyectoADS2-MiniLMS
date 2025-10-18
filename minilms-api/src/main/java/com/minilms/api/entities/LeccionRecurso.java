@@ -1,7 +1,8 @@
 package com.minilms.api.entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -9,31 +10,26 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name = "comentarios")
-public class Comentario {
+@Table(name = "lecciones_recursos")
+public class LeccionRecurso {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "comentario_id")
+    @Column(name = "leccion_recurso_id")
     private Long id;
 
-    @NotBlank @Size(max = 900)
-    @Column(nullable = false, length = 900)
-    private String contenido;
+    @NotBlank
+    @Column(name = "nombre_recurso", nullable = false)
+    private String nombreRecurso;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "usuario_id", nullable = false)
-    private User usuario;
+    @NotBlank
+    @Column(name = "url_recurso", nullable = false)
+    private String urlRecurso;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "leccion_id", nullable = false)
     private Leccion leccion;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "comentario_padre_id")
-    private Comentario comentarioPadre;
     
     @CreationTimestamp
     @Column(name = "creado_en", nullable = false, updatable = false)
@@ -43,4 +39,3 @@ public class Comentario {
     @Column(name = "actualizado_en")
     private LocalDateTime actualizadoEn;
 }
-

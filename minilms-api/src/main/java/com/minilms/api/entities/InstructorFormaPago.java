@@ -1,39 +1,22 @@
 package com.minilms.api.entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name = "cursos")
-public class Curso {
+@Table(name = "instructores_formas_pago")
+public class InstructorFormaPago {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "curso_id")
+    @Column(name = "instructor_forma_pago_id")
     private Long id;
-
-    @NotBlank @Size(max = 255)
-    @Column(nullable = false)
-    private String titulo;
-
-    @NotBlank @Size(max = 900)
-    @Column(nullable = false, length = 900)
-    private String descripcion;
-
-    @NotNull @PositiveOrZero
-    @Column(nullable = false, precision = 6, scale = 2) // Soporta hasta 9,999.99
-    private BigDecimal precio;
-
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "estado_id", nullable = false)
-    private Estado estado;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
@@ -42,9 +25,16 @@ public class Curso {
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "categoria_id", nullable = false)
-    private Categoria categoria;
-    
+    @JoinColumn(name = "forma_pago_id", nullable = false)
+    private FormaPago formaPago; // Referencia a la tabla catálogo que ya creamos
+
+    @NotBlank
+    @Column(name = "detalles_cuenta", nullable = false) // Ej: CBU, Alias, email de PayPal
+    private String detallesCuenta;
+
+    @Column(name = "es_preferida", nullable = false)
+    private boolean esPreferida = false;
+
     @CreationTimestamp
     @Column(name = "creado_en", nullable = false, updatable = false)
     private LocalDateTime creadoEn;
@@ -53,4 +43,3 @@ public class Curso {
     @Column(name = "actualizado_en")
     private LocalDateTime actualizadoEn;
 }
-

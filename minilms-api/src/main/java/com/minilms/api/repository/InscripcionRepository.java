@@ -12,10 +12,10 @@ import java.util.Optional;
 public interface InscripcionRepository extends JpaRepository<Inscripcion, Long> {
 
     /**
-     * Busca una inscripción específica por estudiante y curso.
-     * Sirve para saber si un usuario ya compró un curso.
+     * CORREGIDO: Busca una inscripción específica por el ID del estudiante y el ID del curso.
+     * Spring Data JPA entiende que debe buscar por la propiedad 'usuarioId' de la entidad 'estudiante'.
      */
-    Optional<Inscripcion> findByEstudianteIdAndCursoId(Long estudianteId, Long cursoId);
+    Optional<Inscripcion> findByEstudianteUsuarioIdAndCursoId(Long estudianteId, Long cursoId);
 
     /**
      * Encuentra todas las inscripciones de un estudiante.

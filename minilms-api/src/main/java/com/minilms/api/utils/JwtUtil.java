@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 @Slf4j
@@ -23,6 +25,24 @@ public class JwtUtil {
     
     private SecretKey getSigningKey() {
         return Keys.hmacShaKeyFor(jwtSecret.getBytes());
+    }
+
+    // --- MÉTODO NUEVO AÑADIDO ---
+    /**
+     * Genera un token JWT a partir del correo y el rol del usuario.
+     * Este es el método que AuthService necesita.
+     */
+    public String generateTokenWithRole(String correo, String rol) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("rol", rol); // Añadimos el rol como un "claim" dentro del token
+
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(correo)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .compact();
     }
     
     public String generateJwtToken(Authentication authentication) {
@@ -70,3 +90,4 @@ public class JwtUtil {
         return false;
     }
 }
+

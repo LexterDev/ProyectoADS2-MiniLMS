@@ -1,11 +1,10 @@
 package com.minilms.api.entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -16,36 +15,45 @@ public class Pago {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "pago_id")
     private Long id;
 
-    @NotNull
-    @Positive
-    @Column(name = "monto_total", nullable = false)
+    @NotNull @Positive
+    @Column(name = "monto_total", nullable = false, precision = 6, scale = 2)
     private BigDecimal montoTotal;
 
-    @NotNull
-    @Positive
-    @Column(name = "comision_plataforma", nullable = false)
+    @NotNull @PositiveOrZero
+    @Column(name = "comision_plataforma", nullable = false, precision = 6, scale = 2)
     private BigDecimal comisionPlataforma;
 
-    @NotNull
-    @Positive
-    @Column(name = "monto_instructor", nullable = false)
+    @NotNull @Positive
+    @Column(name = "monto_instructor", nullable = false, precision = 6, scale = 2)
     private BigDecimal montoInstructor;
 
     @Column(name = "id_transaccion_pasarela")
     private String idTransaccionPasarela;
 
-    @NotBlank
-    @Column(nullable = false, length = 50)
-    private String estado;
-    
-    @CreationTimestamp
-    @Column(name = "fecha_pago", updatable = false)
-    private LocalDateTime fechaPago;
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "estado_id", nullable = false)
+    private Estado estado;
 
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "forma_pago_id", nullable = false)
+    private FormaPago formaPago;
+    
     @NotNull
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "inscripcion_id", nullable = false, unique = true)
     private Inscripcion inscripcion;
+    
+    @CreationTimestamp
+    @Column(name = "creado_en", nullable = false, updatable = false)
+    private LocalDateTime creadoEn;
+
+    @UpdateTimestamp
+    @Column(name = "actualizado_en")
+    private LocalDateTime actualizadoEn;
 }
+
