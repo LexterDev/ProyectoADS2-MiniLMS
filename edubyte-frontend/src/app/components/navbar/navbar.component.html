@@ -1,0 +1,39 @@
+<nav class="bg-white shadow-sm fixed w-full top-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-16">
+      <!-- Logo -->
+      <div class="flex items-center space-x-2">
+        <div class="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center">
+          <span class="text-white font-bold text-xl">E</span>
+        </div>
+        <span class="text-xl font-bold text-gray-900">EduByte</span>
+      </div>
+
+      <!-- Menu Items -->
+      <div class="hidden md:flex items-center space-x-8">
+        <a *ngFor="let item of menuItems" 
+           [href]="item.link"
+           class="text-gray-700 hover:text-purple-600 transition-colors font-medium">
+          {{ item.label }}
+        </a>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex items-center space-x-4">
+        <button mat-button 
+                class="!text-purple-600 !font-semibold">
+          Regístrate
+        </button>
+        <button mat-stroked-button 
+                class="!border-gray-300 !text-gray-700">
+          Iniciar sesión
+        </button>
+        <button mat-icon-button 
+                (click)="toggleDarkMode()"
+                class="!text-gray-700">
+          <mat-icon>{{ isDarkMode ? 'light_mode' : 'dark_mode' }}</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>

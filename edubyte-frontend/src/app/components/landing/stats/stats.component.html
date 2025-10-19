@@ -1,0 +1,14 @@
+<section class="py-12 bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <mat-card 
+        *ngFor="let stat of stats" 
+        class="!shadow-md hover:!shadow-xl transition-shadow duration-300 !rounded-xl">
+        <mat-card-content class="p-8">
+          <p class="text-sm font-medium text-gray-600 mb-2">{{ stat.label }}</p>
+          <p class="text-4xl font-bold text-gray-900">{{ stat.value }}</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</section>

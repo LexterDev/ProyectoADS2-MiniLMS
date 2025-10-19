@@ -1,0 +1,43 @@
+<section class="bg-gradient-to-br from-purple-50 to-pink-50 pt-24 pb-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <!-- Left Content -->
+      <div class="space-y-6">
+        <h1 class="text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
+          Aprende a tu propio ritmo
+        </h1>
+        <p class="text-lg text-gray-600 max-w-xl">
+          Explora una amplia gama de cursos en línea impartidos por expertos de la industria. 
+          Mejora tus habilidades y avanza en tu carrera con EduByte.
+        </p>
+
+        <!-- Search Bar -->
+        <div class="flex items-center bg-white rounded-lg shadow-md p-2 max-w-xl">
+          <mat-icon class="text-gray-400 ml-2">search</mat-icon>
+          <input 
+            type="text" 
+            [(ngModel)]="searchQuery"
+            placeholder="Busca cursos"
+            class="flex-1 px-4 py-2 outline-none text-gray-700">
+          <button 
+            mat-raised-button 
+            color="primary"
+            (click)="onSearch()"
+            class="!bg-purple-600 !text-white !font-semibold">
+            Buscar
+          </button>
+        </div>
+      </div>
+
+      <!-- Right Illustration -->
+      <div class="relative">
+        <div class="bg-gradient-to-br from-amber-200 to-amber-100 rounded-3xl p-8 shadow-xl">
+          <img 
+            src="assets/hero-illustration.png" 
+            alt="Student learning" 
+            class="w-full h-auto rounded-2xl">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
