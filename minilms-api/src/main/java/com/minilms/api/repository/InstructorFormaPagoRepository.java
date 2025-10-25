@@ -12,5 +12,5 @@ public interface InstructorFormaPagoRepository extends JpaRepository<InstructorF
     /**
      * Encuentra todas las formas de pago de un instructor específico.
      */
-    List<InstructorFormaPago> findByInstructorUsuarioId(Long instructorId);
+    List<InstructorFormaPago> findByInstructorId(Long instructorId);
 }

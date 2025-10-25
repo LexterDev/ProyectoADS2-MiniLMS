@@ -17,7 +17,7 @@ public class InstructorDetalle {
 
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId // Esto le dice a Hibernate que la PK de esta tabla es la misma que la de User
-    @JoinColumn(name = "usuario_id")
+    @JoinColumn(name = "usuario_id", referencedColumnName = "usuario_id")
     private User user;
 
     @Column(length = 900)

@@ -20,7 +20,7 @@ public class CursoRevision {
     private Curso curso;
 
     @ManyToOne
-    @JoinColumn(name = "moderador_id", nullable = false)
+    @JoinColumn(name = "moderador_id", referencedColumnName = "usuario_id" , nullable = false)
     private User moderador;
 
     @CreationTimestamp

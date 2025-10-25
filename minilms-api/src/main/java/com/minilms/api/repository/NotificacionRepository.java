@@ -11,5 +11,5 @@ public interface NotificacionRepository extends JpaRepository<Notificacion, Long
     /**
      * Busca las notificaciones de un usuario, mostrando las más nuevas primero.
      */
-    List<Notificacion> findByUsuarioUsuarioIdOrderByCreadoEnDesc(Long usuarioId);
+    List<Notificacion> findByUsuarioIdOrderByCreadoEnDesc(Long usuarioId);
 }

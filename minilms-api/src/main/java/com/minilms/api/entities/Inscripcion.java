@@ -28,7 +28,7 @@ public class Inscripcion {
     
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "estudiante_id", nullable = false)
+    @JoinColumn(name = "estudiante_id", referencedColumnName = "usuario_id" , nullable = false)
     private User estudiante;
 
     @NotNull

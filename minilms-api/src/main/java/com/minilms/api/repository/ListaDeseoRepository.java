@@ -8,6 +8,6 @@ import java.util.List;
 
 @Repository
 public interface ListaDeseoRepository extends JpaRepository<ListaDeseo, Long> {
-    List<ListaDeseo> findByUsuarioUsuarioId(Long usuarioId);
-    boolean existsByUsuarioUsuarioIdAndCursoId(Long usuarioId, Long cursoId);
+    List<ListaDeseo> findByUsuarioId(Long usuarioId);
+    boolean existsByUsuarioIdAndCursoId(Long usuarioId, Long cursoId);
 }

@@ -6,9 +6,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.Data; // IMPORT AÑADIDO
-
-@Data // ¡ANOTACIÓN AÑADIDA! Esto crea getCodigo(), setCodigo(), etc.
+import lombok.Data;
+@Data
 @Entity
 @Table(name = "roles")
 public class Rol {

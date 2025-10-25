@@ -40,7 +40,7 @@ public class AuthService {
         // CORREGIDO: Llamamos al nuevo método que creamos en JwtUtil
         String token = jwtUtil.generateTokenWithRole(user.getCorreo(), user.getRol().getCodigo());
         
-        return new AuthResponse(token, user.getUsuarioId(), user.getNombre(), user.getApellido(), user.getCorreo(), user.getRol().getCodigo());
+        return new AuthResponse(token, user.getId(), user.getNombre(), user.getApellido(), user.getCorreo(), user.getRol().getCodigo());
     }
 
     public AuthResponse register(RegisterRequest request) {
@@ -66,7 +66,7 @@ public class AuthService {
         // CORREGIDO: Llamamos al nuevo método que creamos en JwtUtil
         String token = jwtUtil.generateTokenWithRole(savedUser.getCorreo(), savedUser.getRol().getCodigo());
 
-        return new AuthResponse(token, savedUser.getUsuarioId(), savedUser.getNombre(), savedUser.getApellido(), savedUser.getCorreo(), savedUser.getRol().getCodigo());
+        return new AuthResponse(token, savedUser.getId(), savedUser.getNombre(), savedUser.getApellido(), savedUser.getCorreo(), savedUser.getRol().getCodigo());
     }
 }
 

@@ -12,7 +12,7 @@ public interface CursoRepository extends JpaRepository<Curso, Long> {
      * Encuentra todos los cursos creados por un instructor específico.
      * Útil para el dashboard del instructor.
      */
-    List<Curso> findByInstructorUsuarioId(Long instructorId);
+    List<Curso> findByInstructorId(Long instructorId);
 
     /**
      * CORREGIDO: Encuentra todos los cursos que tienen un estado particular,

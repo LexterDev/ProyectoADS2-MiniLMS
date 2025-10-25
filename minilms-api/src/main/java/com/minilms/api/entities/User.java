@@ -27,7 +27,7 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "usuario_id")
-    private Long usuarioId; // CORREGIDO: Renombrado de 'id' a 'usuarioId' para consistencia.
+    private Long id;
     
     @NotBlank(message = "El nombre es obligatorio")
     @Size(min = 2, max = 50)

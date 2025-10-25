@@ -37,7 +37,7 @@ public class Curso {
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "instructor_id", nullable = false)
+    @JoinColumn(name = "instructor_id", referencedColumnName = "usuario_id" , nullable = false)
     private User instructor;
 
     @NotNull
