@@ -20,10 +20,7 @@ import com.minilms.api.config.responseApi.ApiResponse;
 import com.minilms.api.config.responseApi.ResponseHandler;
 import com.minilms.api.dto.MessageResponse;
 
-import lombok.extern.slf4j.Slf4j;
-
 @RestControllerAdvice
-@Slf4j
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(BadCredentialsException.class)
@@ -83,7 +80,7 @@ public class GlobalExceptionHandler {
     /* Captura cualquier otra excepción y devuelve 500 */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<Object>> handleGenericException(Exception ex) {
-        log.error("Error al procesar la petición", ex);
+        // log.error("Error al procesar la petición", ex);
         return ResponseHandler.generateErrorResponse("Internal Server Error. Cause By: " + ex.getMessage(),
                 HttpStatus.INTERNAL_SERVER_ERROR);
     }
