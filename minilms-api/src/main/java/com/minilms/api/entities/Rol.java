@@ -7,9 +7,11 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
-@Data
+import lombok.ToString;
 @Entity
 @Table(name = "roles")
+@Data
+@ToString
 public class Rol {
 
     @Id

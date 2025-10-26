@@ -1,5 +1,6 @@
 package com.minilms.api.config;
 
+import com.minilms.api.enums.UserRole;
 import com.minilms.api.security.AuthTokenFilter;
 import com.minilms.api.services.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -62,10 +63,10 @@ public class SecurityConfig {
                 .requestMatchers("/h2-console/**").permitAll()
                 
                 // Endpoints protegidos por rol
-                .requestMatchers("/api/admin/**").hasRole("ADMINISTRADOR")
-                .requestMatchers("/api/moderator/**").hasRole("MODERADOR")
-                .requestMatchers("/api/instructor/**").hasAnyRole("INSTRUCTOR", "ADMINISTRADOR")
-                .requestMatchers("/api/student/**").hasAnyRole("ESTUDIANTE", "INSTRUCTOR", "ADMINISTRADOR")
+                .requestMatchers("/api/admin/**").hasRole(UserRole.Administrador.getCodigo())
+                .requestMatchers("/api/moderator/**").hasRole(UserRole.Moderador.getCodigo())
+                .requestMatchers("/api/instructor/**").hasAnyRole(UserRole.Instructor.getCodigo(), UserRole.Administrador.getCodigo())
+                .requestMatchers("/api/student/**").hasAnyRole(UserRole.Estudiante.getCodigo(), UserRole.Instructor.getCodigo(), UserRole.Administrador.getCodigo())
                 
                 // Cualquier otra request requiere autenticación
                 .anyRequest().authenticated()

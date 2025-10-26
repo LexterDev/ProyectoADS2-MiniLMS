@@ -7,6 +7,8 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
+
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
@@ -20,6 +22,7 @@ import java.util.Collections;
 @Entity
 @Table(name = "usuarios")
 @Data
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class User implements UserDetails {
