@@ -1,15 +1,34 @@
 package com.minilms.api.entities;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
-import lombok.Data;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 
-@Data
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ForeignKey;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 @Entity
-@Table(name = "cursos_secciones")
+@Table(name = "cursos_secciones", uniqueConstraints = {
+        @UniqueConstraint(name = "seccion_uk_curso_orden", columnNames = { "curso_id", "orden" })
+})
 public class Seccion {
 
     @Id
@@ -17,31 +36,32 @@ public class Seccion {
     @Column(name = "seccion_id")
     private Long id;
 
-    @NotBlank @Size(max = 255)
+    @NotBlank
+    @Size(max = 255)
     @Column(nullable = false)
     private String titulo;
 
-    @NotNull @PositiveOrZero
+    @NotNull
+    @PositiveOrZero
     @Column(nullable = false)
     private Integer orden;
-    
-    @Column(name = "duracion_estimada")
-    private Integer duracionEstimada; // En minutos
 
-    @Column(nullable = false)
+    @Column(name = "duracion_estimada")
+    private Integer duracionEstimada;
+
+    @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT true")
     private boolean visible = true;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "curso_id", nullable = false)
+    @JoinColumn(name = "curso_id", referencedColumnName = "curso_id", nullable = false, foreignKey = @ForeignKey(name = "cursos_fk_seccion_id"))
     private Curso curso;
-    
+
     @CreationTimestamp
-    @Column(name = "creado_en", nullable = false, updatable = false)
+    @Column(name = "creado_en", nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime creadoEn;
 
     @UpdateTimestamp
     @Column(name = "actualizado_en")
     private LocalDateTime actualizadoEn;
 }
-
