@@ -1,0 +1,49 @@
+package com.minilms.api.controllers;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.minilms.api.config.responseApi.ApiResponse;
+import com.minilms.api.config.responseApi.PageResponse;
+import com.minilms.api.config.responseApi.ResponseHandler;
+import com.minilms.api.dto.CourseDTO;
+import com.minilms.api.services.CourseService;
+
+import lombok.RequiredArgsConstructor;
+
+@RestController
+@RequestMapping("/api/courses")
+@CrossOrigin(origins = "http://localhost:4200")
+@RequiredArgsConstructor
+public class CourseController {
+
+    private final CourseService courseService;
+
+    @GetMapping("/findAll")
+    public ResponseEntity<ApiResponse<PageResponse<CourseDTO>>> findCourses(
+            @RequestParam(required = false) String txt,
+            @RequestParam(required = false, defaultValue = "0") int page,
+            @RequestParam(required = false, defaultValue = "10") int size) {
+        return ResponseHandler.generateResponse(courseService.findCourses(Optional.ofNullable(txt), page, size));
+    }
+
+    @GetMapping("/findByCategory")
+    public ResponseEntity<ApiResponse<List<CourseDTO>>> findCoursesByCategory(
+            @RequestParam Long categoryId) {
+        return ResponseHandler.generateResponse(courseService.findCoursesByCategory(categoryId));
+    }
+
+    @GetMapping("/findByInstructor")
+    public ResponseEntity<ApiResponse<List<CourseDTO>>> findCoursesByInstructor(
+            @RequestParam Long instructorId) {
+        return ResponseHandler.generateResponse(courseService.findCoursesByInstructor(instructorId));
+    }
+
+}
