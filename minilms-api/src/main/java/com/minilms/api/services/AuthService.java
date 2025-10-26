@@ -1,16 +1,20 @@
 package com.minilms.api.services;
 
+import com.minilms.api.config.responseApi.ApiException;
 import com.minilms.api.dto.AuthResponse;
 import com.minilms.api.dto.LoginRequest;
 import com.minilms.api.dto.RegisterRequest;
 import com.minilms.api.entities.Estado;
 import com.minilms.api.entities.Rol;
 import com.minilms.api.entities.User;
+import com.minilms.api.enums.UserRole;
 import com.minilms.api.repository.EstadoRepository;
 import com.minilms.api.repository.RolRepository;
 import com.minilms.api.repository.UserRepository;
 import com.minilms.api.utils.JwtUtil;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -45,13 +49,14 @@ public class AuthService {
 
     public AuthResponse register(RegisterRequest request) {
         if (userRepository.existsByCorreo(request.getCorreo())) {
-            throw new RuntimeException("Error: El correo ya está en uso!");
+            throw new ApiException("El correo "+ request.getCorreo() +" ya está en uso!", HttpStatus.BAD_REQUEST);
         }
 
-        Rol userRole = rolRepository.findByCodigo("ESTUDIANTE")
-                .orElseThrow(() -> new RuntimeException("Error: Rol de estudiante no encontrado. Asegúrate de que exista en la tabla 'roles'."));
+        Rol userRole = rolRepository.findByCodigo(UserRole.Estudiante.getCodigo())
+                .orElseThrow(() -> new ApiException("Aun no se ha ingresado un rol en el catalogo", HttpStatus.BAD_REQUEST));
+
         Estado activeState = estadoRepository.findByCodigo("ACT")
-                .orElseThrow(() -> new RuntimeException("Error: Estado activo no encontrado. Asegúrate de que exista en la tabla 'estados'."));
+                .orElseThrow(() -> new ApiException("Aun no se ha ingresado un estado en el catalogo", HttpStatus.BAD_REQUEST));
 
         User user = new User();
         user.setNombre(request.getNombre());
