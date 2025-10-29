@@ -1,1 +1,198 @@
-<p>login works!</p>
+<!-- login.component.html -->
+<div
+  class="flex min-h-screen items-center justify-center bg-cover bg-center dark:bg-background-dark"
+  style="background-image: linear-gradient(135deg, rgba(127, 19, 236, 0.2) 0%, rgba(127, 19, 236, 0) 40%), linear-gradient(to right, #f7f6f8, #e9e5f0);"
+>
+  <div class="w-full max-w-md p-4 sm:p-6">
+
+    <!-- LOGO + TÍTULO -->
+    <div class="mx-auto flex flex-col items-center gap-4">
+      <div class="flex items-center gap-2 text-primary">
+        <svg fill="currentColor" height="32" width="32" viewBox="0 0 24 24">
+          <path
+            d="M12 2L2 7V17L12 22L22 17V7L12 2ZM11 15.5V9.5L5 6.5L11 3.5V9.5L13 10.5V14.5L11 15.5ZM13 10.5L19 7.5L13 4.5V10.5Z"
+          ></path>
+        </svg>
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">EduByte</h1>
+      </div>
+      <p class="text-center text-gray-600 dark:text-gray-300">
+        Bienvenido de nuevo. Inicia sesión para continuar aprendiendo.
+      </p>
+    </div>
+
+    <!-- TARJETA DE FORMULARIO -->
+    <div
+      class="mt-8 rounded-xl bg-white/50 dark:bg-background-dark/50 backdrop-blur-sm shadow-2xl shadow-primary/10"
+    >
+      <div class="p-8">
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-6">
+          <!-- EMAIL -->
+          <div>
+            <label
+              for="email"
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >Correo electrónico</label
+            >
+            <div class="relative mt-1">
+              <div
+                class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"
+              >
+                <span class="material-symbols-outlined text-gray-400">mail</span>
+              </div>
+              <input
+                type="email"
+                id="email"
+                formControlName="email"
+                placeholder="ejemplo@correo.com"
+                autocomplete="email"
+                class="custom-form-input block w-full rounded-lg py-3 pl-10 pr-3 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background-light dark:focus:ring-offset-background-dark"
+              />
+            </div>
+            <div
+              *ngIf="email?.invalid && (email?.dirty || email?.touched)"
+              class="mt-1 text-sm text-red-600 dark:text-red-400"
+            >
+              <span *ngIf="email?.hasError('required')">El correo es requerido.</span>
+              <span *ngIf="email?.hasError('email')">Formato no válido.</span>
+            </div>
+          </div>
+
+          <!-- PASSWORD -->
+          <div>
+            <label
+              for="password"
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >Contraseña</label
+            >
+            <div class="relative mt-1">
+              <div
+                class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"
+              >
+                <span class="material-symbols-outlined text-gray-400">lock</span>
+              </div>
+              <input
+                [type]="hidePassword ? 'password' : 'text'"
+                id="password"
+                formControlName="password"
+                placeholder="Ingresa tu contraseña"
+                autocomplete="current-password"
+                class="custom-form-input block w-full rounded-lg py-3 pl-10 pr-10 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background-light dark:focus:ring-offset-background-dark"
+              />
+              <button
+                type="button"
+                (click)="hidePassword = !hidePassword; $event.preventDefault()"
+                class="absolute inset-y-0 right-0 flex cursor-pointer items-center pr-3"
+              >
+                <span class="material-symbols-outlined text-gray-400 hover:text-primary">
+                  {{ hidePassword ? 'visibility' : 'visibility_off' }}
+                </span>
+              </button>
+            </div>
+            <div
+              *ngIf="password?.invalid && (password?.dirty || password?.touched)"
+              class="mt-1 text-sm text-red-600 dark:text-red-400"
+            >
+              <span *ngIf="password?.hasError('required')">La contraseña es requerida.</span>
+            </div>
+          </div>
+
+          <!-- CHECKBOX Y LINK -->
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              <input
+                id="remember-me"
+                formControlName="rememberMe"
+                type="checkbox"
+                class="h-4 w-4 rounded border-gray-300 dark:border-gray-600 bg-background-light dark:bg-background-dark text-primary focus:ring-primary"
+              />
+              <label
+                for="remember-me"
+                class="ml-2 block text-sm text-gray-900 dark:text-gray-300"
+                >Recordarme</label
+              >
+            </div>
+            <div class="text-sm">
+              <a href="#" class="font-medium text-primary hover:text-primary/80"
+                >¿Olvidaste tu contraseña?</a
+              >
+            </div>
+          </div>
+
+          <!-- BOTÓN SUBMIT -->
+          <div>
+            <button
+              type="submit"
+              [disabled]="loginForm.invalid"
+              class="custom-submit-button flex w-full justify-center rounded-lg px-4 py-3 text-sm font-semibold text-white shadow-sm transition-all hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background-light dark:focus:ring-offset-background-dark disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Iniciar Sesión
+            </button>
+          </div>
+        </form>
+
+        <!-- SEPARADOR -->
+        <div class="relative my-6">
+          <div aria-hidden="true" class="absolute inset-0 flex items-center">
+            <div class="w-full border-t border-gray-300 dark:border-gray-600"></div>
+          </div>
+          <div class="relative flex justify-center text-sm">
+            <span
+              class="bg-white/50 dark:bg-background-dark/50 px-2 text-gray-500 dark:text-gray-400"
+              >O continuar con</span
+            >
+          </div>
+        </div>
+
+        <!-- BOTÓN GOOGLE -->
+        <div>
+          <button
+            type="button"
+            class="flex w-full items-center justify-center rounded-lg border border-gray-300 dark:border-gray-600 bg-background-light/70 dark:bg-background-dark/70 px-4 py-3 text-sm font-medium text-gray-700 dark:text-gray-200 shadow-sm transition-all hover:bg-primary/10 dark:hover:bg-primary/20 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background-light dark:focus:ring-offset-background-dark"
+          >
+            <svg class="mr-3 h-5 w-5" viewBox="0 0 48 48">
+              <path
+                fill="#FFC107"
+                d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8
+                c-6.627,0-12-5.373-12-12s5.373-12,12-12
+                c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657
+                C34.046,6.053,29.268,4,24,4
+                C12.955,4,4,12.955,4,24s8.955,20,20,20
+                s20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"
+              ></path>
+              <path
+                fill="#FF3D00"
+                d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12
+                c3.059,0,5.842,1.154,7.961,3.039
+                l5.657-5.657C34.046,6.053,29.268,4,24,4
+                C16.318,4,9.656,8.337,6.306,14.691z"
+              ></path>
+              <path
+                fill="#4CAF50"
+                d="M24,44c5.166,0,9.86-1.977,13.409-5.192
+                l-6.19-5.238C29.211,35.091,26.715,36,24,36
+                c-5.222,0-9.619-3.317-11.283-7.946
+                l-6.522,5.025C9.505,39.556,16.227,44,24,44z"
+              ></path>
+              <path
+                fill="#1976D2"
+                d="M43.611,20.083H42V20H24v8h11.303
+                c-0.792,2.237-2.231,4.166-4.087,5.574
+                l6.19,5.238C41.371,34.197,44,28.7,44,24
+                C44,22.659,43.862,21.35,43.611,20.083z"
+              ></path>
+            </svg>
+            Continuar con Google
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- LINK REGISTRO -->
+    <p class="mt-8 text-center text-sm text-gray-500 dark:text-gray-400">
+      ¿No tienes una cuenta?
+      <a routerLink="/auth/register" class="font-medium text-primary hover:text-primary/80"
+        >Regístrate</a
+      >
+    </p>
+  </div>
+</div>
