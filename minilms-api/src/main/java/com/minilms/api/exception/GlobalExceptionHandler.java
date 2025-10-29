@@ -7,6 +7,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -19,6 +20,9 @@ import com.minilms.api.config.responseApi.ApiException;
 import com.minilms.api.config.responseApi.ApiResponse;
 import com.minilms.api.config.responseApi.ResponseHandler;
 import com.minilms.api.dto.MessageResponse;
+
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -75,6 +79,29 @@ public class GlobalExceptionHandler {
             DataIntegrityViolationException ex) {
         return ResponseHandler.generateErrorResponse("Data Integrity Violation. Cause By: " + ex.getMessage(),
                 HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ApiResponse<Map<String, String>>> handleConstraintViolationException(
+            ConstraintViolationException ex) {
+        
+        Map<String, String> errors = new HashMap<>();
+        for (ConstraintViolation<?> violation : ex.getConstraintViolations()) {
+            errors.put(violation.getPropertyPath().toString(), violation.getMessage());
+        }
+        return ResponseHandler.generateErrorResponse(
+                "Error de validación de datos", 
+                HttpStatus.BAD_REQUEST, 
+                errors
+        );
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ApiResponse<Object>> handleAccessDeniedException(AccessDeniedException ex) {
+        return ResponseHandler.generateErrorResponse(
+                "Acceso denegado. No tienes los permisos necesarios para realizar esta acción.", 
+                HttpStatus.FORBIDDEN
+        );
     }
 
     /* Captura cualquier otra excepción y devuelve 500 */

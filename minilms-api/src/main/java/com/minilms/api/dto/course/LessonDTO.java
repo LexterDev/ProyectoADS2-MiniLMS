@@ -15,4 +15,6 @@ public class LessonDTO {
     private boolean visible = false;
     private String creadoEn;
     private String actualizadoEn;
+
+    private Long seccionId;
 }

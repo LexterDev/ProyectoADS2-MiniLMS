@@ -13,6 +13,8 @@ public class SectionDTO {
     private boolean visible = false;
     private String creadoEn;
     private String actualizadoEn;
+    
+    private Long cursoId;
 
     private List<LessonDTO> lecciones;
 

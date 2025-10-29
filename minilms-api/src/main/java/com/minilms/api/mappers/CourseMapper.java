@@ -1,6 +1,7 @@
 package com.minilms.api.mappers;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.minilms.api.dto.course.CourseDTO;
@@ -39,8 +40,8 @@ public class CourseMapper {
             dto.setCategoriaNombre(entity.getCategoria().getNombre());
         }
 
-        dto.setCreadoEn(entity.getCreadoEn());
-        dto.setActualizadoEn(entity.getActualizadoEn());
+        dto.setCreadoEn(LmsUtils.formatDateTime(entity.getCreadoEn()));
+        dto.setActualizadoEn(LmsUtils.formatDateTime(entity.getActualizadoEn()));
 
         return dto;
     }
@@ -55,18 +56,17 @@ public class CourseMapper {
                 .collect(Collectors.toList());
     }
 
-    public static Curso toEntity(CourseDTO dto) {
+    public static Optional<Curso> toEntity(CourseDTO dto) {
         if (dto == null) {
-            return null;
+            return Optional.empty();
         }
 
         Curso entity = new Curso();
-        entity.setId(dto.getId());
         entity.setTitulo(dto.getTitulo());
         entity.setDescripcion(dto.getDescripcion());
         entity.setPrecio(dto.getPrecio());
 
-        return entity;
+        return Optional.of(entity);
     }
 
     public static CourseDTO toDetailsDTO(Curso entity) {
@@ -99,6 +99,7 @@ public class CourseMapper {
         dto.setVisible(entity.isVisible());
         dto.setCreadoEn(LmsUtils.formatDateTime(entity.getCreadoEn()));
         dto.setActualizadoEn(LmsUtils.formatDateTime(entity.getActualizadoEn()));
+        dto.setCursoId(entity.getCurso().getId());
 
         if (entity.getLecciones() != null) {
             dto.setLecciones(
@@ -126,6 +127,37 @@ public class CourseMapper {
         dto.setCreadoEn(LmsUtils.formatDateTime(entity.getCreadoEn()));
         dto.setActualizadoEn(LmsUtils.formatDateTime(entity.getActualizadoEn()));
 
+        dto.setSeccionId(entity.getSeccion().getId());
+
         return dto;
+    }
+
+    public static Optional<Seccion> toSection(SectionDTO dto) {
+        if (dto == null) {
+            return Optional.empty();
+        }
+
+        Seccion entity = new Seccion();
+        entity.setTitulo(dto.getTitulo());
+        entity.setOrden(dto.getOrden());
+        entity.setDuracionEstimada(0);
+        entity.setVisible(dto.isVisible());
+
+        return Optional.of(entity);
+    }
+
+    public static Optional<Leccion> toLesson(LessonDTO dto) {
+        if (dto == null) {
+            return Optional.empty();
+        }
+
+        Leccion entity = new Leccion();
+        entity.setTitulo(dto.getTitulo());
+        entity.setUrl(dto.getUrl());
+        entity.setContenido(dto.getContenido());
+        entity.setOrden(dto.getOrden());
+        entity.setTipo(dto.getTipo());
+
+        return Optional.of(entity);
     }
 }
