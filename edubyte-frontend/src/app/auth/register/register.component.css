@@ -1,0 +1,25 @@
+/* --- ESTILOS DE FORTALEZA DE CONTRASEÑA (del HTML estático) --- */
+/*
+  Estos estilos reaccionan a la clase que el .ts añade dinámicamente
+  al input de contraseña.
+*/
+.form-input.password-strength-weak~.password-strength-indicator>div:nth-child(1) {
+  background-color: #ef4444; /* red-500 */
+}
+.form-input.password-strength-medium~.password-strength-indicator>div:nth-child(-n+2) {
+  background-color: #f59e0b; /* amber-500 */
+}
+.form-input.password-strength-strong~.password-strength-indicator>div:nth-child(-n+3) {
+  background-color: #22c55e; /* green-500 */
+}
+
+/* --- ESTILOS DE ERROR DE VALIDACIÓN DE ANGULAR --- */
+/*
+  Esto se aplica a cualquier input (.form-input) que sea inválido
+  y haya sido "tocado" por el usuario.
+*/
+.form-input.ng-invalid.ng-touched {
+  border-color: #dc2626; /* red-600 */
+  box-shadow: 0 0 0 2px #dc2626;
+  outline: none;
+}
