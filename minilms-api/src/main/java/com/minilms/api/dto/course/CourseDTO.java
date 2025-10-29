@@ -1,7 +1,8 @@
-package com.minilms.api.dto;
+package com.minilms.api.dto.course;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import lombok.Data;
 
@@ -20,5 +21,7 @@ public class CourseDTO {
     private String categoriaNombre;
     private LocalDateTime creadoEn;
     private LocalDateTime actualizadoEn;
+
+    private List<SectionDTO> secciones;
 
 }

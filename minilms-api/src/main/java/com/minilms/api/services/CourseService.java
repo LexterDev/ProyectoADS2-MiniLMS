@@ -5,10 +5,13 @@ import java.util.Optional;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.minilms.api.config.responseApi.ApiException;
 import com.minilms.api.config.responseApi.PageResponse;
-import com.minilms.api.dto.CourseDTO;
+import com.minilms.api.dto.course.CourseDTO;
+import com.minilms.api.entities.Curso;
 import com.minilms.api.mappers.CourseMapper;
 import com.minilms.api.repository.CursoRepository;
 
@@ -38,4 +41,10 @@ public class CourseService {
         return repository.findByInstructorId(instructorId).stream().map(CourseMapper::toDTO).toList();
     }
 
+    public CourseDTO getDetails(Long id) {
+        Curso cursoCompleto = repository.findDetailsById(id)
+                .orElseThrow(() -> new ApiException("No se encontro un Curso con ID: " + id, HttpStatus.NOT_FOUND));
+
+        return CourseMapper.toDetailsDTO(cursoCompleto);
+    }
 }

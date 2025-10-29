@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.minilms.api.config.responseApi.ApiResponse;
 import com.minilms.api.config.responseApi.PageResponse;
 import com.minilms.api.config.responseApi.ResponseHandler;
-import com.minilms.api.dto.CourseDTO;
+import com.minilms.api.dto.course.CourseDTO;
 import com.minilms.api.services.CourseService;
 
 import lombok.RequiredArgsConstructor;
@@ -44,6 +45,12 @@ public class CourseController {
     public ResponseEntity<ApiResponse<List<CourseDTO>>> findCoursesByInstructor(
             @RequestParam Long instructorId) {
         return ResponseHandler.generateResponse(courseService.findCoursesByInstructor(instructorId));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<CourseDTO>> getDetails(
+            @PathVariable Long id) {
+        return ResponseHandler.generateResponse(courseService.getDetails(id));
     }
 
 }

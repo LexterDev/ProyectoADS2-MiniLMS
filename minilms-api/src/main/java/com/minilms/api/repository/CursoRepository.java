@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CursoRepository extends JpaRepository<Curso, Long> {
@@ -34,4 +35,12 @@ public interface CursoRepository extends JpaRepository<Curso, Long> {
     Page<Curso> findCoursesBySearch(@Param("search") String search, Pageable pageable);
 
     List<Curso> findByCategoriaId(Long categoryId);
+
+    @Query("""
+            Select c from Curso c
+            left join c.secciones s
+            left join s.lecciones l
+            where c.id = :id
+            """)
+    Optional<Curso> findDetailsById(@Param("id") Long id);
 }

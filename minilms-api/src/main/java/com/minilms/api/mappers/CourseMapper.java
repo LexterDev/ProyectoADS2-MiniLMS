@@ -3,8 +3,13 @@ package com.minilms.api.mappers;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.minilms.api.dto.CourseDTO;
+import com.minilms.api.dto.course.CourseDTO;
+import com.minilms.api.dto.course.LessonDTO;
+import com.minilms.api.dto.course.SectionDTO;
 import com.minilms.api.entities.Curso;
+import com.minilms.api.entities.Leccion;
+import com.minilms.api.entities.Seccion;
+import com.minilms.api.utils.LmsUtils;
 
 public class CourseMapper {
 
@@ -62,5 +67,65 @@ public class CourseMapper {
         entity.setPrecio(dto.getPrecio());
 
         return entity;
+    }
+
+    public static CourseDTO toDetailsDTO(Curso entity) {
+
+        CourseDTO dto = toDTO(entity);
+        if (dto == null) {
+            return null;
+        }
+
+        if (entity.getSecciones() != null) {
+            dto.setSecciones(
+                    entity.getSecciones().stream()
+                            .map(CourseMapper::toSectionDTO)
+                            .collect(Collectors.toList()));
+        }
+
+        return dto;
+    }
+
+    public static SectionDTO toSectionDTO(Seccion entity) {
+        if (entity == null) {
+            return null;
+        }
+
+        SectionDTO dto = new SectionDTO();
+        dto.setId(entity.getId());
+        dto.setTitulo(entity.getTitulo());
+        dto.setOrden(entity.getOrden());
+        dto.setDuracionEstimada(entity.getDuracionEstimada());
+        dto.setVisible(entity.isVisible());
+        dto.setCreadoEn(LmsUtils.formatDateTime(entity.getCreadoEn()));
+        dto.setActualizadoEn(LmsUtils.formatDateTime(entity.getActualizadoEn()));
+
+        if (entity.getLecciones() != null) {
+            dto.setLecciones(
+                    entity.getLecciones().stream()
+                            .map(CourseMapper::toLessonDTO)
+                            .collect(Collectors.toList()));
+        }
+
+        return dto;
+    }
+
+    public static LessonDTO toLessonDTO(Leccion entity) {
+        if (entity == null) {
+            return null;
+        }
+
+        LessonDTO dto = new LessonDTO();
+        dto.setId(entity.getId());
+        dto.setTitulo(entity.getTitulo());
+        dto.setUrl(entity.getUrl());
+        dto.setContenido(entity.getContenido());
+        dto.setOrden(entity.getOrden());
+        dto.setTipo(entity.getTipo());
+        dto.setVisible(entity.isVisible());
+        dto.setCreadoEn(LmsUtils.formatDateTime(entity.getCreadoEn()));
+        dto.setActualizadoEn(LmsUtils.formatDateTime(entity.getActualizadoEn()));
+
+        return dto;
     }
 }
