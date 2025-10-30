@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgClass } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
 @Component({
@@ -9,93 +9,121 @@ import { RouterLink } from '@angular/router';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    RouterLink
+    RouterLink,
+    NgClass // Necesario para [ngClass]
   ],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent {
+  registerForm: FormGroup;
+  submitted = false;
+  errorMessage: string | null = null;
+  passwordStrengthClass: string = '';
 
-  registerForm!: FormGroup;
-  passwordStrengthClass: string = ''; // Para el indicador de fortaleza
-
-  constructor(private fb: FormBuilder) {}
-
-  ngOnInit(): void {
+  constructor(private fb: FormBuilder) {
     this.registerForm = this.fb.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
+      firstName: ['', [Validators.required]],
+      lastName: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]],
-      confirmPassword: ['', Validators.required],
+      confirmPassword: ['', [Validators.required]],
       role: ['Estudiante'], // Valor por defecto
-      terms: [false, Validators.requiredTrue] // El checkbox DEBE ser true
+      terms: [false, [Validators.requiredTrue]] // El checkbox debe ser true
     }, {
-      // Añadimos el validador personalizado a nivel de grupo
-      validators: this.passwordMatchValidator 
+      // Añadimos un validador a nivel de grupo para comparar contraseñas
+      validators: this.passwordMatchValidator
     });
 
-    // (Opcional pero recomendado) Escuchar cambios en la contraseña para el indicador
-    this.password?.valueChanges.subscribe(value => {
-      this.passwordStrengthClass = this.calculatePasswordStrength(value);
+    // Escuchamos los cambios en el campo de contraseña para actualizar el indicador
+    this.f['password'].valueChanges.subscribe(value => {
+      this.updatePasswordStrength(value);
     });
   }
 
+  // Getter para acceder fácilmente a los controles del formulario
+  get f() {
+    return this.registerForm.controls;
+  }
+
   /**
-   * Validador personalizado para el grupo de formulario.
-   * Comprueba si 'password' y 'confirmPassword' coinciden.
+   * Validador personalizado para asegurar que las contraseñas coincidan
    */
   passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
     const password = control.get('password');
     const confirmPassword = control.get('confirmPassword');
 
-    // Si los campos aún no existen, no hacer nada
-    if (!password || !confirmPassword) {
+    if (password && confirmPassword && password.value !== confirmPassword.value) {
+      // Marcamos el error en el control 'confirmPassword'
+      confirmPassword.setErrors({ mismatch: true });
+      return { mismatch: true };
+    } else {
+      // Si coinciden, quitamos el error (si existía)
+      if (confirmPassword?.hasError('mismatch')) {
+        confirmPassword.setErrors(null);
+      }
       return null;
     }
-    
-    // Si 'confirmPassword' no ha sido tocado, no mostramos el error aún
-    if (confirmPassword.pristine) {
-      return null;
-    }
-
-    // Retorna un error 'passwordMismatch' si no coinciden
-    return password.value === confirmPassword.value ? null : { passwordMismatch: true };
   }
 
   /**
-   * Calcula la clase de CSS para el indicador de fortaleza.
+   * Actualiza la clase CSS basada en la fortaleza de la contraseña
    */
-  calculatePasswordStrength(password: string): string {
+  updatePasswordStrength(password: string) {
     if (!password) {
-      return ''; // Sin clase
-    }
-    if (password.length < 6) {
-      return 'password-strength-weak';
-    } else if (password.length < 10) {
-      return 'password-strength-medium';
-    } else {
-      return 'password-strength-strong';
-    }
-  }
-
-  onSubmit(): void {
-    if (this.registerForm.invalid) {
-      this.registerForm.markAllAsTouched();
+      this.passwordStrengthClass = '';
       return;
     }
     
-    console.log('Formulario de registro enviado:', this.registerForm.value);
-    // Aquí iría la lógica para llamar al servicio de registro
-    // this.authService.register(this.registerForm.value).subscribe(...)
+    // Lógica simple de fortaleza
+    const hasLetters = /[a-zA-Z]/.test(password);
+    const hasNumbers = /[0-9]/.test(password);
+    const hasSymbols = /[^a-zA-Z0-9]/.test(password);
+    
+    let strength = 0;
+    if (hasLetters) strength++;
+    if (hasNumbers) strength++;
+    if (hasSymbols) strength++;
+    
+    if (password.length < 8) {
+      this.passwordStrengthClass = 'password-strength-weak';
+    } else if (strength === 3) {
+      this.passwordStrengthClass = 'password-strength-strong';
+    } else if (strength === 2) {
+      this.passwordStrengthClass = 'password-strength-medium';
+    } else {
+      this.passwordStrengthClass = 'password-strength-weak';
+    }
   }
 
-  // --- Getters para acceso fácil en el HTML ---
+  onSubmit() {
+    this.submitted = true;
+    this.errorMessage = null;
 
-  get firstName() { return this.registerForm.get('firstName'); }
-  get lastName() { return this.registerForm.get('lastName'); }
-  get email() { return this.registerForm.get('email'); }
-  get password() { return this.registerForm.get('password'); }
-  get confirmPassword() { return this.registerForm.get('confirmPassword'); }
-  get terms() { return this.registerForm.get('terms'); }
+    // Detener si el formulario es inválido
+    if (this.registerForm.invalid) {
+      console.log('Formulario inválido');
+      // Imprimir errores para depuración
+      Object.keys(this.f).forEach(key => {
+        const controlErrors = this.f[key].errors;
+        if (controlErrors != null) {
+          console.log('Control:', key, ', Errores:', controlErrors);
+        }
+      });
+      return;
+    }
+
+    // --- Lógica de Registro ---
+    // Aquí llamarías a tu servicio de autenticación
+    console.log('Datos de registro:', this.registerForm.value);
+
+    // Simulación de un error (ej. email ya existe)
+    // this.errorMessage = 'Este correo electrónico ya está registrado.';
+  }
+
+  registerWithGoogle() {
+    this.errorMessage = null;
+    console.log('Registrando con Google...');
+    // Lógica de tu servicio de autenticación para Google
+  }
 }
