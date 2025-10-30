@@ -1,176 +1,191 @@
-<div class="flex flex-col min-h-screen">
-  <header class="w-full bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm sticky top-0 z-10 border-b border-primary/20 dark:border-primary/30">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center justify-between h-16">
-        <div class="flex items-center gap-4">
-          <svg class="h-8 w-8 text-primary" fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-            <path clip-rule="evenodd" d="M24 4H42V17.3333V30.6667H24V44H6V30.6667V17.3333H24V4Z" fill="currentColor" fill-rule="evenodd"></path>
-          </svg>
-          <h1 class="text-xl font-bold text-slate-900 dark:text-white">EduByte</h1>
-        </div>
-        <div class="hidden md:flex items-center gap-8">
-          <a class="text-sm font-medium hover:text-primary transition-colors" href="#">Inicio</a>
-          <a class="text-sm font-medium hover:text-primary transition-colors" href="#">Explorar</a>
-          <a class="text-sm font-medium hover:text-primary transition-colors" href="#">Mis cursos</a>
-          <a class="text-sm font-medium hover:text-primary transition-colors" href="#">Crear</a>
-        </div>
-        <div class="flex items-center gap-4">
-          <button class="p-2 rounded-full hover:bg-primary/10 transition-colors">
-            <svg fill="currentColor" height="20px" viewBox="0 0 256 256" width="20px" xmlns="http://www.w3.org/2000/svg">
-              <path d="M221.8,175.94C216.25,166.38,208,139.33,208,104a80,80,0,1,0-160,0c0,35.34-8.26,62.38-13.81,71.94A16,16,0,0,0,48,200H88.81a40,40,0,0,0,78.38,0H208a16,16,0,0,0,13.8-24.06ZM128,216a24,24,0,0,1-22.62-16h45.24A24,24,0,0,1,128,216ZM48,184c7.7-13.24,16-43.92,16-80a64,64,0,1,1,128,0c0,36.05,8.28,66.73,16,80Z"></path>
-            </svg>
-          </button>
-          <div class="w-10 h-10 rounded-full bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDy1LQfvxGQWoP4KQiwMVK6o6k7ks00mEyPsyGeQscgGk1-XqeZxP01eLECIxU7gzbA6rY8UJRb3whImjJZvMNy5LxBgkZH32EWX7QXl4Wpys9GWm49v4_DKsdBsEFpn4Yt72POz5OMuMc5pq5_vb3p8Xamaw0Kusu71ZiEAjVI3SzRJr5w0LRhe5IAaZbeJRFSUcJaYUTn56BKiLa0OwcF_B9d8LAGiDWmfsM0CenTmNdV4soyJKaZlNQKSeZfUjGoeYJoVVAy26c");'></div>
-        </div>
+<!-- 
+  Contenedor principal con el fondo degradado, igual que el login.
+-->
+<div class="container-wrapper" style="background-image: linear-gradient(135deg, rgba(127, 19, 236, 0.2) 0%, rgba(127, 19, 236, 0) 40%), linear-gradient(to right, #f7f6f8, #e9e5f0);">
+  
+  <!-- Tarjeta principal -->
+  <div class="content-card-wrapper">
+    
+    <!-- Encabezado con logo y título -->
+    <div class="header">
+      <div class="logo-container">
+        <!-- SVG del Logo de EduByte -->
+        <svg fill="currentColor" height="32" viewBox="0 0 24 24" width="32" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2L2 7V17L12 22L22 17V7L12 2ZM11 15.5V9.5L5 6.5L11 3.5V9.5L13 10.5V14.5L11 15.5ZM13 10.5L19 7.5L13 4.5V10.5Z"></path>
+        </svg>
+        <h1 class="title">Crea tu cuenta</h1>
       </div>
+      <p class="subtitle">
+        Comienza tu viaje de aprendizaje hoy mismo.
+      </p>
     </div>
-  </header>
 
-  <main class="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-    <div class="w-full max-w-lg space-y-8 p-8 bg-background-light dark:bg-background-dark/50 rounded-xl shadow-2xl shadow-primary/10">
-      <div>
-        <h2 class="text-center text-3xl font-extrabold text-slate-900 dark:text-white">Crea tu cuenta en EduByte</h2>
-        <p class="mt-2 text-center text-sm text-slate-600 dark:text-slate-400">
-          Comienza tu viaje de aprendizaje hoy mismo.
-        </p>
-      </div>
-
-      <form class="mt-8 space-y-6" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <!-- Contenedor del formulario (tarjeta traslúcida) -->
+    <div class="form-card">
+      <div class="form-card-body">
         
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300" for="first-name">Nombre</label>
-            <div class="mt-1">
-              <input class="form-input w-full px-4 py-3 rounded-lg bg-background-light dark:bg-background-dark border-primary/20 dark:border-primary/30 focus:ring-primary focus:border-primary"
-                     id="first-name"
-                     formControlName="firstName"
-                     placeholder="Ingresa tu nombre"
-                     type="text"/>
-            </div>
-            <div *ngIf="firstName?.invalid && (firstName?.dirty || firstName?.touched)" class="mt-1 text-sm text-red-600 dark:text-red-400">
-              <span *ngIf="firstName?.hasError('required')">El nombre es requerido.</span>
-            </div>
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300" for="last-name">Apellido</label>
-            <div class="mt-1">
-              <input class="form-input w-full px-4 py-3 rounded-lg bg-background-light dark:bg-background-dark border-primary/20 dark:border-primary/30 focus:ring-primary focus:border-primary"
-                     id="last-name"
-                     formControlName="lastName"
-                     placeholder="Ingresa tu apellido"
-                     type="text"/>
-            </div>
-            <div *ngIf="lastName?.invalid && (lastName?.dirty || lastName?.touched)" class="mt-1 text-sm text-red-600 dark:text-red-400">
-              <span *ngIf="lastName?.hasError('required')">El apellido es requerido.</span>
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <label class="block text-sm font-medium text-slate-700 dark:text-slate-300" for="email-address">Correo electrónico</label>
-          <div class="mt-1">
-            <input class="form-input w-full px-4 py-3 rounded-lg bg-background-light dark:bg-background-dark border-primary/20 dark:border-primary/30 focus:ring-primary focus:border-primary"
-                   id="email-address"
-                   formControlName="email"
-                   placeholder="tu@email.com"
-                   type="email"/>
-          </div>
-          <div *ngIf="email?.invalid && (email?.dirty || email?.touched)" class="mt-1 text-sm text-red-600 dark:text-red-400">
-            <span *ngIf="email?.hasError('required')">El correo es requerido.</span>
-            <span *ngIf="email?.hasError('email')">El formato del correo no es válido.</span>
-          </div>
-        </div>
-
-        <div>
-          <label class="block text-sm font-medium text-slate-700 dark:text-slate-300" for="password">Contraseña</label>
-          <div class="mt-1 relative">
-            <input class="form-input w-full px-4 py-3 rounded-lg bg-background-light dark:bg-background-dark border-primary/20 dark:border-primary/30 focus:ring-primary focus:border-primary"
-                   id="password"
-                   formControlName="password"
-                   placeholder="Crea una contraseña segura"
-                   type="password"
-                   [class]="passwordStrengthClass"/> <div class="password-strength-indicator grid grid-cols-3 gap-1 w-full h-1 mt-2 rounded-full overflow-hidden">
-              <div class="h-full bg-slate-200 dark:bg-slate-700 rounded-full transition-colors"></div>
-              <div class="h-full bg-slate-200 dark:bg-slate-700 rounded-full transition-colors"></div>
-              <div class="h-full bg-slate-200 dark:bg-slate-700 rounded-full transition-colors"></div>
-            </div>
-          </div>
-          <div *ngIf="password?.invalid && (password?.dirty || password?.touched)" class="mt-1 text-sm text-red-600 dark:text-red-400">
-            <span *ngIf="password?.hasError('required')">La contraseña es requerida.</span>
-            <span *ngIf="password?.hasError('minlength')">Debe tener al menos 8 caracteres.</span>
-          </div>
-        </div>
-
-        <div>
-          <label class="block text-sm font-medium text-slate-700 dark:text-slate-300" for="confirm-password">Confirmar Contraseña</label>
-          <div class="mt-1">
-            <input class="form-input w-full px-4 py-3 rounded-lg bg-background-light dark:bg-background-dark border-primary/20 dark:border-primary/30 focus:ring-primary focus:border-primary"
-                   id="confirm-password"
-                   formControlName="confirmPassword"
-                   placeholder="Confirma tu contraseña"
-                   type="password"/>
-          </div>
-          <div *ngIf="confirmPassword?.invalid && (confirmPassword?.dirty || confirmPassword?.touched)" class="mt-1 text-sm text-red-600 dark:text-red-400">
-            <span *ngIf="confirmPassword?.hasError('required')">La confirmación es requerida.</span>
-          </div>
-          <div *ngIf="registerForm.hasError('passwordMismatch') && (confirmPassword?.dirty || confirmPassword?.touched)" class="mt-1 text-sm text-red-600 dark:text-red-400">
-            <span>Las contraseñas no coinciden.</span>
-          </div>
-        </div>
-
-        <div>
-          <label class="block text-sm font-medium text-slate-700 dark:text-slate-300" for="role">Rol</label>
-          <div class="mt-1">
-            <select class="form-select w-full px-4 py-3 rounded-lg bg-background-light dark:bg-background-dark border-primary/20 dark:border-primary/30 focus:ring-primary focus:border-primary"
-                    id="role"
-                    formControlName="role">
-              <option>Estudiante</option>
-              <option>Instructor</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="flex items-center">
-          <input class="form-checkbox h-4 w-4 rounded text-primary border-primary/40 focus:ring-primary"
-                 id="terms-and-conditions"
-                 formControlName="terms"
-                 type="checkbox"/>
-          <label class="ml-2 block text-sm text-slate-900 dark:text-slate-300" for="terms-and-conditions">
-            Acepto los <a class="font-medium text-primary hover:underline" href="#">términos y condiciones</a>
-          </label>
-        </div>
-        <div *ngIf="terms?.invalid && (terms?.dirty || terms?.touched)" class="mt-1 text-sm text-red-600 dark:text-red-400">
-          <span>Debes aceptar los términos y condiciones.</span>
-        </div>
-
-        <div class="space-y-4">
-          <button class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
-                  type="submit"
-                  [disabled]="registerForm.invalid">
-            Crear Cuenta
-          </button>
-          <button class="group relative w-full flex justify-center py-3 px-4 border border-primary/30 text-sm font-medium rounded-lg text-slate-700 dark:text-slate-200 bg-primary/10 hover:bg-primary/20 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
-                  type="button">
-            <svg class="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path d="M22.56,12.25C22.56,11.45 22.49,10.68 22.36,9.92H12.27V14.4H18.1C17.84,15.93 17,17.25 15.75,18.1V20.76H19.34C21.45,18.83 22.56,15.83 22.56,12.25Z"></path>
-              <path d="M12.27,23C15.11,23 17.5,22.14 19.34,20.76L15.75,18.1C14.8,18.72 13.63,19.09 12.27,19.09C9.56,19.09 7.22,17.25 6.39,14.81H2.69V17.5C4.5,20.72 8.12,23 12.27,23Z"></path>
-              <path d="M6.39,14.81C6.18,14.22 6.06,13.59 6.06,12.94C6.06,12.29 6.18,11.66 6.39,11.07V8.38H2.69C1.94,9.85 1.5,11.35 1.5,12.94C1.5,14.53 1.94,16.03 2.69,17.5L6.39,14.81Z"></path>
-              <path d="M12.27,6.81C13.73,6.81 14.95,7.31 15.93,8.22L19.42,4.72C17.5,3 15.11,2 12.27,2C8.12,2 4.5,4.28 2.69,7.5L6.39,10.19C7.22,7.75 9.56,6.81 12.27,6.81Z"></path>
-            </svg>
-            Registrarse con Google
-          </button>
-        </div>
-      </form>
+        <!-- Formulario de Angular -->
+        <form class="form-body" [formGroup]="registerForm" (ngSubmit)="onSubmit()" novalidate>
       
-      <div class="text-sm text-center">
-        <p class="text-slate-600 dark:text-slate-400">
-          ¿Ya tienes cuenta?
-          <a class="font-medium text-primary hover:underline"
-             routerLink="/auth/login">
-            Inicia sesión
-          </a>
-        </p>
+          <!-- Fila de Nombre y Apellido -->
+          <div class="grid-row">
+            <!-- Campo Nombre -->
+            <div class="form-group">
+              <label for="first-name" class="form-label">Nombre</label>
+              <div class="input-group">
+                <div class="input-icon">
+                  <span class="material-symbols-outlined">person</span>
+                </div>
+                <input type="text" id="first-name" class="form-input" placeholder="Ingresa tu nombre"
+                       formControlName="firstName"
+                       [class.is-invalid]="submitted && f['firstName'].errors" />
+              </div>
+              <div *ngIf="submitted && f['firstName'].errors" class="validation-feedback">
+                <div *ngIf="f['firstName'].errors['required']">El nombre es requerido.</div>
+              </div>
+            </div>
+            
+            <!-- Campo Apellido -->
+            <div class="form-group">
+              <label for="last-name" class="form-label">Apellido</label>
+              <div class="input-group">
+                <div class="input-icon">
+                  <span class="material-symbols-outlined">badge</span>
+                </div>
+                <input type="text" id="last-name" class="form-input" placeholder="Ingresa tu apellido"
+                       formControlName="lastName"
+                       [class.is-invalid]="submitted && f['lastName'].errors" />
+              </div>
+              <div *ngIf="submitted && f['lastName'].errors" class="validation-feedback">
+                <div *ngIf="f['lastName'].errors['required']">El apellido es requerido.</div>
+              </div>
+            </div>
+          </div>
+    
+          <!-- Campo Email -->
+          <div class="form-group">
+            <label for="email-address" class="form-label">Correo electrónico</label>
+            <div class="input-group">
+              <div class="input-icon">
+                <span class="material-symbols-outlined">mail</span>
+              </div>
+              <input type="email" id="email-address" class="form-input" placeholder="tu@email.com"
+                     formControlName="email"
+                     [class.is-invalid]="submitted && f['email'].errors" />
+            </div>
+            <div *ngIf="submitted && f['email'].errors" class="validation-feedback">
+              <div *ngIf="f['email'].errors['required']">El correo es requerido.</div>
+              <div *ngIf="f['email'].errors['email']">Debe ser un correo válido.</div>
+            </div>
+          </div>
+    
+          <!-- Campo Contraseña -->
+          <div class="form-group">
+            <label for="password" class="form-label">Contraseña</label>
+            <div class="input-group">
+              <div class="input-icon">
+                <span class="material-symbols-outlined">lock</span>
+              </div>
+              <input type="password" id="password" 
+                     class="form-input"
+                     [ngClass]="passwordStrengthClass"
+                     placeholder="Crea una contraseña segura"
+                     formControlName="password"
+                     [class.is-invalid]="submitted && f['password'].errors" />
+            </div>
+            <!-- Indicador de Fortaleza -->
+            <div class="password-strength-indicator">
+              <div></div>
+              <div></div>
+              <div></div>
+            </div>
+            <div *ngIf="submitted && f['password'].errors" class="validation-feedback">
+              <div *ngIf="f['password'].errors['required']">La contraseña es requerida.</div>
+              <div *ngIf="f['password'].errors['minlength']">Debe tener al menos 8 caracteres.</div>
+            </div>
+          </div>
+    
+          <!-- Campo Confirmar Contraseña -->
+          <div class="form-group">
+            <label for="confirm-password" class="form-label">Confirmar Contraseña</label>
+            <div class="input-group">
+              <div class="input-icon">
+                <span class="material-symbols-outlined">password</span>
+              </div>
+              <input type="password" id="confirm-password" class="form-input" placeholder="Confirma tu contraseña"
+                     formControlName="confirmPassword"
+                     [class.is-invalid]="submitted && f['confirmPassword'].errors" />
+            </div>
+            <div *ngIf="submitted && f['confirmPassword'].errors" class="validation-feedback">
+              <div *ngIf="f['confirmPassword'].errors['required']">Debes confirmar la contraseña.</div>
+              <div *ngIf="f['confirmPassword'].errors['mismatch']">Las contraseñas no coinciden.</div>
+            </div>
+          </div>
+    
+          <!-- Campo Rol -->
+          <div class="form-group">
+            <label for="role" class="form-label">Rol</label>
+             <div class="input-group">
+                <div class="input-icon">
+                  <span class="material-symbols-outlined">school</span>
+                </div>
+                <select id="role" class="form-select" formControlName="role">
+                  <option>Estudiante</option>
+                  <option>Instructor</option>
+                </select>
+             </div>
+          </div>
+    
+          <!-- Campo Términos y Condiciones -->
+          <div class="form-options">
+            <div class="remember-me">
+              <input id="terms-and-conditions" type="checkbox" class="form-checkbox" 
+                     formControlName="terms"
+                     [class.is-invalid]="submitted && f['terms'].errors" />
+              <label for="terms-and-conditions" class="form-label-checkbox">
+                Acepto los <a href="#">términos y condiciones</a>
+              </label>
+            </div>
+            <div *ngIf="submitted && f['terms'].errors" class="validation-feedback">
+              <div *ngIf="f['terms'].errors['required']">Debes aceptar los términos.</div>
+            </div>
+          </div>
+    
+          <!-- Mensaje de error general de la API -->
+          <div *ngIf="errorMessage" class="alert-danger">
+            {{ errorMessage }}
+          </div>
+    
+          <!-- Botones -->
+          <div class="button-group">
+            <button type="submit" class="submit-button">
+              Crear Cuenta
+            </button>
+            <button type="button" class="google-button" (click)="registerWithGoogle()">
+              <!-- SVG de Google -->
+              <svg class="google-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M22.56,12.25C22.56,11.45 22.49,10.68 22.36,9.92H12.27V14.4H18.1C17.84,15.93 17,17.25 15.75,18.1V20.76H19.34C21.45,18.83 22.56,15.83 22.56,12.25Z"></path>
+                <path d="M12.27,23C15.11,23 17.5,22.14 19.34,20.76L15.75,18.1C14.8,18.72 13.63,19.09 12.27,19.09C9.56,19.09 7.22,17.25 6.39,14.81H2.69V17.5C4.5,20.72 8.12,23 12.27,23Z"></path>
+                <path d="M6.39,14.81C6.18,14.22 6.06,13.59 6.06,12.94C6.06,12.29 6.18,11.66 6.39,11.07V8.38H2.69C1.94,9.85 1.5,11.35 1.5,12.94C1.5,14.53 1.94,16.03 2.69,17.5L6.39,14.81Z"></path>
+                <path d="M12.27,6.81C13.73,6.81 14.95,7.31 15.93,8.22L19.42,4.72C17.5,3 15.11,2 12.27,2C8.12,2 4.5,4.28 2.69,7.5L6.39,10.19C7.22,7.75 9.56,6.81 12.27,6.81Z"></path>
+              </svg>
+              Registrarse con Google
+            </button>
+          </div>
+        </form>
+    
+        <!-- Enlace inferior para Iniciar Sesión -->
+        <div class="footer-link">
+          <p>
+            ¿Ya tienes cuenta?
+            <a [routerLink]="['/login']">
+              Inicia sesión
+            </a>
+          </p>
+        </div>
       </div>
     </div>
-  </main>
+
+  </div>
 </div>
+
