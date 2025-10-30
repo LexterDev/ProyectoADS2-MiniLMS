@@ -3,6 +3,8 @@ services:
     image: postgres:16-alpine
     container_name: minilms-db
     restart: always
+    env_file:
+      - ./.env
     environment:
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
@@ -22,11 +24,14 @@ services:
       - db
     ports:
       - "8080:8080"
+    env_file:
+      - ./.env
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/${POSTGRES_DB}
       - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
       - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - JWT_SECRET=${JWT_SECRET}
     networks:
       - minilms-network
 
