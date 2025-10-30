@@ -1,0 +1,50 @@
+/* Estilos para StatsComponent (components/landing/stats/stats.component.css) */
+
+.stats-grid {
+  margin-top: 4rem; /* mt-16 */
+  display: grid;
+  grid-template-columns: 1fr; /* 1 columna por defecto */
+  gap: 1rem; /* gap-4 */
+}
+
+@media (min-width: 640px) { /* sm:grid-cols-2 */
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) { /* lg:grid-cols-3 */
+  .stats-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem; /* gap-2 */
+  border: 1px solid var(--border-light);
+  padding: 1.5rem; /* p-6 */
+  color: var(--text-dark);
+
+  /* *** NUESTRO ESTÁNDAR *** */
+  border-radius: 0.75rem; /* rounded-xl (mejor que rounded-lg) */
+}
+:host-context(html.dark) .stat-card {
+  border-color: var(--border-dark);
+  color: var(--text-light);
+}
+
+.stat-label {
+  font-size: 1rem; /* text-base */
+  line-height: 1.5rem;
+  font-weight: 500; /* font-medium */
+}
+
+.stat-value {
+  font-size: 1.875rem; /* text-3xl */
+  line-height: 2.25rem;
+  font-weight: 700; /* font-bold */
+  letter-spacing: -0.025em; /* tracking-tight */
+}
+
