@@ -1,0 +1,25 @@
+# Usa una imagen base de Java 21
+FROM openjdk:21-jdk-slim
+
+# Establece el directorio de trabajo dentro del contenedor
+WORKDIR /app
+
+# Copia los archivos necesarios para construir el proyecto con Maven
+COPY .mvn/ .mvn
+COPY mvnw .
+COPY pom.xml .
+
+# Descarga las dependencias de Maven. Esto aprovecha el cache de capas de Docker.
+RUN ./mvnw dependency:go-offline
+
+# Copia el código fuente de la aplicación
+COPY src ./src
+
+# Construye el archivo .jar de la aplicación, omitiendo los tests
+RUN ./mvnw clean package -DskipTests
+
+# Expone el puerto en el que correrá la aplicación
+EXPOSE 8080
+
+# Comando para ejecutar la aplicación cuando se inicie el contenedor
+CMD ["java", "-jar", "target/minilms-api-0.0.1-SNAPSHOT.jar"]
