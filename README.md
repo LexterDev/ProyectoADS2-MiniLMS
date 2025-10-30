@@ -1,72 +1,88 @@
 # ProyectoADS2-MiniLMS
 Mini-LMS para cursos online - Proyecto ADS II
 
+## 🚀 Ejecución con Docker
 
-## Configuración del Entorno Local con Docker
+El proyecto está configurado para ejecutarse con Docker y Docker Compose, con configuraciones separadas para entornos de desarrollo y producción.
 
-El proyecto utiliza Docker y Docker Compose para simplificar la configuración del entorno de desarrollo. Las siguientes instrucciones aplican al servicio `minilms-api`.
+### Requisitos Previos
 
-### Prerrequisitos
+*   [Docker](https://www.docker.com/get-started) instalado.
+*   [Docker Compose](https://docs.docker.com/compose/install/) (incluido con Docker Desktop).
 
-*   [Docker Desktop](https://www.docker.com/products/docker-desktop/) instalado y en ejecución.
+### ⚙️ Configuración Inicial
 
-### Pasos para la Instalación
+Antes de iniciar, es necesario configurar las variables de entorno.
 
-1.  **Navegar al Directorio de la API**
+1.  Navega al directorio `minilms-api`.
+2.  Crea un archivo llamado `.env` y añade el siguiente contenido. **Asegúrate de que `DOCKER_REGISTRY` coincida con tu nombre de usuario de Docker Hub.**
 
-    Abre una terminal y sitúate en el directorio `minilms-api`.
+    ```env
+    # PostgreSQL Database settings
+    POSTGRES_DB=minilmsdb
+    POSTGRES_USER=admin
+    POSTGRES_PASSWORD=adminpass
 
-    ```bash
-    cd minilms-api
+    # Docker Registry (tu usuario de Docker Hub, ej: noerodas)
+    DOCKER_REGISTRY=tu-usuario-de-dockerhub
+
+    # JWT Secret (cambia esto por una clave segura y larga en producción)
+    JWT_SECRET=unaClaveSecretaParaDesarrollo
     ```
 
-2.  **Configurar Variables de Entorno**
+### 💻 Entorno de Desarrollo (Local)
 
-    El proyecto necesita un archivo `.env` para las credenciales de la base de datos. Crea una copia del archivo de ejemplo:
+Este modo construye la imagen de la API localmente y expone el puerto de la base de datos, permitiendo la conexión con herramientas externas como DBeaver.
 
-    ```bash
-    # En Windows (PowerShell)
-    cp .env.example .env
-
-    # En Windows (Command Prompt)
-    copy .env.example .env
-    ```
-
-    Los valores por defecto en el archivo `.env` son suficientes para iniciar.
-
-3.  **Levantar los Contenedores**
-
-    Ejecuta el siguiente comando para construir la imagen de la API y levantar los contenedores de la aplicación y la base de datos.
+1.  Abre una terminal en el directorio `minilms-api`.
+2.  Ejecuta el siguiente comando para construir e iniciar los contenedores:
 
     ```bash
-    docker-compose up --build -d
+    # Forma corta (recomendada)
+    docker-compose up --build
     ```
+    *   Este comando combina automáticamente `docker-compose.yml` (base) y `docker-compose.override.yml` (desarrollo).
 
-    *   `--build`: Reconstruye la imagen de la API si hay cambios en el código.
-    *   `-d`: Ejecuta los contenedores en segundo plano.
-
-4.  **Verificar el Estado**
-
-    Comprueba que los contenedores estén en ejecución:
+    **Alternativa explícita:**
+    Si prefieres especificar los archivos manualmente (útil para claridad o debugging), puedes usar el siguiente comando, que tiene el mismo efecto que el anterior:
 
     ```bash
-    docker-compose ps
+    docker-compose -f docker-compose.yml -f docker-compose.override.yml up --build
+    ```
+    *   Para ejecutar cualquiera de los comandos en segundo plano, añade la bandera `-d`.
+
+### ☁️ Entorno de Producción / Staging (Remoto)
+
+Este modo utiliza una imagen pre-construida de un registro de contenedores (como Docker Hub).
+
+1.  **Paso Previo: Construir y Subir la Imagen**
+
+    ```bash
+    # 1. Inicia sesión en tu registro
+    docker login
+
+    # 2. Construye y etiqueta la imagen (reemplaza 'tu-registro' con tu usuario de Docker Hub)
+    docker build -t tu-registro/minilms-api:latest ./minilms-api
+
+    # 3. Sube la imagen
+    docker push tu-registro/minilms-api:latest
     ```
 
-    Deberías ver dos servicios (`minilms-api` y `minilms-db`) con el estado `running`.
+2.  **Desplegar en el Servidor**
+
+    ```bash
+    docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+    ```
 
 ### Acceso a los Servicios
 
-*   **API**: Disponible en `http://localhost:8080`.
-*   **Base de Datos**: Puedes conectarte usando los siguientes datos:
+*   **API**: Disponible en `http://localhost:8080` (o la IP del servidor).
+*   **Base de Datos (solo en desarrollo)**:
     *   **Host**: `localhost`
     *   **Puerto**: `5433`
-    *   **Usuario/Contraseña/BD**: Los definidos en tu archivo `.env`.
+    *   **Credenciales**: Las definidas en tu archivo `.env`.
 
-### Detener el Entorno
+### Detener los Servicios
 
-Para detener todos los servicios, ejecuta desde el directorio `minilms-api`:
-
-```bash
-docker-compose down
-```
+*   **Desarrollo**: `docker-compose down`
+*   **Producción**: `docker-compose -f docker-compose.yml -f docker-compose.prod.yml down`
