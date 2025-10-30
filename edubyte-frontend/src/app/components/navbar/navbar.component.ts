@@ -1,33 +1,36 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatToolbarModule } from '@angular/material/toolbar';
+import { RouterLink } from '@angular/router'; // <-- 1. IMPORTANTE
 
 @Component({
   selector: 'app-navbar',
+  standalone: true, 
   imports: [
     CommonModule,
-    MatButtonModule,
-    MatIconModule,
-    MatToolbarModule
+    RouterLink // <-- 2. AÑADIDO
   ],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })
 export class NavbarComponent {
 
-   menuItems = [
-    { label: 'Inicio', link: '/' },
-    { label: 'Cursos', link: '/cursos' },
-    { label: 'Instructores', link: '/instructores' },
-    { label: 'Comunidad', link: '/comunidad' }
-  ];
+    // ¡Genial! Usaremos este array en el HTML
+    menuItems = [
+     { label: 'Inicio', link: '/' },
+     { label: 'Cursos', link: '/cursos' },
+     { label: 'Instructores', link: '/instructores' },
+     { label: 'Comunidad', link: '/comunidad' }
+    ];
 
-  isDarkMode = false;
+   // Lo quitamos, ya que el estado lo manejará el propio HTML
+   // isDarkMode = false; 
 
-  toggleDarkMode() {
-    this.isDarkMode = !this.isDarkMode;
-  }
+   toggleDarkMode() {
+    // 3. Esta es la lógica importante:
+    // Añade o quita la clase 'dark' del tag <html>
+    // para que nuestro CSS pueda reaccionar.
+    document.documentElement.classList.toggle('dark');
+   }
 
 }
+

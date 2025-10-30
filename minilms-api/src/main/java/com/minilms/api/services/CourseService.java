@@ -11,17 +11,32 @@ import org.springframework.stereotype.Service;
 import com.minilms.api.config.responseApi.ApiException;
 import com.minilms.api.config.responseApi.PageResponse;
 import com.minilms.api.dto.course.CourseDTO;
+import com.minilms.api.dto.course.LessonDTO;
+import com.minilms.api.dto.course.SectionDTO;
+import com.minilms.api.entities.Categoria;
 import com.minilms.api.entities.Curso;
+import com.minilms.api.entities.Estado;
+import com.minilms.api.entities.Seccion;
+import com.minilms.api.enums.EstadoEnum;
 import com.minilms.api.mappers.CourseMapper;
+import com.minilms.api.repository.CategoriaRepository;
 import com.minilms.api.repository.CursoRepository;
+import com.minilms.api.repository.EstadoRepository;
+import com.minilms.api.repository.LeccionRepository;
+import com.minilms.api.repository.SeccionRepository;
+import com.minilms.api.utils.LmsUtils;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class CourseService {
+public class CourseService extends LmsUtils {
 
     private final CursoRepository repository;
+    private final SeccionRepository sectionRepository;
+    private final LeccionRepository lecturaRepository;
+    private final EstadoRepository estadoRepository;
+    private final CategoriaRepository categoriaRepository;
 
     public PageResponse<CourseDTO> findCourses(Optional<String> txt, int page, int size) {
 
@@ -46,5 +61,76 @@ public class CourseService {
                 .orElseThrow(() -> new ApiException("No se encontro un Curso con ID: " + id, HttpStatus.NOT_FOUND));
 
         return CourseMapper.toDetailsDTO(cursoCompleto);
+    }
+
+    public CourseDTO createCourse(CourseDTO dto) {
+        return CourseMapper.toEntity(dto).map(curso -> {
+
+            curso.setInstructor(getUserLoggedIn());
+            Optional<Estado> estado = estadoRepository.findByCodigo(EstadoEnum.BORRADOR.getCodigo());
+            Optional<Categoria> categoria = categoriaRepository.findById(dto.getCategoriaId());
+
+            if (estado.isEmpty()) {
+                throw new ApiException("No se encontro un estado con el codigo: " + EstadoEnum.BORRADOR.getCodigo(),
+                        HttpStatus.BAD_REQUEST);
+            }
+            if (categoria.isEmpty()) {
+                throw new ApiException("No se encontro una categoria con el id: " + dto.getCategoriaId(),
+                        HttpStatus.BAD_REQUEST);
+            }
+            curso.setEstado(estado.get());
+            curso.setCategoria(categoria.get());
+
+            return CourseMapper.toDTO(repository.save(curso));
+        }).orElseThrow(
+                () -> new ApiException("Ocurrio un error al convertir el objeto de entrada a entidad",
+                        HttpStatus.BAD_REQUEST));
+    }
+
+    public SectionDTO createCourseSection(SectionDTO dto) {
+
+        boolean duplicateOrder = sectionRepository.findByCursoIdOrderByOrdenAsc(dto.getCursoId()).stream().filter(s -> {
+            return s.getCurso().getId() == dto.getCursoId() && s.getOrden() == dto.getOrden();
+        }).findFirst().isPresent();
+
+        if (duplicateOrder) {
+            throw new ApiException("La posicion " + dto.getOrden() + " ya esta asignada", HttpStatus.BAD_REQUEST);
+        }
+
+        return CourseMapper.toSection(dto).map(section -> {
+
+            Optional<Curso> curso = repository.findById(dto.getCursoId());
+            if (curso.isEmpty()) {
+                throw new ApiException("No se encontro un curso con el id: " + dto.getCursoId(),
+                        HttpStatus.BAD_REQUEST);
+            }
+            section.setCurso(curso.get());
+            return CourseMapper.toSectionDTO(sectionRepository.save(section));
+        }).orElseThrow(
+                () -> new ApiException("Ocurrio un error al convertir el dto de entrada a entidad",
+                        HttpStatus.BAD_REQUEST));
+    }
+
+    public LessonDTO createCourseLesson(LessonDTO dto) {
+        Optional<Seccion> section = sectionRepository.findById(dto.getSeccionId());
+        if (section.isEmpty()) {
+            throw new ApiException("No se encontro una seccion con el id: " + dto.getSeccionId(),
+                    HttpStatus.BAD_REQUEST);
+        }
+
+        boolean duplicateOrder = lecturaRepository.findBySeccionIdOrderByOrdenAsc(dto.getSeccionId()).stream().filter(l -> {
+            return l.getSeccion().getId() == dto.getSeccionId() && l.getOrden() == dto.getOrden();
+        }).findFirst().isPresent();
+
+        if (duplicateOrder) {
+            throw new ApiException("La posicion " + dto.getOrden() + " ya esta asignada", HttpStatus.BAD_REQUEST);
+        }
+
+        return CourseMapper.toLesson(dto).map(lesson -> {
+            lesson.setSeccion(section.get());
+            return CourseMapper.toLessonDTO(lecturaRepository.save(lesson));
+        }).orElseThrow(
+                () -> new ApiException("Ocurrio un error al convertir el dto de entrada a entidad",
+                        HttpStatus.BAD_REQUEST));
     }
 }

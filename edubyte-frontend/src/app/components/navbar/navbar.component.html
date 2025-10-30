@@ -1,39 +1,38 @@
-<nav class="bg-white shadow-sm fixed w-full top-0 z-50">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex justify-between items-center h-16">
-      <!-- Logo -->
-      <div class="flex items-center space-x-2">
-        <div class="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center">
-          <span class="text-white font-bold text-xl">E</span>
-        </div>
-        <span class="text-xl font-bold text-gray-900">EduByte</span>
-      </div>
-
-      <!-- Menu Items -->
-      <div class="hidden md:flex items-center space-x-8">
-        <a *ngFor="let item of menuItems" 
-           [href]="item.link"
-           class="text-gray-700 hover:text-purple-600 transition-colors font-medium">
-          {{ item.label }}
-        </a>
-      </div>
-
-      <!-- Actions -->
-      <div class="flex items-center space-x-4">
-        <button mat-button 
-                class="!text-purple-600 !font-semibold">
-          Regístrate
-        </button>
-        <button mat-stroked-button 
-                class="!border-gray-300 !text-gray-700">
-          Iniciar sesión
-        </button>
-        <button mat-icon-button 
-                (click)="toggleDarkMode()"
-                class="!text-gray-700">
-          <mat-icon>{{ isDarkMode ? 'light_mode' : 'dark_mode' }}</mat-icon>
-        </button>
-      </div>
+<!-- 
+  Header principal de la aplicación.
+  Traducido de Tailwind a clases CSS puras.
+-->
+<header class="header-container">
+  <!-- Logo y Título -->
+  <div class="logo-container">
+    <div class="logo-icon">
+      <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+        <path clip-rule="evenodd" d="M24 4H42V17.3333V30.6667H24V44H6V30.6667V17.3333H24V4Z" fill="currentColor" fill-rule="evenodd"></path>
+      </svg>
     </div>
+    <h2 class="logo-title">EduByte</h2>
   </div>
-</nav>
+
+  <!-- Enlaces de Navegación (¡usando tu array 'menuItems'!) -->
+  <nav class="nav-links">
+    @for (item of menuItems; track item.label) {
+      <a [href]="item.link">{{ item.label }}</a>
+    }
+  </nav>
+
+  <!-- Botones de Acción del Usuario -->
+  <div class="user-actions">
+    <button class="btn btn-primary">
+      <span>Regístrate</span>
+    </button>
+    <button class="btn btn-secondary">
+      <span>Iniciar sesión</span>
+    </button>
+    
+    <!-- Botón de Modo Oscuro (conectado a tu función) -->
+    <button class="btn btn-icon" (click)="toggleDarkMode()" aria-label="Cambiar modo oscuro">
+      <span class="material-symbols-outlined"> dark_mode </span>
+    </button>
+  </div>
+</header>
+

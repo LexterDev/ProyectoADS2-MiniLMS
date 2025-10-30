@@ -1,1 +1,137 @@
-<p>login works!</p>
+<!-- 
+  Contenedor principal con el fondo degradado. 
+  El estilo en línea es necesario para el 'background-image'
+-->
+<div class="container-wrapper" style="background-image: linear-gradient(135deg, rgba(127, 19, 236, 0.2) 0%, rgba(127, 19, 236, 0) 40%), linear-gradient(to right, #f7f6f8, #e9e5f0);">
+  
+  <!-- Tarjeta principal -->
+  <div class="content-card-wrapper">
+    
+    <!-- Encabezado con logo y título -->
+    <div class="header">
+      <div class="logo-container">
+        <!-- SVG del Logo de EduByte -->
+        <svg fill="currentColor" height="32" viewBox="0 0 24 24" width="32" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2L2 7V17L12 22L22 17V7L12 2ZM11 15.5V9.5L5 6.5L11 3.5V9.5L13 10.5V14.5L11 15.5ZM13 10.5L19 7.5L13 4.5V10.5Z"></path>
+        </svg>
+        <h1 class="title">EduByte</h1>
+      </div>
+      <p class="subtitle">
+        Bienvenido de nuevo. Inicia sesión para continuar aprendiendo.
+      </p>
+    </div>
+
+    <!-- Contenedor del formulario (tarjeta traslúcida) -->
+    <div class="form-card">
+      <div class="form-card-body">
+        <!-- Formulario de Angular -->
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
+          
+          <!-- Campo Email -->
+          <div class="form-group">
+            <label for="email" class="form-label">Correo electrónico</label>
+            <div class="input-group">
+              <div class="input-icon">
+                <span class="material-symbols-outlined">mail</span>
+              </div>
+              <input 
+                type="email" 
+                id="email" 
+                class="form-input" 
+                placeholder="ejemplo@correo.com"
+                formControlName="email"
+                [class.is-invalid]="submitted && f['email'].errors"
+              />
+            </div>
+            <!-- Mensajes de Validación Email -->
+            <div *ngIf="submitted && f['email'].errors" class="validation-feedback">
+              <div *ngIf="f['email'].errors['required']">El correo es requerido.</div>
+              <div *ngIf="f['email'].errors['email']">Debe ser un correo válido.</div>
+            </div>
+          </div>
+
+          <!-- Campo Contraseña -->
+          <div class="form-group">
+            <label for="password" class="form-label">Contraseña</label>
+            <div class="input-group">
+              <div class="input-icon">
+                <span class="material-symbols-outlined">lock</span>
+              </div>
+              <input 
+                [type]="passwordFieldType" 
+                id="password" 
+                class="form-input password" 
+                placeholder="Ingresa tu contraseña"
+                formControlName="password"
+                [class.is-invalid]="submitted && f['password'].errors"
+              />
+              <!-- Botón para mostrar/ocultar contraseña -->
+              <button type="button" class="password-toggle" (click)="togglePasswordVisibility()">
+                <span class="material-symbols-outlined">{{ passwordIcon }}</span>
+              </button>
+            </div>
+            <!-- Mensajes de Validación Contraseña -->
+            <div *ngIf="submitted && f['password'].errors" class="validation-feedback">
+              <div *ngIf="f['password'].errors['required']">La contraseña es requerida.</div>
+            </div>
+          </div>
+
+          <!-- Opciones (Recordarme y Olvidé Contraseña) -->
+          <div class="form-options">
+            <div class="remember-me">
+              <input id="remember-me" type="checkbox" class="form-checkbox" formControlName="rememberMe" />
+              <label for="remember-me" class="form-label-checkbox">Recordarme</label>
+            </div>
+            <div class="forgot-link">
+              <!-- Enlace de Angular -->
+              <a [routerLink]="['/forgot-password']">¿Olvidaste tu contraseña?</a>
+            </div>
+          </div>
+
+          <!-- Mensaje de error general de la API -->
+          <div *ngIf="errorMessage" class="alert-danger">
+            {{ errorMessage }}
+          </div>
+
+          <!-- Botón de Iniciar Sesión -->
+          <div class="button-group">
+            <button type="submit" class="submit-button">
+              Iniciar Sesión
+            </button>
+          </div>
+        </form>
+
+        <!-- Divisor "O continuar con" -->
+        <div class="divider">
+          <div class="divider-line"></div>
+          <div class="divider-text">
+            <span>O continuar con</span>
+          </div>
+        </div>
+
+        <!-- Botón de Google -->
+        <div class="button-group">
+          <button type="button" class="google-button" (click)="loginWithGoogle()">
+            <!-- SVG de Google -->
+            <svg class="google-icon" height="48px" viewBox="0 0 48 48" width="48px" xmlns="http://www.w3.org/2000/svg">
+              <path d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24s8.955,20,20,20s20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z" fill="#FFC107"></path>
+              <path d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z" fill="#FF3D00"></path>
+              <path d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.222,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z" fill="#4CAF50"></path>
+              <path d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.574l6.19,5.238C41.371,34.197,44,28.7,44,24C44,22.659,43.862,21.35,43.611,20.083z" fill="#1976D2"></path>
+            </svg>
+            Continuar con Google
+          </button>
+        </div>
+        
+      </div>
+    </div>
+
+    <!-- Enlace inferior para Registrarse -->
+    <p class="footer-link">
+      ¿No tienes una cuenta?
+      <!-- Enlace de Angular -->
+      <a [routerLink]="['/register']">Regístrate</a>
+    </p>
+
+  </div>
+</div>
