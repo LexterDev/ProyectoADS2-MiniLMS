@@ -1,1 +1,351 @@
-/*   Estilos CSS para asegurar que el formulario se vea idéntico   al diseño original, solucionando problemas de Tailwind y   el autocompletar del navegador. */ /* --- 1. ESTILOS PARA LOS INPUTS (custom-form-input) --- */ .custom-form-input {   /* Color de fondo (background-light: "#f7f6f8" con 70% opacidad) */   background-color: rgba(247, 246, 248, 0.7);   border: 2px solid transparent;   transition: border-color 0.2s ease, box-shadow 0.2s ease;     /* Pista para el navegador sobre el esquema de color (MODO CLARO) */   color-scheme: light; } /* --- MODO OSCURO (INPUTS) --- */ :host-context(body.dark) .custom-form-input {   /* Color de fondo (background-dark: "#191022" con 70% opacidad) */   background-color: rgba(25, 16, 34, 0.7);     /* Pista para el navegador sobre el esquema de color (MODO OSCURO) */   color-scheme: dark; } /* --- ESTADO DE FOCO (INPUTS) --- */ .custom-form-input:focus:not(.ng-invalid) {   /* Tu color primario: "#7f13ec" */   border-color: #7f13ec;   box-shadow: 0 0 0 2px #7f13ec;   outline: none; } /* --- ESTADO DE ERROR (INPUTS) --- */ .custom-form-input.ng-invalid.ng-touched {   /* Color rojo (similar a Tailwind 'red-600') */   border-color: #dc2626;   box-shadow: 0 0 0 2px #dc2626;   outline: none; } /* --- 2. ARREGLO PARA AUTOCOMPLETAR (NUEVO MÉTODO) ---   Usamos un box-shadow gigante para "tapar" el fondo azul del   navegador, en lugar de pelear con 'background-color'. */ /* MODO CLARO (Texto oscuro) */ :host ::ng-deep .custom-form-input:-webkit-autofill, :host ::ng-deep .custom-form-input:-webkit-autofill:hover, :host ::ng-deep .custom-form-input:-webkit-autofill:focus, :host ::ng-deep .custom-form-input:-webkit-autofill:active  {   /* Pone el color de fondo que queremos como una sombra INTERNA */   box-shadow: inset 0 0 0 50px rgba(247, 246, 248, 0.7); /* Tu color light */     /* Forzamos el color de la letra (Tailwind text-gray-900) */   -webkit-text-fill-color: #1f2937 !important;     /* Forzamos el color-scheme para que el navegador no se confunda */   color-scheme: light !important; } /* MODO OSCURO (Texto claro) */ :host-context(body.dark) ::ng-deep .custom-form-input:-webkit-autofill, :host-context(body.dark) ::ng-deep .custom-form-input:-webkit-autofill:hover, :host-context(body.dark) ::ng-deep .custom-form-input:-webkit-autofill:focus, :host-context(body.dark) ::ng-deep .custom-form-input:-webkit-autofill:active {   /* Pone el color de fondo que queremos como una sombra INTERNA */   box-shadow: inset 0 0 0 50px rgba(25, 16, 34, 0.7); /* Tu color dark */     /* Forzamos el color de la letra en modo oscuro (Tailwind text-white) */   -webkit-text-fill-color: #f3f4f6 !important;     /* Forzamos el color-scheme para que el navegador no se confunda */   color-scheme: dark !important; } /* --- 3. ESTILOS PARA EL BOTÓN DE SUBMIT --- */ /* Añadimos esto porque la clase 'bg-primary' de Tailwind   no se estaba aplicando correctamente. */ .custom-submit-button {   /* Tu color primario: "#7f13ec" */   background-color: #7f13ec; } .custom-submit-button:hover {   /* Tu color 'hover:bg-primary/90' */   background-color: rgba(127, 19, 236, 0.9); } .custom-submit-button:disabled {   /* Estilo 'disabled:opacity-50' de Tailwind */   opacity: 0.5; }
+/* Variables de color (consistentes con forgot-password.css)
+*/
+:host {
+  --primary: #7f13ec;
+  --background-light: #f7f6f8;
+  --background-dark: #191022;
+  --text-slate-800: #1e293b;
+  --text-slate-600: #475569;
+  --text-slate-700: #334155;
+  --text-slate-400: #94a3b8;
+  --text-slate-500: #64748b;
+  --border-slate-200: #e2e8f0;
+  --border-slate-300: #cbd5e1;
+  --border-slate-600: #475569;
+  --font-display: 'Manrope', sans-serif;
+}
+
+/* Estilos para el ícono de Material Symbols */
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 24;
+  font-size: 20px; /* Ajuste para íconos de input */
+}
+
+/* Contenedor principal (flex min-h-screen...) */
+.container-wrapper {
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+  background-size: cover;
+  background-position: center;
+  font-family: var(--font-display);
+  color: var(--text-slate-800);
+}
+
+/* Envoltura de la tarjeta (w-full max-w-md p-4) */
+.content-card-wrapper {
+  width: 100%;
+  max-width: 28rem; /* 448px */
+  padding: 1rem;
+}
+
+/* Encabezado (mx-auto flex flex-col...) */
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem; /* 16px */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* 8px */
+  color: var(--primary);
+}
+
+.logo-container svg {
+  width: 32px;
+  height: 32px;
+  fill: currentColor;
+}
+
+.title {
+  font-size: 1.875rem; /* 30px */
+  font-weight: 800;
+  color: #111827; /* text-gray-900 */
+}
+
+.subtitle {
+  text-align: center;
+  color: #4b5563; /* text-gray-600 */
+}
+
+/* Tarjeta del formulario (mt-8 rounded-xl bg-white/50...) */
+.form-card {
+  margin-top: 2rem; /* 32px */
+  border-radius: 0.75rem; /* rounded-xl */
+  background-color: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(4px);
+  box-shadow: 0 20px 25px -5px rgba(127, 19, 236, 0.1), 0 8px 10px -6px rgba(127, 19, 236, 0.1);
+}
+
+.form-card-body {
+  padding: 2rem; /* p-8 */
+}
+
+/* Grupos de formulario (space-y-6) */
+.form-group {
+  margin-bottom: 1.5rem; /* 24px */
+}
+.form-group:last-child {
+  margin-bottom: 0;
+}
+.button-group {
+  margin-top: 1.5rem;
+}
+/* Asegura que el mensaje de error también tenga espacio */
+.alert-danger {
+  margin-top: 1.5rem;
+}
+
+
+/* Etiquetas */
+.form-label {
+  display: block;
+  font-size: 0.875rem; /* 14px */
+  font-weight: 500;
+  color: var(--text-slate-700);
+}
+
+/* Grupo de input con ícono */
+.input-group {
+  position: relative;
+  margin-top: 0.25rem; /* mt-1 */
+}
+
+.input-icon {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  padding-left: 0.75rem; /* pl-3 */
+  pointer-events: none;
+}
+
+.input-icon .material-symbols-outlined {
+  color: var(--text-slate-400);
+}
+
+/* Estilo del Input (block w-full rounded-lg...) */
+.form-input {
+  display: block;
+  width: 100%;
+  border-radius: 0.5rem; /* rounded-lg */
+  border: 1px solid transparent; /* border-transparent */
+  background-color: rgba(247, 246, 248, 0.7); /* bg-background-light/70 */
+  padding: 0.85rem 0.75rem; /* py-3 pr-3 */
+  padding-left: 2.5rem; /* pl-10 */
+  color: var(--text-slate-800);
+  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.form-input::placeholder {
+  color: var(--text-slate-500);
+}
+
+.form-input:focus {
+  border-color: var(--primary);
+  outline: none;
+  box-shadow: 0 0 0 2px var(--primary); /* focus:ring-2 focus:ring-primary */
+}
+
+/* Input de contraseña (con espacio para botón) */
+.form-input.password {
+  padding-right: 2.5rem; /* pr-10 */
+}
+
+/* Botón de mostrar/ocultar contraseña */
+.password-toggle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  padding-right: 0.75rem; /* pr-3 */
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  color: var(--text-slate-400);
+}
+.password-toggle:hover {
+  color: var(--primary);
+}
+.password-toggle .material-symbols-outlined {
+  color: inherit;
+}
+
+/* Opciones del formulario */
+.form-options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+}
+
+.remember-me {
+  display: flex;
+  align-items: center;
+}
+
+.form-checkbox {
+  height: 1rem;
+  width: 1rem;
+  border-radius: 0.25rem;
+  border-color: var(--border-slate-300);
+  color: var(--primary);
+  background-color: var(--background-light);
+}
+.form-checkbox:focus {
+  box-shadow: 0 0 0 2px var(--primary);
+}
+
+.form-label-checkbox {
+  margin-left: 0.5rem; /* ml-2 */
+  display: block;
+  font-size: 0.875rem;
+  color: var(--text-slate-800);
+}
+
+.forgot-link {
+  font-size: 0.875rem;
+}
+
+.forgot-link a {
+  font-weight: 500;
+  color: var(--primary);
+  text-decoration: none;
+  transition: color 0.2s ease-in-out;
+}
+.forgot-link a:hover {
+  color: rgba(127, 19, 236, 0.8);
+}
+
+/* Botón de envío */
+.submit-button {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  border-radius: 0.5rem;
+  background-color: var(--primary);
+  padding: 0.85rem 1rem; /* px-4 py-3 */
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+.submit-button:hover {
+  background-color: rgba(127, 19, 236, 0.9);
+}
+.submit-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--primary);
+}
+
+/* Divisor "O continuar con" */
+.divider {
+  position: relative;
+  margin: 1.5rem 0; /* my-6 */
+}
+.divider-line {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  border-top: 1px solid var(--border-slate-300);
+}
+.divider-text {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  font-size: 0.875rem;
+}
+.divider-text span {
+  /* Fondo debe coincidir con el de la tarjeta */
+  background-color: rgba(255, 255, 255, 0.5); 
+  padding: 0 0.5rem; /* px-2 */
+  color: var(--text-slate-500);
+}
+
+/* Botón de Google */
+.google-button {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  border: 1px solid var(--border-slate-300);
+  background-color: rgba(247, 246, 248, 0.7);
+  padding: 0.85rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-slate-700);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+.google-button:hover {
+  background-color: rgba(127, 19, 236, 0.1);
+}
+.google-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--primary);
+}
+
+.google-icon {
+  margin-right: 0.75rem; /* mr-3 */
+  height: 1.25rem; /* h-5 */
+  width: 1.25rem; /* w-5 */
+}
+
+/* Enlace inferior (Regístrate) */
+.footer-link {
+  margin-top: 2rem; /* mt-8 */
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--text-slate-500);
+}
+.footer-link a {
+  font-weight: 500;
+  color: var(--primary);
+  text-decoration: none;
+  transition: color 0.2s ease-in-out;
+}
+.footer-link a:hover {
+  color: rgba(127, 19, 236, 0.8);
+}
+
+/* Estilos de Validación */
+.form-input.is-invalid {
+  border-color: #ef4444; /* text-red-600 */
+}
+.form-input.is-invalid:focus {
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.3);
+}
+
+.validation-feedback {
+  font-size: 0.875rem;
+  color: #ef4444;
+  margin-top: 0.5rem;
+}
+
+.alert-danger {
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  background-color: #fee2e2; /* red-100 */
+  color: #991b1b; /* red-800 */
+}
