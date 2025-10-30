@@ -1,0 +1,5 @@
+services:
+  api:
+    image: ${DOCKER_REGISTRY}/minilms-api:latest # <- Reemplaza el marcador de posición aquí
+    environment:
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=validate # 'validate' es más seguro para producción

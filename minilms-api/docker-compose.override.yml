@@ -1,0 +1,9 @@
+services:
+  db:
+    ports:
+      - "5433:5432" # Exponemos el puerto solo para desarrollo
+
+  api:
+    build: . # Construimos la imagen localmente
+    environment:
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update # Usamos 'update' para facilitar el desarrollo
