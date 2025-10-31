@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -93,6 +94,12 @@ public class CourseController {
     @PreAuthorize("hasRole('INSTRUCTOR')")
     public ResponseEntity<ApiResponse<LessonDTO>> updateCourseLesson(@RequestBody LessonDTO dto) {
         return ResponseHandler.generateResponse(courseService.updateCourseLesson(dto));
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('INSTRUCTOR')")
+    public ResponseEntity<ApiResponse<String>> deleteCourse(@PathVariable Long id) {
+        return ResponseHandler.generateResponse(courseService.deleteCourse(id));
     }
 
 }

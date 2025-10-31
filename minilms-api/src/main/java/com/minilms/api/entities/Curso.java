@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.SQLRestriction;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.CascadeType;
@@ -35,6 +36,7 @@ import lombok.Setter;
         @Index(name = "curso_idx_instructor", columnList = "instructor_id"),
         @Index(name = "curso_idx_categoria", columnList = "categoria_id")
 })
+@SQLRestriction("eliminado = 0")
 public class Curso {
 
     @Id
@@ -79,6 +81,9 @@ public class Curso {
     @UpdateTimestamp
     @Column(name = "actualizado_en")
     private LocalDateTime actualizadoEn;
+
+    @Column(name = "eliminado", nullable = false, columnDefinition = "SMALLINT DEFAULT 0")
+    private Short eliminado;
 
     @OneToMany(mappedBy = "curso", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Seccion> secciones;

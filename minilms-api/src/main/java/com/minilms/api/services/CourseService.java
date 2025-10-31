@@ -178,4 +178,14 @@ public class CourseService extends LmsUtils {
         }).orElseThrow(
                 () -> new ApiException("No se encontro una leccion con el id: " + dto.getId(), HttpStatus.NOT_FOUND));
     }
+
+    public String deleteCourse(Long id) {
+        return repository.findById(id).map((course) ->{
+            course.setEliminado(Short.valueOf("1"));
+            course.setActualizadoEn(LocalDateTime.now());
+            Curso entity = repository.save(course);
+            return String.format("Curso %s eliminado con exito",  entity.getTitulo());
+        }).orElseThrow(
+                () -> new ApiException("No se encontro un curso con el id: " + id, HttpStatus.NOT_FOUND));
+    }
 }
