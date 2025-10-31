@@ -1,5 +1,6 @@
 package com.minilms.api.services;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +32,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class CourseService extends LmsUtils {
+
 
     private final CursoRepository repository;
     private final SeccionRepository sectionRepository;
@@ -118,9 +120,10 @@ public class CourseService extends LmsUtils {
                     HttpStatus.BAD_REQUEST);
         }
 
-        boolean duplicateOrder = lecturaRepository.findBySeccionIdOrderByOrdenAsc(dto.getSeccionId()).stream().filter(l -> {
-            return l.getSeccion().getId() == dto.getSeccionId() && l.getOrden() == dto.getOrden();
-        }).findFirst().isPresent();
+        boolean duplicateOrder = lecturaRepository.findBySeccionIdOrderByOrdenAsc(dto.getSeccionId()).stream()
+                .filter(l -> {
+                    return l.getSeccion().getId() == dto.getSeccionId() && l.getOrden() == dto.getOrden();
+                }).findFirst().isPresent();
 
         if (duplicateOrder) {
             throw new ApiException("La posicion " + dto.getOrden() + " ya esta asignada", HttpStatus.BAD_REQUEST);
@@ -132,5 +135,47 @@ public class CourseService extends LmsUtils {
         }).orElseThrow(
                 () -> new ApiException("Ocurrio un error al convertir el dto de entrada a entidad",
                         HttpStatus.BAD_REQUEST));
+    }
+
+    public CourseDTO updateCourse(CourseDTO dto) {
+        return repository.findById(dto.getId()).map((course) ->{
+            course.setTitulo(dto.getTitulo());
+            course.setDescripcion(dto.getDescripcion());
+            course.setPrecio(dto.getPrecio());
+            course.setActualizadoEn(LocalDateTime.now());
+
+            if(nullSafetyValue(dto.getEstadoCodigo())) {
+                estadoRepository.findByCodigo(dto.getEstadoCodigo()).ifPresent(course::setEstado);
+            }
+            if(nullSafetyValue(dto.getCategoriaId())) {
+                categoriaRepository.findById(dto.getCategoriaId()).ifPresent(course::setCategoria);
+            }
+            return CourseMapper.toDTO(repository.save(course));
+        }).orElseThrow(
+                () -> new ApiException("No se encontro un curso con el id: " + dto.getId(), HttpStatus.NOT_FOUND));
+    }
+
+    public SectionDTO updateCourseSection(SectionDTO dto) {
+        return sectionRepository.findById(dto.getId()).map((section) ->{
+            section.setTitulo(dto.getTitulo());
+            section.setVisible(dto.isVisible());
+            section.setActualizadoEn(LocalDateTime.now());
+            return CourseMapper.toSectionDTO(sectionRepository.save(section));
+        }).orElseThrow(
+                () -> new ApiException("No se encontro una seccion con el id: " + dto.getId(), HttpStatus.NOT_FOUND));
+
+    }
+
+    public LessonDTO updateCourseLesson(LessonDTO dto) {
+        return lecturaRepository.findById(dto.getId()).map((lesson) ->{
+            lesson.setTitulo(dto.getTitulo());
+            lesson.setUrl(dto.getUrl());
+            lesson.setContenido(dto.getContenido());
+            lesson.setTipo(dto.getTipo());
+            lesson.setVisible(dto.isVisible());
+            lesson.setActualizadoEn(LocalDateTime.now());
+            return CourseMapper.toLessonDTO(lecturaRepository.save(lesson));
+        }).orElseThrow(
+                () -> new ApiException("No se encontro una leccion con el id: " + dto.getId(), HttpStatus.NOT_FOUND));
     }
 }

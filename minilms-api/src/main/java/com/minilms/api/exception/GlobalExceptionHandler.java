@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -101,6 +102,19 @@ public class GlobalExceptionHandler {
         return ResponseHandler.generateErrorResponse(
                 "Acceso denegado. No tienes los permisos necesarios para realizar esta acción.", 
                 HttpStatus.FORBIDDEN
+        );
+    }
+
+    @ExceptionHandler(TransactionSystemException.class)
+    public ResponseEntity<?> handleTransactionSystemException(TransactionSystemException ex) {
+        Throwable rootCause = ex.getRootCause();
+        if (rootCause instanceof ConstraintViolationException) {
+            ConstraintViolationException cve = (ConstraintViolationException) rootCause;
+            return handleConstraintViolationException(cve);
+        }
+        return ResponseHandler.generateErrorResponse(
+                "Error al procesar la transacción. Causa: " + ex.getMessage(),
+                HttpStatus.INTERNAL_SERVER_ERROR
         );
     }
 

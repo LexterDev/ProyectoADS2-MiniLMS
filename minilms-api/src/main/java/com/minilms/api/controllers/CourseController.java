@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -74,6 +75,24 @@ public class CourseController {
     @PreAuthorize("hasRole('INSTRUCTOR')")
     public ResponseEntity<ApiResponse<LessonDTO>> createCourseLesson(@RequestBody LessonDTO dto) {
         return ResponseHandler.generateResponse(courseService.createCourseLesson(dto));
+    }
+
+    @PutMapping("/update")
+    @PreAuthorize("hasRole('INSTRUCTOR')")
+    public ResponseEntity<ApiResponse<CourseDTO>> updateCourse(@RequestBody CourseDTO dto) {
+        return ResponseHandler.generateResponse(courseService.updateCourse(dto));
+    }
+
+    @PutMapping("/updateSection")
+    @PreAuthorize("hasRole('INSTRUCTOR')")
+    public ResponseEntity<ApiResponse<SectionDTO>> updateCourseSection(@RequestBody SectionDTO dto) {
+        return ResponseHandler.generateResponse(courseService.updateCourseSection(dto));
+    }
+
+    @PutMapping("/updateLesson")
+    @PreAuthorize("hasRole('INSTRUCTOR')")
+    public ResponseEntity<ApiResponse<LessonDTO>> updateCourseLesson(@RequestBody LessonDTO dto) {
+        return ResponseHandler.generateResponse(courseService.updateCourseLesson(dto));
     }
 
 }

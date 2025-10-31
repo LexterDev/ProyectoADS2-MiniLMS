@@ -1,5 +1,6 @@
 package com.minilms.api.utils;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -31,13 +32,14 @@ public class LmsUtils {
 
     public static User getUserLoggedIn() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        
+
         if (authentication == null || !authentication.isAuthenticated()) {
-            throw new ApiException("No hay un usuario autenticado en el contexto de seguridad.", HttpStatus.UNAUTHORIZED);
+            throw new ApiException("No hay un usuario autenticado en el contexto de seguridad.",
+                    HttpStatus.UNAUTHORIZED);
         }
 
         Object principal = authentication.getPrincipal();
-        if (principal instanceof User) { 
+        if (principal instanceof User) {
             return (User) principal;
         }
 
@@ -46,5 +48,27 @@ public class LmsUtils {
 
     public static Long getLoggedInUserId() {
         return getUserLoggedIn().getId();
+    }
+
+    public static boolean nullSafetyValue(Object object) {
+        if (object == null) {
+            return false;
+        }
+        switch (object.getClass().getSimpleName()) {
+            case "String":
+                return !((String) object).isEmpty();
+            case "Integer":
+                return ((Integer) object) != 0;
+            case "Long":
+                return ((Long) object) != 0;
+            case "Double":
+                return ((Double) object) != 0;
+            case "Float":
+                return ((Float) object) != 0;
+            case "BigDecimal":
+                return ((BigDecimal) object).compareTo(BigDecimal.ZERO) != 0;
+            default:
+                return true;
+        }
     }
 }
