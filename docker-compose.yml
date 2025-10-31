@@ -1,38 +1,40 @@
 services:
   db:
-    image: postgres:16-alpine
+    image: postgres:15
     container_name: minilms-db
     restart: always
-    env_file:
-      - ./.env
     environment:
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-    # La sección 'ports' se elimina para producción por seguridad.
     volumes:
       - minilms-db-data:/var/lib/postgresql/data
     networks:
       - minilms-network
 
   api:
-    # La imagen se especificará en los archivos de override.
-    # Para desarrollo: build: .
-    # Para producción: image: tu-usuario/tu-imagen:tag
     container_name: minilms-api
-    restart: always # Cambiado a 'always' para mayor resiliencia en producción
+    restart: always
+    build:
+      dockerfile: Dockerfile
     depends_on:
       - db
-    ports:
-      - "8080:8080"
-    env_file:
-      - ./.env
+    env_file: ./.env
     environment:
+      - JWT_SECRET=${JWT_SECRET}
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/${POSTGRES_DB}
       - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
       - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
-      # El valor de DDL_AUTO se definirá en el archivo de override
-      - JWT_SECRET=${JWT_SECRET}
+    networks:
+      - minilms-network
+
+  frontend:
+    container_name: minilms-frontend
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - api
     networks:
       - minilms-network
 
