@@ -1,0 +1,91 @@
+<!-- 
+  Formulario de Filtros
+  Refactorizado a 100% Tailwind para soportar modo oscuro.
+-->
+<form [formGroup]="filtersForm" class="bg-background-light dark:bg-background-dark border border-primary/20 dark:border-primary/30 rounded-xl p-6">
+  
+  <!-- Campo de Búsqueda -->
+  <div class="mb-4">
+    <label for="search" class="block text-sm font-medium text-background-dark dark:text-background-light/90">
+      Búsqueda
+    </label>
+    <div class="relative mt-1">
+      <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+        <span class="material-symbols-outlined text-lg text-background-dark/50 dark:text-background-light/50">search</span>
+      </div>
+      <input 
+        type="text" 
+        id="search" 
+        formControlName="search"
+        placeholder="Buscar por título o descripción..." 
+        class="block w-full rounded-xl border border-primary/30 dark:border-primary/40 bg-background-light dark:bg-background-dark/50 py-3 pl-10 pr-4 text-sm focus:border-primary focus:ring-primary"
+      />
+    </div>
+  </div>
+
+  <!-- Campo de Categoría -->
+  <div class="mb-4">
+    <label for="category" class="block text-sm font-medium text-background-dark dark:text-background-light/90">
+      Categoría
+    </label>
+    <select 
+      id="category" 
+      formControlName="category"
+      class="block w-full rounded-xl border border-primary/30 dark:border-primary/40 bg-background-light dark:bg-background-dark/50 py-3 px-4 text-sm mt-1 focus:border-primary focus:ring-primary"
+    >
+      <option value="todos">Todas las categorías</option>
+      <option value="Desarrollo Web">Desarrollo Web</option>
+      <option value="Diseño UX/UI">Diseño UX/UI</option>
+      <option value="Marketing Digital">Marketing Digital</option>
+      <option value="Ciencia de Datos">Ciencia de Datos</option>
+      <option value="Negocios">Negocios</option>
+      <option value="Idiomas">Idiomas</option>
+    </select>
+  </div>
+
+  <!-- Campo de Nivel -->
+  <div class="mb-4">
+    <label for="level" class="block text-sm font-medium text-background-dark dark:text-background-light/90">
+      Nivel
+    </label>
+    <select 
+      id="level" 
+      formControlName="level"
+      class="block w-full rounded-xl border border-primary/30 dark:border-primary/40 bg-background-light dark:bg-background-dark/50 py-3 px-4 text-sm mt-1 focus:border-primary focus:ring-primary"
+    >
+      <option value="todos">Todos los niveles</option>
+      <option value="principiante">Principiante</option>
+      <option value="intermedio">Intermedio</option>
+      <option value="avanzado">Avanzado</option>
+    </select>
+  </div>
+
+  <!-- Campo de Precio -->
+  <div>
+    <label class="block text-sm font-medium text-background-dark dark:text-background-light/90">
+      Precio
+    </label>
+    <div class="flex flex-col gap-2 mt-2">
+      <div class="flex items-center">
+        <input id="price-todos" type="radio" value="todos" formControlName="price" class="h-4 w-4 text-primary focus:ring-primary border-primary/30 dark:border-primary/40">
+        <label for="price-todos" class="ml-2 text-sm text-background-dark dark:text-background-light/90">
+          Todos
+        </label>
+      </div>
+      <div class="flex items-center">
+        <input id="price-gratis" type="radio" value="gratis" formControlName="price" class="h-4 w-4 text-primary focus:ring-primary border-primary/30 dark:border-primary/40">
+        <label for="price-gratis" class="ml-2 text-sm text-background-dark dark:text-background-light/90">
+          Gratis
+        </label>
+      </div>
+      <div class="flex items-center">
+        <input id="price-pago" type="radio" value="pago" formControlName="price" class="h-4 w-4 text-primary focus:ring-primary border-primary/30 dark:border-primary/40">
+        <label for="price-pago" class="ml-2 text-sm text-background-dark dark:text-background-light/90">
+          De pago
+        </label>
+      </div>
+    </div>
+  </div>
+
+</form>
+

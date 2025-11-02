@@ -1,0 +1,49 @@
+<!-- 
+  Página de Lista de Cursos
+  - Contiene una sección principal para el título y una cuadrícula para filtros y cursos.
+--><main class="min-h-screen py-10 bg-background-light dark:bg-background-dark text-background-dark dark:text-background-light">
+  <div class="mx-auto max-w-7xl px-4 md:px-8">
+    
+    <!-- Título de la Página --><h1 class="text-3xl font-extrabold tracking-tight mb-8">Explorar Cursos</h1>
+
+    <!-- 
+      Cuadrícula principal: 1/3 para filtros, 2/3 para cursos
+      Se adapta en móviles a una sola columna.
+    --><div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      
+      <!-- Columna de Filtros --><div class="lg:col-span-1">
+        <!-- 
+          Nuestro componente de filtros.
+          Cuando emite un cambio (filterChange), llamamos al método applyFilters.
+        --><app-course-filters (filterChange)="applyFilters($event)"></app-course-filters>
+      </div>
+
+      <!-- Columna de Lista de Cursos --><div class="lg:col-span-3">
+        <!-- Título para la lista de cursos --><h2 class="text-2xl font-bold tracking-tight mb-6">Resultados ({{ filteredCourses.length }})</h2>
+
+        <!-- 
+          Cuadrícula de Tarjetas de Cursos
+          - Se adapta automáticamente a 1, 2 o 3 columnas.
+          - Usamos @for para recorrer la lista de cursos filtrados.
+        --><div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          @for (course of filteredCourses; track course.id) {
+            <!-- 
+              Nuestro componente de tarjeta de curso.
+              Le pasamos los datos del curso individual a sus @Input().
+            --><app-course-card
+              [imageUrl]="course.imageUrl"
+              [title]="course.title"
+              [description]="course.description">
+            </app-course-card>
+          } @empty {
+            <!-- Mensaje si no hay cursos que coincidan con los filtros --><div class="col-span-full text-center py-10 text-background-dark/70 dark:text-background-light/70">
+              <p>No se encontraron cursos que coincidan con los filtros aplicados.</p>
+              <p class="mt-2">Intenta ajustar tus criterios de búsqueda.</p>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
