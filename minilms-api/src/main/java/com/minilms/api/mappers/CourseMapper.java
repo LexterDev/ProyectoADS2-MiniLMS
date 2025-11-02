@@ -31,8 +31,7 @@ public class CourseMapper {
         }
 
         if (entity.getInstructor() != null) {
-            dto.setInstructorId(entity.getInstructor().getId());
-            dto.setInstructorNombre(entity.getInstructor().getNombre());
+            dto.setInstructor(UserMapper.toDTO(entity.getInstructor()));
         }
 
         if (entity.getCategoria() != null) {

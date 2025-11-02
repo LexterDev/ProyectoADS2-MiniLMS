@@ -3,6 +3,7 @@ package com.minilms.api.mappers;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import com.minilms.api.dto.course.CourseDTO;
 import com.minilms.api.dto.inscription.InscriptionDTO;
 import com.minilms.api.dto.inscription.InscriptionProgressDTO;
 import com.minilms.api.entities.Inscripcion;
@@ -73,6 +74,15 @@ public class InscriptionMapper {
         entity.setNotaEvaluacion(dto.getNotaEvaluacion());
 
         return entity;
+    }
+
+    public static CourseDTO toCourseDTO(Inscripcion entity) {
+        if (entity == null) {
+            return null;
+        }
+        CourseDTO dto = CourseMapper.toDTO(entity.getCurso());
+        dto.setInscripcion(toDTO(entity));
+        return dto;
     }
 
 }

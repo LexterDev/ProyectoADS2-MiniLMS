@@ -23,15 +23,16 @@ public interface CursoRepository extends JpaRepository<Curso, Long> {
     /**
      * CORREGIDO: Encuentra todos los cursos que tienen un estado particular,
      * buscando por el campo 'codigo' de la entidad Estado relacionada.
-     * Esencial para que los moderadores vean los cursos pendientes de aprobación (ej. "PEND").
+     * Esencial para que los moderadores vean los cursos pendientes de aprobación
+     * (ej. "PEND").
      */
     List<Curso> findByEstadoCodigo(String codigo);
 
     @Query("""
-        SELECT c FROM Curso c 
-        WHERE LOWER(c.titulo) LIKE LOWER(CONCAT('%', :search, '%'))
-           OR LOWER(c.descripcion) LIKE LOWER(CONCAT('%', :search, '%'))
-    """)
+                SELECT c FROM Curso c
+                WHERE LOWER(c.titulo) LIKE LOWER(CONCAT('%', :search, '%'))
+                   OR LOWER(c.descripcion) LIKE LOWER(CONCAT('%', :search, '%'))
+            """)
     Page<Curso> findCoursesBySearch(@Param("search") String search, Pageable pageable);
 
     List<Curso> findByCategoriaId(Long categoryId);
@@ -43,4 +44,12 @@ public interface CursoRepository extends JpaRepository<Curso, Long> {
             where c.id = :id
             """)
     Optional<Curso> findDetailsById(@Param("id") Long id);
+
+    @Query("""
+            SELECT i.curso
+            FROM Inscripcion i
+            WHERE 
+                i.estudiante.id = :usuario_id
+                """)
+    List<Curso> findCoursesByEstudiante(@Param("usuario_id") Long usuarioId);
 }

@@ -1,12 +1,14 @@
 package com.minilms.api.services;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.minilms.api.config.responseApi.ApiException;
+import com.minilms.api.dto.course.CourseDTO;
 import com.minilms.api.dto.inscription.InscriptionDTO;
 import com.minilms.api.dto.inscription.InscriptionProgressDTO;
 import com.minilms.api.entities.Curso;
@@ -122,4 +124,7 @@ public class EnrollService extends LmsUtils {
         return repository.save(inscripcion);
     }
 
+    public List<CourseDTO> findCourses() {
+        return repository.findByEstudiante(getUserLoggedIn()).stream().map(InscriptionMapper::toCourseDTO).toList();
+    }
 }
