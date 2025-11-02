@@ -1,0 +1,24 @@
+<!-- 
+  Sección Categorías
+
+-->
+<section class="mt-16">
+  <h2 class="text-2xl font-bold tracking-tight text-background-dark dark:text-background-light">
+    Categorías populares
+  </h2>
+  
+  <!-- Grid de "chips" de categorías -->
+  <div class="mt-6 flex flex-wrap gap-3">
+    
+    <!-- Usamos @for para recorrer el array de categorías del .ts -->
+    @for (category of categories; track category) {
+      <div class="flex h-9 shrink-0 items-center justify-center rounded-full bg-primary/10 dark:bg-primary/20 px-4 cursor-pointer transition-colors hover:bg-primary/20 dark:hover:bg-primary/30">
+        <p class="text-sm font-medium text-primary">
+          {{ category }}
+        </p>
+      </div>
+    }
+
+  </div>
+</section>
+

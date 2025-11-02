@@ -1,0 +1,21 @@
+
+<div class="flex flex-col gap-4 overflow-hidden rounded-xl border border-primary/20 dark:border-primary/30">
+  
+  <!-- 
+    Imagen del Curso 
+    Usamos [style.background-image] para poner la URL que recibimos del @Input()
+  -->
+  <div 
+    class="w-full aspect-video bg-cover bg-center rounded-b-lg" 
+    [style.background-image]="'url(' + imageUrl + ')'">
+  </div>
+  
+  <!-- Información del Curso -->
+  <div class="p-6 pt-0 text-background-dark dark:text-background-light">
+    <p class="font-semibold">{{ title }}</p>
+    <p class="text-sm text-background-dark/70 dark:text-background-light/70">
+      {{ description }}
+    </p>
+  </div>
+</div>
+
