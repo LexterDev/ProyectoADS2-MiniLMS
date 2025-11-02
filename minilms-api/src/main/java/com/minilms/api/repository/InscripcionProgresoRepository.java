@@ -12,4 +12,10 @@ public interface InscripcionProgresoRepository extends JpaRepository<Inscripcion
 
     Optional<InscripcionProgreso> findByInscripcionIdAndLeccionId(Long inscripcionId, Long leccionId);
 
+    /**
+     * Cuenta las lecciones que ha completado un estudiante
+     * para una inscripción por curso específica.
+     */
+    long countByInscripcionIdAndCompletadoTrue(Long inscripcionId);
+
 }

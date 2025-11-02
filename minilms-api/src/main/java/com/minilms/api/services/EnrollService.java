@@ -11,6 +11,7 @@ import com.minilms.api.dto.inscription.InscriptionDTO;
 import com.minilms.api.dto.inscription.InscriptionProgressDTO;
 import com.minilms.api.entities.Curso;
 import com.minilms.api.entities.Estado;
+import com.minilms.api.entities.Inscripcion;
 import com.minilms.api.entities.InscripcionProgreso;
 import com.minilms.api.entities.Leccion;
 import com.minilms.api.enums.EstadoEnum;
@@ -79,10 +80,46 @@ public class EnrollService extends LmsUtils {
                         return p;
                     });
 
-            return InscriptionMapper.toDTO(progresoRepository.save(progress));
+            InscripcionProgreso aux = progresoRepository.save(progress);
+            Inscripcion auxIns = updateInscriptionProgress(ins);
+            if(auxIns != null){
+                aux.setInscripcion(auxIns);
+            }
+            return InscriptionMapper.toDTO(aux);
         }).orElseThrow(
                 () -> new ApiException("No se encontro una inscripcion con el id: " + dto.getId(),
                         HttpStatus.NOT_FOUND));
+    }
+
+    public Inscripcion updateInscriptionProgress(Inscripcion inscripcion) {
+
+        Long cursoId = inscripcion.getCurso().getId();
+        long lessonTotal = lessonRepository.countByCursoId(cursoId);
+
+        if (lessonTotal == 0) {
+            inscripcion.setProgreso(0);
+            inscripcion.setCompletado(false);
+            inscripcion.setFechaFinCurso(null);
+            repository.save(inscripcion);
+            return null;
+        }
+
+        long completedLesson = progresoRepository.countByInscripcionIdAndCompletadoTrue(inscripcion.getId());
+
+        double porcentaje = ((double) completedLesson / lessonTotal) * 100.0;
+        int progresoRedondeado = (int) Math.round(porcentaje);
+
+        inscripcion.setProgreso(progresoRedondeado);
+
+        if (progresoRedondeado >= 100) {
+            inscripcion.setCompletado(true);
+            inscripcion.setFechaFinCurso(LocalDateTime.now());
+        } else {
+            inscripcion.setCompletado(false);
+            inscripcion.setFechaFinCurso(null);
+        }
+
+        return repository.save(inscripcion);
     }
 
 }

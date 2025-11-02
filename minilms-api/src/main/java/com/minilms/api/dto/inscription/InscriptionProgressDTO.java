@@ -14,5 +14,6 @@ public class InscriptionProgressDTO {
     private boolean completado = false;
     private String fechaCompletado;
     private BigDecimal notaEvaluacion;
+    private Integer progresoCurso;
 
 }
