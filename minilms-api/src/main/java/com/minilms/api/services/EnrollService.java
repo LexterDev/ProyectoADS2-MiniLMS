@@ -1,0 +1,88 @@
+package com.minilms.api.services;
+
+import java.time.LocalDateTime;
+import java.util.Optional;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+
+import com.minilms.api.config.responseApi.ApiException;
+import com.minilms.api.dto.inscription.InscriptionDTO;
+import com.minilms.api.dto.inscription.InscriptionProgressDTO;
+import com.minilms.api.entities.Curso;
+import com.minilms.api.entities.Estado;
+import com.minilms.api.entities.InscripcionProgreso;
+import com.minilms.api.entities.Leccion;
+import com.minilms.api.enums.EstadoEnum;
+import com.minilms.api.mappers.InscriptionMapper;
+import com.minilms.api.repository.CursoRepository;
+import com.minilms.api.repository.EstadoRepository;
+import com.minilms.api.repository.InscripcionProgresoRepository;
+import com.minilms.api.repository.InscripcionRepository;
+import com.minilms.api.repository.LeccionRepository;
+import com.minilms.api.utils.LmsUtils;
+
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
+public class EnrollService extends LmsUtils {
+
+    private final InscripcionRepository repository;
+    private final EstadoRepository estadoRepository;
+    private final CursoRepository cursoRepository;
+    private final LeccionRepository lessonRepository;
+    private final InscripcionProgresoRepository progresoRepository;
+
+    public InscriptionDTO inscriptionCourse(InscriptionDTO dto) {
+        return InscriptionMapper.toEntity(dto).map(
+                (entity) -> {
+
+                    entity.setEstudiante(getUserLoggedIn());
+                    Optional<Estado> estado = estadoRepository.findByCodigo(EstadoEnum.INSCRITO.getCodigo());
+                    Optional<Curso> curso = cursoRepository.findById(dto.getCursoId());
+                    if (estado.isEmpty()) {
+                        throw new ApiException(
+                                "No se encontro un estado con el codigo: " + EstadoEnum.INSCRITO.getCodigo(),
+                                HttpStatus.BAD_REQUEST);
+                    }
+                    if (curso.isEmpty()) {
+                        throw new ApiException("No se encontro un curso con el id: " + dto.getCursoId(),
+                                HttpStatus.BAD_REQUEST);
+                    }
+                    entity.setEstado(estado.get());
+                    entity.setCurso(curso.get());
+
+                    return InscriptionMapper.toDTO(repository.save(entity));
+                }).orElseThrow(
+                        () -> new RuntimeException("Ocurrio un error al convertir el objeto de entrada a entidad"));
+    }
+
+    public InscriptionProgressDTO markLesson(InscriptionProgressDTO dto) {
+        return repository.findByEstudianteIdAndCursoId(getLoggedInUserId(), dto.getCursoId()).map(ins -> {
+            Leccion lesson = lessonRepository.findById(dto.getLeccionId()).orElseThrow(
+                    () -> new ApiException("No se encontro una leccion con el id: " + dto.getLeccionId(),
+                            HttpStatus.NOT_FOUND));
+
+            InscripcionProgreso progress = progresoRepository
+                    .findByInscripcionIdAndLeccionId(ins.getId(), lesson.getId()).map(
+                            p -> {
+                                p.setCompletado(dto.isCompletado());
+                                p.setFechaCompletado(LocalDateTime.now());
+                                p.setNotaEvaluacion(dto.getNotaEvaluacion());
+                                return p;
+                            })
+                    .orElseGet(() -> {
+                        InscripcionProgreso p = InscriptionMapper.toEntity(dto);
+                        p.setInscripcion(ins);
+                        p.setLeccion(lesson);
+                        return p;
+                    });
+
+            return InscriptionMapper.toDTO(progresoRepository.save(progress));
+        }).orElseThrow(
+                () -> new ApiException("No se encontro una inscripcion con el id: " + dto.getId(),
+                        HttpStatus.NOT_FOUND));
+    }
+
+}

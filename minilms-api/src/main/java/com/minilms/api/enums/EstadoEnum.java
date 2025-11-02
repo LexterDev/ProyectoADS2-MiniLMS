@@ -5,7 +5,8 @@ public enum EstadoEnum {
     INACTIVO("INA", "Inactivo"),
     BORRADOR("BOR", "Borrador"),
     EN_REVISION("REV", "En Revisión"),
-    PUBLICADO("PUB", "Publicado");
+    PUBLICADO("PUB", "Publicado"),
+    INSCRITO("INS", "Inscrito");
     
     private final String codigo;
     private final String descripcion;
