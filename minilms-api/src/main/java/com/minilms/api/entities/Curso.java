@@ -92,4 +92,7 @@ public class Curso {
 
     @OneToMany(mappedBy = "curso", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Seccion> secciones;
+
+    @OneToMany(mappedBy = "curso", fetch = FetchType.LAZY)
+    private List<Inscripcion> inscripciones;
 }

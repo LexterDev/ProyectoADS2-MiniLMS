@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.minilms.api.dto.file.FileDTO;
 import com.minilms.api.dto.inscription.InscriptionDTO;
 import com.minilms.api.dto.user.InstructorDTO;
+import com.minilms.api.dto.user.StudentDTO;
 
 import lombok.Data;
 
@@ -30,5 +31,6 @@ public class CourseDTO {
     private InstructorDTO instructor;
 
     private List<SectionDTO> secciones;
+    private List<StudentDTO> estudiantes;
 
 }

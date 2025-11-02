@@ -211,4 +211,8 @@ public class CourseService extends LmsUtils {
         }).orElseThrow(
                 () -> new ApiException("No se encontro un curso con el id: " + id, HttpStatus.NOT_FOUND));
     }
+
+    public List<CourseDTO> findCoursesDashboardByInstructor() {
+        return repository.findByInstructorId(getLoggedInUserId()).stream().map(CourseMapper::toDTOToInstructor).toList();
+    }
 }
