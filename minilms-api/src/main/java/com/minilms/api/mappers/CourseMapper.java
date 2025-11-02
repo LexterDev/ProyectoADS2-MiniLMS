@@ -161,4 +161,35 @@ public class CourseMapper {
 
         return Optional.of(entity);
     }
+
+    public static CourseDTO toDTOToInstructor(Curso entity) {
+        if (entity == null) {
+            return null;
+        }
+
+        CourseDTO dto = new CourseDTO();
+        dto.setId(entity.getId());
+        dto.setTitulo(entity.getTitulo());
+        dto.setDescripcion(entity.getDescripcion());
+        dto.setPrecio(entity.getPrecio());
+
+        if (entity.getEstado() != null) {
+            dto.setEstadoCodigo(entity.getEstado().getCodigo());
+            dto.setEstadoNombre(entity.getEstado().getDescripcion());
+        }
+
+        if (entity.getCategoria() != null) {
+            dto.setCategoriaId(entity.getCategoria().getId());
+            dto.setCategoriaNombre(entity.getCategoria().getNombre());
+        }
+        dto.setEstudiantes(
+                entity.getInscripciones().stream().map(i -> UserMapper.toDTOStudent(i.getEstudiante())).toList());
+
+        dto.setCreadoEn(LmsUtils.formatDateTime(entity.getCreadoEn()));
+        dto.setActualizadoEn(LmsUtils.formatDateTime(entity.getActualizadoEn()));
+
+        dto.setAdjunto(FileMapper.toDTO(entity.getAdjunto()));
+
+        return dto;
+    }
 }
