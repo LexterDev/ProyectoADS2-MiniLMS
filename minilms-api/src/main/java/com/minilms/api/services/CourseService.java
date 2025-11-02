@@ -3,6 +3,7 @@ package com.minilms.api.services;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -14,12 +15,14 @@ import com.minilms.api.config.responseApi.PageResponse;
 import com.minilms.api.dto.course.CourseDTO;
 import com.minilms.api.dto.course.LessonDTO;
 import com.minilms.api.dto.course.SectionDTO;
+import com.minilms.api.entities.Adjunto;
 import com.minilms.api.entities.Categoria;
 import com.minilms.api.entities.Curso;
 import com.minilms.api.entities.Estado;
 import com.minilms.api.entities.Seccion;
 import com.minilms.api.enums.EstadoEnum;
 import com.minilms.api.mappers.CourseMapper;
+import com.minilms.api.mappers.FileMapper;
 import com.minilms.api.repository.CategoriaRepository;
 import com.minilms.api.repository.CursoRepository;
 import com.minilms.api.repository.EstadoRepository;
@@ -39,6 +42,7 @@ public class CourseService extends LmsUtils {
     private final LeccionRepository lecturaRepository;
     private final EstadoRepository estadoRepository;
     private final CategoriaRepository categoriaRepository;
+    private final FileService fileService;
 
     public PageResponse<CourseDTO> findCourses(Optional<String> txt, int page, int size) {
 
@@ -82,6 +86,12 @@ public class CourseService extends LmsUtils {
             }
             curso.setEstado(estado.get());
             curso.setCategoria(categoria.get());
+
+            FileMapper.toMultipartFile(dto.getAdjunto()).ifPresent(file->{
+                fileService.uploadFile(file).ifPresent(adj->{
+                    curso.setAdjunto(adj);
+                });
+            });
 
             return CourseMapper.toDTO(repository.save(curso));
         }).orElseThrow(
@@ -143,6 +153,7 @@ public class CourseService extends LmsUtils {
             course.setDescripcion(dto.getDescripcion());
             course.setPrecio(dto.getPrecio());
             course.setActualizadoEn(LocalDateTime.now());
+            AtomicReference<Adjunto> prev = new AtomicReference<>();
 
             if(nullSafetyValue(dto.getEstadoCodigo())) {
                 estadoRepository.findByCodigo(dto.getEstadoCodigo()).ifPresent(course::setEstado);
@@ -150,7 +161,19 @@ public class CourseService extends LmsUtils {
             if(nullSafetyValue(dto.getCategoriaId())) {
                 categoriaRepository.findById(dto.getCategoriaId()).ifPresent(course::setCategoria);
             }
-            return CourseMapper.toDTO(repository.save(course));
+            
+            FileMapper.toMultipartFile(dto.getAdjunto()).ifPresent(file->{
+                fileService.uploadFile(file).ifPresent(fileUploaded->{
+                    prev.set(course.getAdjunto());
+                    course.setAdjunto(fileUploaded);
+                });
+            });
+            
+            Curso courseSaved = repository.save(course);
+            if (prev.get() != null) {
+                fileService.deleteFile(prev.get().getId());
+            }
+            return CourseMapper.toDTO(repository.save(courseSaved));
         }).orElseThrow(
                 () -> new ApiException("No se encontro un curso con el id: " + dto.getId(), HttpStatus.NOT_FOUND));
     }
