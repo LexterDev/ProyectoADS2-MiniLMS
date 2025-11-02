@@ -67,6 +67,12 @@ public class SecurityConfig {
                 .requestMatchers("/api/moderator/**").hasRole(UserRole.Moderador.getCodigo())
                 .requestMatchers("/api/instructor/**").hasAnyRole(UserRole.Instructor.getCodigo(), UserRole.Administrador.getCodigo())
                 .requestMatchers("/api/student/**").hasAnyRole(UserRole.Estudiante.getCodigo(), UserRole.Instructor.getCodigo(), UserRole.Administrador.getCodigo())
+
+                // Acceso a la UI de Swagger y al JSON de la API
+                .requestMatchers("/swagger-ui.html").permitAll()
+                .requestMatchers("/swagger-ui/**").permitAll()
+                .requestMatchers("/v3/api-docs").permitAll()
+                .requestMatchers("/v3/api-docs/**").permitAll()
                 
                 // Cualquier otra request requiere autenticación
                 .anyRequest().authenticated()
