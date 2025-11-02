@@ -1,157 +1,44 @@
-<!-- Contenedor principal de la landing page -->
-<main class="main-container">
-  <div class="content-wrapper">
+<!-- 
+  Contenedor principal de la página de aterrizaje
+  100% Tailwind
+-->
+<main class="w-full bg-background-light dark:bg-background-dark">
 
+  <!-- 
+    Envoltura de contenido
+    - Centra el contenido (mx-auto)
+    - Le da un ancho máximo (max-w-7xl)
+    - Le da padding (px-4, etc.)
+  -->
+  <div class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 lg:py-20">
+
+    <!-- 
+      ¡Aquí es donde ocurre la magia!
+      En lugar de tener HTML gigante, solo llamamos a los selectores
+      de los componentes que hemos creado.
+    -->
+    
     <!-- Sección Hero -->
-    <section class="hero-section">
-      <div class="hero-grid">
-        <div class="hero-content">
-          <div class="hero-text">
-            <h1 class="hero-title">
-              Aprende a tu propio ritmo
-            </h1>
-            <p class="hero-subtitle">
-              Explora una amplia gama de cursos en línea impartidos por expertos de la industria. Mejora tus habilidades y avanza en tu carrera con EduByte.
-            </p>
-          </div>
-          <div class="search-bar">
-            <div class="search-input-wrapper">
-              <span class="material-symbols-outlined search-icon"> search </span>
-              <input class="form-input" placeholder="Busca cursos"/>
-            </div>
-            <button class="btn btn-primary search-button">
-              Buscar
-            </button>
-          </div>
-        </div>
-        <div class="hero-image" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCw27kg6iThlu8Pe_193cYULYZhhprP_vOrTbwT3Qk0vuAkFYShhKc089LjnuE3kCijglidnc1F-dt191-kXbwGumg-KYNpkCy9GVXsnBhhocDD8e_rNYZ3bHniczHqyUY-pBadRBNuYhfGmXVjFMtrDRjWQV_JCR_1TgeQmD7yCdNN1iXlMUg8nuUJOAc3OmXActvJC8gGFV9oAJH4nhNP03yExR1pT8Px9AlRU3u23sGGdqyOaGhQrufsaK2xv5zzr-bfJ6Pc4qs");'></div>
-      </div>
-    </section>
+    <app-hero></app-hero>
 
-    <!-- Sección de Estadísticas -->
-    <section class="stats-section">
-      <div class="stat-card">
-        <p class="stat-title">Cursos</p>
-        <p class="stat-value">10,000+</p>
-      </div>
-      <div class="stat-card">
-        <p class="stat-title">Estudiantes</p>
-        <p class="stat-value">500,000+</p>
-      </div>
-      <div class="stat-card">
-        <p class="stat-title">Instructores</p>
-        <p class="stat-value">1,000+</p>
-      </div>
-    </section>
+    <!-- Sección Estadísticas -->
+    <app-stats></app-stats>
 
-    <!-- Sección de Categorías -->
-    <section class="categories-section">
-      <h2 class="section-title">Categorías populares</h2>
-      <div class="categories-grid">
-        <div class="category-chip"><p>Desarrollo web</p></div>
-        <div class="category-chip"><p>Diseño UX/UI</p></div>
-        <div class="category-chip"><p>Marketing digital</p></div>
-        <div class="category-chip"><p>Ciencia de datos</p></div>
-        <div class="category-chip"><p>Negocios</p></div>
-        <div class="category-chip"><p>Idiomas</p></div>
-      </div>
-    </section>
+    <!-- Sección Categorías -->
+    <app-categories></app-categories>
 
-    <!-- Sección de Cursos Destacados -->
-    <section class="featured-section">
-      <h2 class="section-title">Cursos destacados</h2>
-      <div class="featured-grid">
-        <div class="course-card">
-          <div class="course-image" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCNmQ9MVdwXfj9buUq7UnjzK8cLCpOoHzujOnCTQ9HaJtqe3Qoq2PCbzeJxv-OfxSEPYzZ8ZsVmwlCFrnOnqPeR3T_3uMZNFWdWfHagDXq2RMg2uyFNi7v45z92vy6LtauYCyoJVfsql3oaRZQml9H1rRGp0UVS2TwKOMlFnf2pPBPwgMJDQizt4FlvaCpKQGp3ZueymEn2J5LoXoWzVclEe0GGG1AmRY_N1NwxtWTMvWxxnWy-sQy5WohMT2n4Iu_cAiTEbGF_Qx0");'></div>
-          <div class="course-info">
-            <p class="course-title">Desarrollo web completo</p>
-            <p class="course-description">Aprende a crear aplicaciones web modernas desde cero.</p>
-          </div>
-        </div>
-        <div class="course-card">
-          <div class="course-image" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA362_T9-3ZgbnPzyrOZrxzgch8gn8qVxSwVFKxM6m5k4MLA6zzuz7pcknEDDxiXNmxI5nPJRiUJvaQVc2UiF0j2zOUd0ErsFy5Ej0KOdLn7-RrxpWgVuosIEimx0Abuh_ioCqQNEX1RB-72a0eAsXC4bLyB307x0_QaMKV8AvaBcPhHvASLp8E-WwrVVr7URj3i0AL6niDtyKwnc0btd2b2CHtJ93xG5xOJ0H_DT4BqaxlD3CDXHYhuS9pIkgKotrDUWPaASsmlmM");'></div>
-          <div class="course-info">
-            <p class="course-title">Diseño UX/UI avanzado</p>
-            <p class="course-description">Domina las herramientas y técnicas de diseño centradas en el usuario.</p>
-          </div>
-        </div>
-        <div class="course-card">
-          <div class="course-image" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCCCQvHJYzHbFtRozxi60c371_3wlkdG2PybtXMF5YoA_7tDxCIdVNP5V0b6ZMsqMFJisGWoh1i6nkHqqkt3O1mdMRWnEX6z5tJOPgeQFAOVcY8AtEAFxus-4tCJsJ_V059CqbFEoAbFZQ9ocQY3KoWBBqeJkmmk9X7paQbiIwx_TY5G9kPlqGt1bEqO2V1TXnFirM98K1AsmuIoZT01zHvDvH1pXu8wjmPy3JtJfXnjCERDIk3jwHQ9AUFtkOcGq2WLAf9qeVs9Y4");'></div>
-          <div class="course-info">
-            <p class="course-title">Marketing digital para principiantes</p>
-            <p class="course-description">Descubre las estrategias clave para impulsar tu negocio en línea.</p>
-          </div>
-        </div>
-      </div>
-    </section>
+    <!-- Sección Cursos Destacados -->
+    <app-featured-courses></app-featured-courses>
 
-    <!-- Sección "Cómo funciona" -->
-    <section class="how-it-works-section">
-      <h2 class="section-title text-center">¿Cómo funciona?</h2>
-      <h3 class="section-subtitle text-center">Empieza a aprender en 3 sencillos pasos</h3>
-      <div class="steps-grid">
-        <div class="step-card">
-          <div class="step-icon-wrapper">
-            <span class="material-symbols-outlined step-icon"> search </span>
-          </div>
-          <h4 class="step-title">Explora nuestra biblioteca</h4>
-          <p class="step-description">Descubre miles de cursos en diversas áreas, desde tecnología hasta artes.</p>
-        </div>
-        <div class="step-card">
-          <div class="step-icon-wrapper">
-            <span class="material-symbols-outlined step-icon"> rule_folder </span>
-          </div>
-          <h4 class="step-title">Inscríbete en un curso</h4>
-          <p class="step-description">Elige el curso que mejor se adapte a tus intereses y comienza a aprender.</p>
-        </div>
-        <div class="step-card">
-          <div class="step-icon-wrapper">
-            <span class="material-symbols-outlined step-icon"> school </span>
-          </div>
-          <h4 class="step-title">Alcanza tus metas</h4>
-          <p class="step-description">Obtén nuevas habilidades y conocimientos para avanzar en tu carrera.</p>
-        </div>
-      </div>
-    </section>
+    <!-- Sección ¿Cómo funciona? -->
+    <app-how-it-works></app-how-it-works>
 
-    <!-- Sección de Testimonios -->
-    <section class="testimonials-section">
-      <h2 class="section-title text-center">Lo que dicen nuestros estudiantes</h2>
-      <div class="testimonials-grid">
-        <div class="testimonial-card">
-          <div class="testimonial-image" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCogbwxt6jVzeOrWq4KXCxY4ghk8FLPNhk0UaFZIjKWAzOM9nO-GknPnNXKnrliEA1gskqKHcV1P8cDJI1mnOxBURNUtWAXhxEokkG9alnLBYQ7wXDAR31xQpMloy5hV_ZnYMMrYoRqPAh1pnKAvMl2f-3CWMCRp0LxoyeMBy97B67WtzP2HGfKFVTZ2nzj00eLupmUD1zoOI51lISmg0DQejXOHAJjTxa6X80ywwPCrY8c2q2iS_Cy29BqigYe6QnXkllPKIk5ZrM");'></div>
-          <div class="testimonial-info">
-            <p class="testimonial-name">Ana García</p>
-            <p class="testimonial-quote">"EduByte me ha ayudado a cambiar mi carrera. Los cursos son excelentes y los instructores muy profesionales."</p>
-          </div>
-        </div>
-        <div class="testimonial-card">
-          <div class="testimonial-image" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuChcVBsVzPYe9BRjbX38QsSbHmh9U3yHSxtJYtSvzjw6z9kO4No1jVxL4J9byEd7PMvF2IZjlK9VtAtVyg1oJfgI8Bj4kLybzjl34IJbVRjeuSB4aqOciLRZFhKqJbtQQ6J0WAnaDMCl4XIfqysWwAQJBFKbtnLzFP7vjjd9ygyDBZU7i-0l8zQJY_Znzz0FVV73E_wCDdngFNso5ccoRPruGC_gw6UHBPHg7GkVcNaB4Squ7E77pOh7T50EqmuSPGdSVZPoKXaGB0");'></div>
-          <div class="testimonial-info">
-            <p class="testimonial-name">Carlos López</p>
-            <p class="testimonial-quote">"La flexibilidad de EduByte es perfecta para mi estilo de vida. Puedo aprender a mi propio ritmo y desde cualquier lugar."</p>
-          </div>
-        </div>
-        <div class="testimonial-card">
-          <div class="testimonial-image" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDVQi1nhHedf93xajeezRXRABtmbVxB4SjmiaRIR392erhXs8PJ8wl7M7MOkM42I8llEv2_RMpanx0WDQreQ_I2-5j19B_eyxqoRhnsqQ8MxRJyDCWvDV0aW05zFK_1gNaRRZb8j1be8263zb3btsh-NnUlpKWChXpmr2EFNMBqqEcx45OvkiGrmiC83xAcQNKsZVdr_s5m16yghr-B6LWUI08kBKlg3sLQNRO4uOwdsK4O_MbN6kGAuoMSSDM5Ob-rIwuHp7it21A");'></div>
-          <div class="testimonial-info">
-            <p class="testimonial-name">Sofía Martínez</p>
-            <p class="testimonial-quote">"Recomiendo EduByte a todos los que quieran adquirir nuevas habilidades. La calidad de los cursos es excepcional."</p>
-          </div>
-        </div>
-      </div>
-    </section>
+    <!-- Sección Testimonios -->
+    <app-testimonials></app-testimonials>
 
     <!-- Sección CTA (Call to Action) -->
-    <section class="cta-section">
-      <div class="cta-content">
-        <h2 class="cta-title">¡Empieza a aprender hoy mismo!</h2>
-        <p class="cta-subtitle">Regístrate gratis y descubre un mundo de conocimiento a tu alcance.</p>
-        <button class="btn btn-primary cta-button">
-          Explora nuestros cursos
-        </button>
-      </div>
-    </section>
+    <app-cta></app-cta>
 
   </div>
 </main>
+

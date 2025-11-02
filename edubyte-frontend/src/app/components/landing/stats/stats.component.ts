@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatCardModule } from '@angular/material/card';
+// 1. Eliminamos MatCardModule
 
+// Interfaz (¡buena práctica de tu compañero!)
 interface Stat {
   label: string;
   value: string;
@@ -9,19 +10,22 @@ interface Stat {
 
 @Component({
   selector: 'app-stats',
+  standalone: true, // <-- 2. Lo mantenemos standalone
   imports: [
-    CommonModule,
-    MatCardModule
+    CommonModule
+    // 3. MatCardModule eliminado
   ],
-  templateUrl: './stats.component.html',
-  styleUrl: './stats.component.css'
+  templateUrl: './stats.component.html'
+  // <-- 4. 'styleUrl' eliminado
 })
 export class StatsComponent {
 
-   stats: Stat[] = [
-    { label: 'Cursos', value: '10,000+' },
-    { label: 'Estudiantes', value: '500,000+' },
-    { label: 'Instructores', value: '1,000+' }
-  ];
+    // 5. La lógica del compañero se mantiene
+    stats: Stat[] = [
+     { label: 'Cursos', value: '10,000+' },
+     { label: 'Estudiantes', value: '500,000+' },
+     { label: 'Instructores', value: '1,000+' }
+   ];
 
 }
+

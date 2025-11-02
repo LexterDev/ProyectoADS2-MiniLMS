@@ -1,43 +1,59 @@
-<section class="bg-gradient-to-br from-purple-50 to-pink-50 pt-24 pb-16">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-      <!-- Left Content -->
-      <div class="space-y-6">
-        <h1 class="text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
+<!-- 
+  Contenedor de la sección Hero
+  ¡100% Tailwind y componentizado!
+-->
+
+<!-- 
+  ¡AQUÍ ESTÁ EL ARREGLO DEL MODO NEGRO! 
+  Añadimos bg-background-light y dark:bg-background-dark
+-->
+<section class="w-full py-10 lg:py-20 bg-background-light dark:bg-background-dark">
+
+  <!-- 
+    ¡AQUÍ ESTÁ EL ARREGLO DE LA IMAGEN!
+    Añadimos lg:grid-cols-2 y lg:gap-12
+  -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 lg:gap-12 items-center">
+
+    <!-- Contenido Izquierdo (Texto y Búsqueda) -->
+    <div class="flex flex-col gap-6 text-center lg:text-left">
+      <div class="flex flex-col gap-4">
+        <!-- ¡ARREGLO MODO NEGRO! -> dark:text-background-light -->
+        <h1 class="text-4xl font-extrabold tracking-tighter text-background-dark dark:text-background-light sm:text-5xl lg:text-6xl">
           Aprende a tu propio ritmo
         </h1>
-        <p class="text-lg text-gray-600 max-w-xl">
-          Explora una amplia gama de cursos en línea impartidos por expertos de la industria. 
-          Mejora tus habilidades y avanza en tu carrera con EduByte.
+        <!-- ¡ARREGLO MODO NEGRO! -> dark:text-background-light/70 -->
+        <p class="max-w-xl text-base text-background-dark/70 dark:text-background-light/70 mx-auto lg:mx-0">
+          Explora una amplia gama de cursos en línea impartidos por expertos de la industria. Mejora tus habilidades y avanza en tu carrera con EduByte.
         </p>
+      </div>
 
-        <!-- Search Bar -->
-        <div class="flex items-center bg-white rounded-lg shadow-md p-2 max-w-xl">
-          <mat-icon class="text-gray-400 ml-2">search</mat-icon>
+      <!-- Barra de Búsqueda (Conectada a ReactiveFormsModule) -->
+      <form [formGroup]="searchForm" (ngSubmit)="onSearch()" class="flex w-full max-w-md items-center space-x-2 mx-auto lg:mx-0">
+        <div class="relative flex-1">
+          <!-- ¡ARREGLO MODO NEGRO! -> dark:text-background-light/50 -->
+          <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-background-dark/50 dark:text-background-light/50"> search </span>
           <input 
-            type="text" 
-            [(ngModel)]="searchQuery"
+            type="text"
+            formControlName="query"
+            class="form-input w-full rounded-xl border-primary/30 bg-background-light dark:bg-background-dark dark:border-primary/40 pl-10 pr-2 py-3 text-background-dark dark:text-background-light placeholder:text-background-dark/50 dark:placeholder:text-background-light/50 focus:border-primary focus:ring-primary" 
             placeholder="Busca cursos"
-            class="flex-1 px-4 py-2 outline-none text-gray-700">
-          <button 
-            mat-raised-button 
-            color="primary"
-            (click)="onSearch()"
-            class="!bg-purple-600 !text-white !font-semibold">
-            Buscar
-          </button>
+          />
         </div>
-      </div>
-
-      <!-- Right Illustration -->
-      <div class="relative">
-        <div class="bg-gradient-to-br from-amber-200 to-amber-100 rounded-3xl p-8 shadow-xl">
-          <img 
-            src="assets/hero-illustration.png" 
-            alt="Student learning" 
-            class="w-full h-auto rounded-2xl">
-        </div>
-      </div>
+        <button type="submit" class="flex h-12 shrink-0 items-center justify-center rounded-xl bg-primary px-6 text-sm font-bold text-white hover:bg-primary/90">
+          Buscar
+        </button>
+      </form>
     </div>
+
+    <!-- Contenido Derecho (Imagen) -->
+    <!-- 
+      ¡AQUÍ ESTÁ EL ARREGLO DEL ESPACIO! 
+      Añadimos 'mt-12' (margen superior en móvil) y 'lg:mt-0' (quitamos el margen en pantallas grandes)
+    -->
+    <div class="w-full h-auto rounded-xl aspect-video bg-cover bg-center lg:col-start-2 mt-12 lg:mt-0" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCw27kg6iThlu8Pe_193cYULYZhhprP_vOrTbwT3Qk0vuAkFYShhKc089LjnuE3kCijglidnc1F-dt191-kXbwGumg-KYNpkCy9GVXsnBhhocDD8e_rNYZ3bHniczHqyUY-pBadRBNuYhfGmXVjFMtrDRjWQV_JCR_1TgeQmD7yCdNN1iXlMUg8nuUJOAc3OmXActvJC8gGFV9oAJH4nhNP03yExR1pT8Px9AlRU3u23sGGdqyOaGhQrufsaK2xv5zzr-bfJ6Pc4qs");'>
+    </div>
+
   </div>
 </section>
+

@@ -1,14 +1,22 @@
-<section class="py-12 bg-white">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <mat-card 
-        *ngFor="let stat of stats" 
-        class="!shadow-md hover:!shadow-xl transition-shadow duration-300 !rounded-xl">
-        <mat-card-content class="p-8">
-          <p class="text-sm font-medium text-gray-600 mb-2">{{ stat.label }}</p>
-          <p class="text-4xl font-bold text-gray-900">{{ stat.value }}</p>
-        </mat-card-content>
-      </mat-card>
+<!-- 
+  Sección Stats
+  Refactorizada a 100% Tailwind, eliminando <mat-card>.
+  Nota: No se usa <section> ni 'max-width' aquí, porque este componente
+  vive dentro del '.content-wrapper' de la página de landing.
+-->
+<div class="mt-16 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+  
+  <!-- 1. Reemplazamos *ngFor por @for -->
+  @for (stat of stats; track stat.label) {
+    
+    <!-- 2. Reemplazamos <mat-card> por un <div> con clases de Tailwind (con bordes y soporte de modo oscuro) -->
+    <div class="flex flex-col gap-2 rounded-xl border border-primary/20 dark:border-primary/30 p-6 text-background-dark dark:text-background-light">
+      
+      <!-- 3. Añadimos clases de texto para modo claro/oscuro -->
+      <p class="text-base font-medium text-background-dark/70 dark:text-background-light/70">{{ stat.label }}</p>
+      <p class="text-3xl font-bold tracking-tight">{{ stat.value }}</p>
+    
     </div>
-  </div>
-</section>
+  }
+</div>
+

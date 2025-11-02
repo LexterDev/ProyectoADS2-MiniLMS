@@ -1,28 +1,36 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatButtonModule } from '@angular/material/button';
-import { MatInputModule } from '@angular/material/input';
-import { MatIconModule } from '@angular/material/icon';
-import { FormsModule } from '@angular/forms';
+// ¡Refactorizado! Ya no se usa Angular Material ni FormsModule
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-hero',
+  standalone: true,
   imports: [
     CommonModule,
-    MatButtonModule,
-    MatInputModule,
-    MatIconModule,
-    FormsModule
+    ReactiveFormsModule // <-- ¡Usamos Reactive forms!
   ],
   templateUrl: './hero.component.html',
-  styleUrl: './hero.component.css'
+  // ¡Refactorizado! Ya no se usa hero.component.css
+  // styleUrl: './hero.component.css' 
 })
 export class HeroComponent {
 
-  searchQuery = '';
+  // ¡Refactorizado!
+  searchForm: FormGroup;
 
-  onSearch() {
-    console.log('Searching for:', this.searchQuery);
+  constructor(private fb: FormBuilder) {
+    // ¡AQUÍ ESTÁ EL ARREGLO!
+    // Ahora el FormGroup se inicializa con el control 'query'
+    this.searchForm = this.fb.group({
+      query: [''] 
+    });
   }
 
+  onSearch() {
+    if (this.searchForm.valid) {
+      console.log('Buscando:', this.searchForm.value.query);
+    }
+  }
 }
+
