@@ -8,11 +8,11 @@ import { RouterLink } from '@angular/router';
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule, // Importante para formularios reactivos
-    RouterLink           // Para el enlace de "Volver"
+    ReactiveFormsModule, 
+    RouterLink            
   ],
-  templateUrl: './forgot-password.component.html',
-  styleUrls: ['./forgot-password.component.css']
+  templateUrl: './forgot-password.component.html'
+
 })
 export class ForgotPasswordComponent {
   forgotPasswordForm: FormGroup;
@@ -51,16 +51,7 @@ export class ForgotPasswordComponent {
     // Por seguridad, no confirmes si el email existe o no.
     this.successMessage = 'Si existe una cuenta con este correo, recibirás un enlace para restablecer tu contraseña.';
     
-    // En un caso real, podrías manejar errores del backend así:
-    // this.authService.sendRecoveryEmail(this.f['email'].value).subscribe({
-    //   next: () => {
-    //     this.successMessage = 'Si existe una cuenta...';
-    //     this.forgotPasswordForm.reset();
-    //     this.submitted = false;
-    //   },
-    //   error: (err) => {
-    //     this.errorMessage = 'Ocurrió un error. Por favor, intenta más tarde.';
-    //   }
-    // });
+
   }
 }
+
