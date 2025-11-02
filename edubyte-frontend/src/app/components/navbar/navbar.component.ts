@@ -1,18 +1,22 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router'; // <-- 1. IMPORTANTE
+import { Router, RouterLink, RouterLinkActive } from '@angular/router'; // <-- 1. IMPORTANTE
 
 @Component({
   selector: 'app-navbar',
   standalone: true, 
   imports: [
     CommonModule,
-    RouterLink // <-- 2. AÑADIDO
+    RouterLink,
+    RouterLinkActive
   ],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })
 export class NavbarComponent {
+
+  private router = inject(Router);
+  
 
     // ¡Genial! Usaremos este array en el HTML
     menuItems = [
@@ -30,6 +34,14 @@ export class NavbarComponent {
     // Añade o quita la clase 'dark' del tag <html>
     // para que nuestro CSS pueda reaccionar.
     document.documentElement.classList.toggle('dark');
+   }
+
+   goToLogin() {
+    this.router.navigate(['/login']);
+   }
+
+   goToRegister() {
+    this.router.navigate(['/register']);
    }
 
 }
