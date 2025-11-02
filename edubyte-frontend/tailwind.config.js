@@ -1,15 +1,15 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  // 1. Asegúrate de que Tailwind sepa si estás usando modo oscuro
-  darkMode: "class", // O 'media' si lo prefieres
-
-  // 2. ¡CRÍTICO! Dile a Tailwind que escanee tus archivos .html y .ts
-  // para encontrar las clases que usas.
+  // 1. ¡ESTA ES LA LÍNEA MÁS IMPORTANTE!
+  // Le dice a Tailwind que escanee todos estos archivos en busca de clases.
   content: [
-    "./src/**/*.{html,ts}", 
+    "./src/**/*.{html,ts}",
   ],
   
-  // 3. Define los colores y fuentes de tu diseño
+  // 2. Habilita el modo oscuro
+  darkMode: "class",
+  
+  // 3. Define nuestros colores personalizados
   theme: {
     extend: {
       colors: {
@@ -18,15 +18,21 @@ module.exports = {
         "background-dark": "#191022",
       },
       fontFamily: {
-        // Asigna 'Manrope' como la fuente "display"
-        "display": ["Manrope", "sans-serif"] 
+        "display": ["Manrope", "sans-serif"], // Fuente principal
+        "body": ["Roboto", "sans-serif"] // Fuente del cuerpo (si la necesitas)
+      },
+      borderRadius: {
+        "DEFAULT": "0.25rem",
+        "lg": "0.5rem",
+        "xl": "0.75rem", // <-- Nuestro borde redondeado
+        "full": "9999px"
       },
     },
   },
 
-  // 4. Añade los plugins que necesites (tu package.json tiene @tailwindcss/postcss)
-  // Asegúrate de tener también @tailwindcss/forms si usarás formularios nativos
+  // 4. Añade los plugins que usamos (como el de formularios)
   plugins: [
-    // require('@tailwindcss/forms'), // Descomenta si lo instalas
+    require('@tailwindcss/forms'),
   ],
 }
+
