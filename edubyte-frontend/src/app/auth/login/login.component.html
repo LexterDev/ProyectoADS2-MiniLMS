@@ -1,115 +1,113 @@
-<!-- 
-  Contenedor principal con el fondo degradado. 
-  El estilo en línea es necesario para el 'background-image'
--->
-<div class="container-wrapper" style="">
-  
+
+<div class="flex min-h-screen items-center justify-center bg-cover bg-center p-4 sm:p-6 bg-gradient-to-r from-background-light to-[#e9e5f0] dark:bg-background-dark" style="background-image: linear-gradient(135deg, rgba(127, 19, 236, 0.2) 0%, rgba(127, 19, 236, 0) 40%);">
+
   <!-- Tarjeta principal -->
-  <div class="content-card-wrapper">
+  <div class="w-full max-w-md">
     
     <!-- Encabezado con logo y título -->
-    <div class="header">
-      <div class="logo-container">
+    <div class="mx-auto flex flex-col items-center gap-4">
+      <div class="flex items-center gap-2 text-primary">
         <!-- SVG del Logo de EduByte -->
         <svg fill="currentColor" height="32" viewBox="0 0 24 24" width="32" xmlns="http://www.w3.org/2000/svg">
           <path d="M12 2L2 7V17L12 22L22 17V7L12 2ZM11 15.5V9.5L5 6.5L11 3.5V9.5L13 10.5V14.5L11 15.5ZM13 10.5L19 7.5L13 4.5V10.5Z"></path>
         </svg>
-        <h1 class="title">EduByte</h1>
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">EduByte</h1>
       </div>
-      <p class="subtitle">
+      <p class="text-center text-gray-600 dark:text-gray-300">
         Bienvenido de nuevo. Inicia sesión para continuar aprendiendo.
       </p>
     </div>
 
     <!-- Contenedor del formulario (tarjeta traslúcida) -->
-    <div class="form-card">
-      <div class="form-card-body">
-        <!-- Formulario de Angular -->
-        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
+    <div class="mt-8 rounded-xl bg-white/50 dark:bg-background-dark/50 backdrop-blur-sm shadow-2xl shadow-primary/10">
+      <div class="p-8">
+        <!-- 
+          Formulario de Angular 
+        -->
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate class="space-y-6">
           
           <!-- Campo Email -->
-          <div class="form-group">
-            <label for="email" class="form-label">Correo electrónico</label>
-            <div class="input-group">
-              <div class="input-icon">
-                <span class="material-symbols-outlined">mail</span>
+          <div>
+            <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Correo electrónico</label>
+            <div class="relative mt-1">
+              <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                <span class="material-symbols-outlined text-gray-400">mail</span>
               </div>
               <input 
                 type="email" 
                 id="email" 
-                class="form-input" 
                 placeholder="ejemplo@correo.com"
                 formControlName="email"
-                [class.is-invalid]="submitted && f['email'].errors"
+                class="block w-full rounded-xl border-transparent bg-background-light/70 dark:bg-background-dark/70 py-3 pl-10 pr-3 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background-light dark:focus:ring-offset-background-dark"
+                [ngClass]="{ 'border-red-500 focus:border-red-500 focus:ring-red-500': submitted && f['email'].errors }"
               />
             </div>
             <!-- Mensajes de Validación Email -->
-            <div *ngIf="submitted && f['email'].errors" class="validation-feedback">
+            <div *ngIf="submitted && f['email'].errors" class="mt-2 text-sm text-red-600">
               <div *ngIf="f['email'].errors['required']">El correo es requerido.</div>
               <div *ngIf="f['email'].errors['email']">Debe ser un correo válido.</div>
             </div>
           </div>
 
           <!-- Campo Contraseña -->
-          <div class="form-group">
-            <label for="password" class="form-label">Contraseña</label>
-            <div class="input-group">
-              <div class="input-icon">
-                <span class="material-symbols-outlined">lock</span>
+          <div>
+            <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Contraseña</label>
+            <div class="relative mt-1">
+              <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                <span class="material-symbols-outlined text-gray-400">lock</span>
               </div>
               <input 
                 [type]="passwordFieldType" 
                 id="password" 
-                class="form-input password" 
                 placeholder="Ingresa tu contraseña"
                 formControlName="password"
-                [class.is-invalid]="submitted && f['password'].errors"
+                class="block w-full rounded-xl border-transparent bg-background-light/70 dark:bg-background-dark/70 py-3 pl-10 pr-10 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background-light dark:focus:ring-offset-background-dark"
+                [ngClass]="{ 'border-red-500 focus:border-red-500 focus:ring-red-500': submitted && f['password'].errors }"
               />
               <!-- Botón para mostrar/ocultar contraseña -->
-              <button type="button" class="password-toggle" (click)="togglePasswordVisibility()">
-                <span class="material-symbols-outlined">{{ passwordIcon }}</span>
+              <button type="button" class="absolute inset-y-0 right-0 flex cursor-pointer items-center pr-3" (click)="togglePasswordVisibility()">
+                <span class="material-symbols-outlined text-gray-400 hover:text-primary">{{ passwordIcon }}</span>
               </button>
             </div>
             <!-- Mensajes de Validación Contraseña -->
-            <div *ngIf="submitted && f['password'].errors" class="validation-feedback">
+            <div *ngIf="submitted && f['password'].errors" class="mt-2 text-sm text-red-600">
               <div *ngIf="f['password'].errors['required']">La contraseña es requerida.</div>
             </div>
           </div>
 
           <!-- Opciones (Recordarme y Olvidé Contraseña) -->
-          <div class="form-options">
-            <div class="remember-me">
-              <input id="remember-me" type="checkbox" class="form-checkbox" formControlName="rememberMe" />
-              <label for="remember-me" class="form-label-checkbox">Recordarme</label>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              <input id="remember-me" type="checkbox" class="h-4 w-4 rounded-md border-gray-300 dark:border-gray-600 bg-background-light dark:bg-background-dark text-primary focus:ring-primary" formControlName="rememberMe" />
+              <label for="remember-me" class="ml-2 block text-sm text-gray-900 dark:text-gray-300">Recordarme</label>
             </div>
-            <div class="forgot-link">
-              <!-- Enlace de Angular -->
-              <a [routerLink]="['/forgot-password']">¿Olvidaste tu contraseña?</a>
+            <div class="text-sm">
+              <a [routerLink]="['/forgot-password']" class="font-medium text-primary hover:text-primary/80">¿Olvidaste tu contraseña?</a>
             </div>
           </div>
 
           <!-- Mensaje de error general de la API -->
-          <div *ngIf="errorMessage" class="alert-danger">
-            {{ errorMessage }}
+          <div *ngIf="errorMessage" class="rounded-xl border border-red-400 bg-red-50 p-4">
+            <p class="text-sm font-medium text-red-800">{{ errorMessage }}</p>
           </div>
 
           <!-- Botón de Iniciar Sesión -->
-          <div class="button-group">
-            <button type="submit" class="submit-button">
+          <div>
+            <button type="submit" class="flex w-full justify-center rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-white shadow-sm transition-all hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background-light dark:focus:ring-offset-background-dark">
               Iniciar Sesión
             </button>
           </div>
         </form>
-        
+           
       </div>
     </div>
 
     <!-- Enlace inferior para Registrarse -->
-    <p class="footer-link">
+    <p class="mt-8 text-center text-sm text-gray-500 dark:text-gray-400">
       ¿No tienes una cuenta?
-      <!-- Enlace de Angular -->
-      <a [routerLink]="['/register']">Regístrate</a>
+      <a [routerLink]="['/register']" class="font-medium text-primary hover:text-primary/80">Regístrate</a>
     </p>
 
   </div>
 </div>
+
