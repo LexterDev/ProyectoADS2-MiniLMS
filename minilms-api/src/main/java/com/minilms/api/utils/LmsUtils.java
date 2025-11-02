@@ -7,6 +7,7 @@ import java.time.format.DateTimeFormatter;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.minilms.api.config.responseApi.ApiException;
 import com.minilms.api.entities.User;
@@ -15,6 +16,8 @@ public class LmsUtils {
 
     public static final DateTimeFormatter DD_MM_YYYY = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     public static final DateTimeFormatter DD_MM_YYYY_HH_MM_SS = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+
+    
 
     public static String formatDate(LocalDateTime dateTime) {
         if (dateTime == null) {
@@ -51,24 +54,34 @@ public class LmsUtils {
     }
 
     public static boolean nullSafetyValue(Object object) {
-        if (object == null) {
-            return false;
+        return switch (object) {
+            case null -> false;
+            case String s -> !s.isEmpty();
+            case MultipartFile m -> !m.isEmpty();
+            case Integer i -> i != 0;
+            case Long l -> l != 0;
+            case Double d -> d != 0;
+            case Float f -> f != 0;
+            case BigDecimal bd -> bd.compareTo(BigDecimal.ZERO) != 0;
+            default -> true;
+        };
+    }
+
+    public static String aString(Object obj) {
+        return String.valueOf(obj);
+    }
+
+    public static String aString(Object obj, String defaultValue) {
+        if (obj == null) {
+            return defaultValue;
         }
-        switch (object.getClass().getSimpleName()) {
-            case "String":
-                return !((String) object).isEmpty();
-            case "Integer":
-                return ((Integer) object) != 0;
-            case "Long":
-                return ((Long) object) != 0;
-            case "Double":
-                return ((Double) object) != 0;
-            case "Float":
-                return ((Float) object) != 0;
-            case "BigDecimal":
-                return ((BigDecimal) object).compareTo(BigDecimal.ZERO) != 0;
-            default:
-                return true;
+        return String.valueOf(obj);
+    }
+
+    public static Long aLong(Object obj) {
+        if (obj == null) {
+            return null;
         }
+        return Long.parseLong(aString(obj));
     }
 }

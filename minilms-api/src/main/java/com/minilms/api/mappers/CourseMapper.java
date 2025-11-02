@@ -43,6 +43,8 @@ public class CourseMapper {
         dto.setCreadoEn(LmsUtils.formatDateTime(entity.getCreadoEn()));
         dto.setActualizadoEn(LmsUtils.formatDateTime(entity.getActualizadoEn()));
 
+        dto.setAdjunto(FileMapper.toDTO(entity.getAdjunto()));
+
         return dto;
     }
 

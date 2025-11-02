@@ -3,6 +3,8 @@ package com.minilms.api.dto.course;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.minilms.api.dto.file.FileDTO;
+
 import lombok.Data;
 
 @Data
@@ -20,6 +22,8 @@ public class CourseDTO {
     private String categoriaNombre;
     private String creadoEn;
     private String actualizadoEn;
+
+    private FileDTO adjunto;
 
     private List<SectionDTO> secciones;
 

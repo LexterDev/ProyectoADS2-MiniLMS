@@ -20,6 +20,7 @@ import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -83,7 +84,11 @@ public class Curso {
     private LocalDateTime actualizadoEn;
 
     @Column(name = "eliminado", nullable = false, columnDefinition = "SMALLINT DEFAULT 0")
-    private Short eliminado;
+    private Short eliminado =0;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "adjunto_id", referencedColumnName = "adjunto_id", foreignKey = @ForeignKey(name = "cursos_fk_adjunto_id"))
+    private Adjunto adjunto;
 
     @OneToMany(mappedBy = "curso", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Seccion> secciones;
