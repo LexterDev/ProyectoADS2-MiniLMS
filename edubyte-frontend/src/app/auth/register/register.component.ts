@@ -1,25 +1,24 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
-import { CommonModule, NgClass } from '@angular/common';
+import { CommonModule } from '@angular/common'; // CommonModule incluye NgClass
 import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-register',
   standalone: true,
   imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    RouterLink,
-    NgClass // Necesario para [ngClass]
+    CommonModule,        // <-- Incluye *ngIf, *ngFor, [ngClass], etc.
+    ReactiveFormsModule, // <-- Para [formGroup]
+    RouterLink           // <-- Para [routerLink]
   ],
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css']
+  templateUrl: './register.component.html'
+
 })
 export class RegisterComponent {
   registerForm: FormGroup;
   submitted = false;
   errorMessage: string | null = null;
-  passwordStrengthClass: string = '';
+  passwordStrengthClass: string = ''; 
 
   constructor(private fb: FormBuilder) {
     this.registerForm = this.fb.group({
@@ -31,7 +30,7 @@ export class RegisterComponent {
       role: ['Estudiante'], // Valor por defecto
       terms: [false, [Validators.requiredTrue]] // El checkbox debe ser true
     }, {
-      // Añadimos un validador a nivel de grupo para comparar contraseñas
+      // Validador de grupo para comparar contraseñas
       validators: this.passwordMatchValidator
     });
 
@@ -54,11 +53,9 @@ export class RegisterComponent {
     const confirmPassword = control.get('confirmPassword');
 
     if (password && confirmPassword && password.value !== confirmPassword.value) {
-      // Marcamos el error en el control 'confirmPassword'
       confirmPassword.setErrors({ mismatch: true });
       return { mismatch: true };
     } else {
-      // Si coinciden, quitamos el error (si existía)
       if (confirmPassword?.hasError('mismatch')) {
         confirmPassword.setErrors(null);
       }
@@ -67,7 +64,7 @@ export class RegisterComponent {
   }
 
   /**
-   * Actualiza la clase CSS basada en la fortaleza de la contraseña
+   * Actualiza la variable de clase basada en la fortaleza de la contraseña
    */
   updatePasswordStrength(password: string) {
     if (!password) {
@@ -75,7 +72,6 @@ export class RegisterComponent {
       return;
     }
     
-    // Lógica simple de fortaleza
     const hasLetters = /[a-zA-Z]/.test(password);
     const hasNumbers = /[0-9]/.test(password);
     const hasSymbols = /[^a-zA-Z0-9]/.test(password);
@@ -100,7 +96,6 @@ export class RegisterComponent {
     this.submitted = true;
     this.errorMessage = null;
 
-    // Detener si el formulario es inválido
     if (this.registerForm.invalid) {
       console.log('Formulario inválido');
       // Imprimir errores para depuración
@@ -113,17 +108,13 @@ export class RegisterComponent {
       return;
     }
 
-    // --- Lógica de Registro ---
-    // Aquí llamarías a tu servicio de autenticación
     console.log('Datos de registro:', this.registerForm.value);
-
-    // Simulación de un error (ej. email ya existe)
-    // this.errorMessage = 'Este correo electrónico ya está registrado.';
+    // ... aquí iría la llamada al servicio de API ...
   }
 
   registerWithGoogle() {
     this.errorMessage = null;
     console.log('Registrando con Google...');
-    // Lógica de tu servicio de autenticación para Google
   }
 }
+
