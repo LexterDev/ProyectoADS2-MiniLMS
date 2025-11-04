@@ -7,6 +7,8 @@ services:
     build:
       context: ./minilms-api
       dockerfile: Dockerfile
+    ports:
+      - "8080:8080" # Exponemos el puerto de la API solo para desarrollo
     environment:
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update # 'update' es ideal para desarrollo
 
