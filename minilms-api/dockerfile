@@ -9,6 +9,8 @@ WORKDIR /app
 COPY .mvn/ .mvn
 COPY mvnw .
 COPY pom.xml .
+
+#Otorga permisos de ejuctación al script de Maven
 RUN ./mvnw dependency:go-offline
 
 # Copia el código fuente y construye el .jar
