@@ -1,25 +1,32 @@
-# Usa una imagen base de Java 21
-FROM openjdk:21-jdk-slim
+# ---- Etapa de Compilación (Builder) ----
+# Usa una imagen con el JDK completo para compilar la aplicación
+FROM eclipse-temurin:21-jdk AS builder
 
-# Establece el directorio de trabajo dentro del contenedor
+# Establece el directorio de trabajo
 WORKDIR /app
 
-# Copia los archivos necesarios para construir el proyecto con Maven
+# Copia los archivos de Maven y descarga dependencias para aprovechar el cache de Docker
 COPY .mvn/ .mvn
 COPY mvnw .
 COPY pom.xml .
-
-# Descarga las dependencias de Maven. Esto aprovecha el cache de capas de Docker.
 RUN ./mvnw dependency:go-offline
 
-# Copia el código fuente de la aplicación
+# Copia el código fuente y construye el .jar
 COPY src ./src
-
-# Construye el archivo .jar de la aplicación, omitiendo los tests
 RUN ./mvnw clean package -DskipTests
 
-# Expone el puerto en el que correrá la aplicación
+# ---- Etapa de Producción (Final) ----
+# Usa una imagen base mucho más pequeña solo con el entorno de ejecución de Java (JRE)
+FROM eclipse-temurin:21-jre
+
+# Establece el directorio de trabajo
+WORKDIR /app
+
+# Expone el puerto de la aplicación
 EXPOSE 8080
 
-# Comando para ejecutar la aplicación cuando se inicie el contenedor
-CMD ["java", "-jar", "target/minilms-api-0.0.1-SNAPSHOT.jar"]
+# Copia únicamente el archivo .jar compilado desde la etapa 'builder'
+COPY --from=builder /app/target/minilms-api-0.0.1-SNAPSHOT.jar app.jar
+
+# Comando para ejecutar la aplicación
+CMD ["java", "-jar", "app.jar"]
