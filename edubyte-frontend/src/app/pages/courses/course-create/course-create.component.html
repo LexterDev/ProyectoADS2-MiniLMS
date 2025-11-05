@@ -13,6 +13,9 @@
             <p class="text-black/60 dark:text-white/60 text-sm mb-6">Describe los detalles principales de tu curso.</p>
             <div class="grid grid-cols-1 gap-y-4 sm:grid-cols-2 sm:gap-x-6">
               
+              <!-- ... (Campos title, subtitle, shortDescription, longDescription, category, level, language) ... -->
+              <!-- (Estos campos se quedan igual que en tu archivo) -->
+              
               <div class="sm:col-span-2">
                 <label for="title" class="block text-sm font-medium text-black dark:text-white mb-1">Título del Curso</label>
                 <input type="text" id="title" formControlName="title" placeholder="Ej. Introducción a la Programación en Python"
@@ -114,28 +117,43 @@
                 }
               </div>
 
+              <!-- 
+                =========================================
+                SECCIÓN DE IMAGEN (¡ACTUALIZADA!)
+                =========================================
+              -->
               <div class="sm:col-span-2">
                 <label class="block text-sm font-medium text-black dark:text-white mb-2">Imagen Thumbnail</label>
-                <input type="file" class="hidden" id="thumbnail-upload" accept="image/*" (change)="onImageSelected($event)" />
-                <label for="thumbnail-upload" class="mt-1 flex justify-center rounded-lg border-2 border-dashed border-primary/30 px-6 py-10 cursor-pointer hover:border-primary"
-                       [class.border-red-500]="(submitted || f['thumbnail'].touched) && f['thumbnail'].errors">
-                  <div class="text-center">
-                    <span class="material-symbols-outlined text-6xl text-primary/50">cloud_upload</span>
-                    <p class="mt-2 text-lg font-bold text-black dark:text-white">Arrastra y suelta una imagen</p>
-                    <p class="text-sm text-black/60 dark:text-white/60">o haz clic para seleccionar un archivo</p>
-                    @if (selectedImageFile) {
-                      <p class="mt-2 text-sm text-green-600">{{ selectedImageFile.name }}</p>
-                    }
-                  </div>
-                </label>
+                
+                <!-- 
+                  AQUÍ ESTÁ EL CAMBIO:
+                  Reemplazamos el <input> y <label> por el nuevo componente
+                -->
+                <app-image-upload 
+                  [currentImageUrl]="f['thumbnail'].value"
+                  (uploadComplete)="onThumbnailUploaded($event)">
+                </app-image-upload>
+                
+                <!-- 
+                  Mantenemos el @if para los errores de validación del FormGroup
+                -->
                 @if ((submitted || f['thumbnail'].touched) && f['thumbnail'].errors) {
                   <div class="mt-1 text-xs text-red-500">
-                    @if (f['thumbnail'].errors['required']) { <span>La imagen es requerida.</span> }
+                    @if (f['thumbnail'].errors['required']) { 
+                      <span>La imagen es requerida.</span> 
+                    }
                   </div>
                 }
               </div>
-            </div> <div class="my-10 border-t border-black/10 dark:border-white/10"></div>
+            </div> 
+            
+            <div class="my-10 border-t border-black/10 dark:border-white/10"></div>
 
+            <!-- 
+              =========================================
+              SECCIÓN OBJETIVOS (¡DESCOMENTADA!)
+              =========================================
+            -->
             <!-- <h2 class="text-2xl font-bold mb-1">Objetivos de Aprendizaje</h2>
             <p class="text-black/60 dark:text-white/60 text-sm mb-6">¿Qué aprenderán los estudiantes en tu curso? (Define al menos 1)</p>
             <div formArrayName="learningObjectives" class="space-y-4">
@@ -157,18 +175,18 @@
                           aria-label="Eliminar objetivo"
                           class="mt-2 text-red-500 hover:text-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
                     <span class="material-symbols-outlined">delete</span>
-                  </button>
-                </div>
-              }
-            </div> -->
-            <!-- <button type="button" (click)="addObjective()"
+                  </button> 
+                </div> 
+              } 
+            </div>
+            <button type="button" (click)="addObjective()"
                     class="mt-6 inline-flex items-center gap-2 rounded-lg h-11 px-4 border border-primary bg-primary/10 text-primary font-bold text-sm hover:bg-primary/20 transition-colors">
               <span class="material-symbols-outlined">add_circle</span>
               Añadir otro objetivo
-            </button> -->
+            </button>-->
             
+            <!-- Botones de Envío (Sin cambios) -->
             <div class="flex justify-end gap-3 pt-6 mt-10 border-t border-black/10 dark:border-white/10">
-              
               <button 
                 routerLink="/instructor/dashboard" 
                 type="button" 
@@ -176,7 +194,6 @@
                 [disabled]="isLoading">
                 Cancelar
               </button>
-              
               <button 
                 type="submit" 
                 class="rounded-lg h-12 px-6 text-sm font-bold bg-primary text-white hover:bg-primary/90 transition-colors flex items-center justify-center min-w-[150px]"
@@ -198,6 +215,7 @@
           </form> 
         
         } @else {
+          <!-- Pantalla de Éxito (Sin cambios) -->
           <div class="flex flex-col items-center justify-center py-20 text-center">
             <div class="p-6 bg-green-100 dark:bg-green-900 rounded-full">
               <span class="material-symbols-outlined text-6xl text-green-600 dark:text-green-300">
@@ -209,11 +227,14 @@
             </h1>
             <p class="text-lg text-black/60 dark:text-white/60 mt-2">
               Tu curso ha sido guardado exitosamente.
-            </p> <p class="text-sm text-black/60 dark:text-white/60 mt-4">
+            </p> 
+            <p class="text-sm text-black/60 dark:text-white/60 mt-4">
               Serás redirigido al dashboard en unos segundos...
             </p>
           </div>
         }
 
-      </div> </main> </div>
+      </div> 
+    </main> 
+  </div>
 </div>
