@@ -9,6 +9,10 @@ WORKDIR /app
 COPY .mvn/ .mvn
 COPY mvnw .
 COPY pom.xml .
+
+#Otorga permisos de ejecución al script de Maven
+RUN chmod +x mvnw
+
 RUN ./mvnw dependency:go-offline
 
 # Copia el código fuente y construye el .jar
@@ -29,4 +33,4 @@ EXPOSE 8080
 COPY --from=builder /app/target/minilms-api-0.0.1-SNAPSHOT.jar app.jar
 
 # Comando para ejecutar la aplicación
-CMD ["java", "-jar", "app.jar"]
+CMD ["sh", "-c", "java -Dserver.port=${PORT:-8080} -jar app.jar"]
