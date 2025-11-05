@@ -1,88 +1,84 @@
 # ProyectoADS2-MiniLMS
 Mini-LMS para cursos online - Proyecto ADS II
 
-## 🚀 Ejecución con Docker
+Este proyecto está configurado para ser levantado y ejecutado fácilmente usando Docker y Docker Compose.
 
-El proyecto está configurado para ejecutarse con Docker y Docker Compose, con configuraciones separadas para entornos de desarrollo y producción.
+## 🌐 URLs de Producción (Despliegue en Render)
 
-### Requisitos Previos
+La aplicación está desplegada en Render y se puede acceder a través de los siguientes enlaces:
 
-*   [Docker](https://www.docker.com/get-started) instalado.
-*   [Docker Compose](https://docs.docker.com/compose/install/) (incluido con Docker Desktop).
+-   **Frontend (Aplicación en vivo)**: [`https://minilms-frontend.onrender.com/`](https://minilms-frontend.onrender.com/)
+-   **Backend (API en vivo)**: [`https://proyectoads2-minilms.onrender.com/`](https://proyectoads2-minilms.onrender.com/)
+-   **Documentación de la API (Producción)**: [`https://proyectoads2-minilms.onrender.com/swagger-ui/index.html`](https://proyectoads2-minilms.onrender.com/swagger-ui/index.html)
 
-### ⚙️ Configuración Inicial
+---
 
-Antes de iniciar, es necesario configurar las variables de entorno.
+## 🐳 Ejecución del Proyecto en Local
 
-1.  Navega al directorio `minilms-api`.
-2.  Crea un archivo llamado `.env` y añade el siguiente contenido. **Asegúrate de que `DOCKER_REGISTRY` coincida con tu nombre de usuario de Docker Hub.**
+A continuación se describen los pasos para ejecutar el proyecto en un entorno de desarrollo local.
 
-    ```env
-    # PostgreSQL Database settings
-    POSTGRES_DB=minilmsdb
-    POSTGRES_USER=admin
-    POSTGRES_PASSWORD=adminpass
+### 1. Requisitos Previos
 
-    # Docker Registry (tu usuario de Docker Hub, ej: noerodas)
-    DOCKER_REGISTRY=tu-usuario-de-dockerhub
+-   [Docker](https://www.docker.com/get-started) instalado (versión 20.10 o superior).
+-   [Docker Compose](https://docs.docker.com/compose/install/) (generalmente viene incluido con Docker Desktop).
 
-    # JWT Secret (cambia esto por una clave segura y larga en producción)
-    JWT_SECRET=unaClaveSecretaParaDesarrollo
-    ```
+### 2. Clonar el Repositorio
 
-### 💻 Entorno de Desarrollo (Local)
+Abre una terminal y ejecuta:
+```bash
+git clone https://github.com/noerodas/ProyectoADS2-MiniLMS.git
+cd ProyectoADS2-MiniLMS
+```
+*(Nota: Reemplaza `noerodas` con el usuario correcto si el repositorio está en otro lugar).*
 
-Este modo construye la imagen de la API localmente y expone el puerto de la base de datos, permitiendo la conexión con herramientas externas como DBeaver.
+### 3. Elegir un Método de Ejecución
 
-1.  Abre una terminal en el directorio `minilms-api`.
-2.  Ejecuta el siguiente comando para construir e iniciar los contenedores:
+Existen dos maneras de levantar el proyecto en local:
 
-    ```bash
-    # Forma corta (recomendada)
-    docker-compose up --build
-    ```
-    *   Este comando combina automáticamente `docker-compose.yml` (base) y `docker-compose.override.yml` (desarrollo).
+#### Método 1: Modo Desarrollo (Recomendado)
 
-    **Alternativa explícita:**
-    Si prefieres especificar los archivos manualmente (útil para claridad o debugging), puedes usar el siguiente comando, que tiene el mismo efecto que el anterior:
+Este método construye las imágenes de Docker directamente desde el código fuente local. Es la forma estándar de trabajar en el proyecto, hacer cambios y probarlos.
 
-    ```bash
-    docker-compose -f docker-compose.yml -f docker-compose.override.yml up --build
-    ```
-    *   Para ejecutar cualquiera de los comandos en segundo plano, añade la bandera `-d`.
+**Comando:**
+```bash
+docker-compose up --build
+```
+La primera vez que lo ejecutes puede tardar varios minutos mientras se descargan las imágenes base y se construyen los servicios.
 
-### ☁️ Entorno de Producción / Staging (Remoto)
+#### Método 2: Modo Producción Simulado
 
-Este modo utiliza una imagen pre-construida de un registro de contenedores (como Docker Hub).
+Este método no construye nada. Descarga y ejecuta las imágenes exactas que fueron publicadas en el registro público de Docker Hub (`noerodas/minilms-api` y `noerodas/minilms-frontend`). Es útil para verificar la versión estable publicada sin necesidad de construirla.
 
-1.  **Paso Previo: Construir y Subir la Imagen**
+**Comando:**
+```bash
+docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+```
 
-    ```bash
-    # 1. Inicia sesión en tu registro
-    docker login
+### 4. Acceso a los Servicios Locales
 
-    # 2. Construye y etiqueta la imagen (reemplaza 'tu-registro' con tu usuario de Docker Hub)
-    docker build -t tu-registro/minilms-api:latest ./minilms-api
+Una vez que los contenedores estén corriendo, podrás acceder a los servicios desde tu navegador:
 
-    # 3. Sube la imagen
-    docker push tu-registro/minilms-api:latest
-    ```
+-   **Frontend (la aplicación web)**: [`http://localhost:4200`](http://localhost:4200)
+-   **API (el backend)**: [`http://localhost:8080`](http://localhost:8080)
+-   **Documentación de la API (Swagger UI)**: [`http://localhost:8080/swagger-ui/index.html`](http://localhost:8080/swagger-ui/index.html)
 
-2.  **Desplegar en el Servidor**
+### 5. Poblado de Datos de Prueba
 
-    ```bash
-    docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
-    ```
+Al levantar los contenedores por primera vez, la base de datos se crea vacía. Para poder utilizar la aplicación, es necesario poblarla con datos de prueba.
 
-### Acceso a los Servicios
+1.  **Abre la Documentación de la API Local:** [`http://localhost:8080/swagger-ui/index.html`](http://localhost:8080/swagger-ui/index.html)
+2.  **Encuentra el Endpoint:** Busca el controlador `test-controller` y expande el endpoint `POST /api/test/dataSeed`.
+3.  **Ejecuta el Endpoint:** Haz clic en "Try it out" y luego en "Execute".
 
-*   **API**: Disponible en `http://localhost:8080` (o la IP del servidor).
-*   **Base de Datos (solo en desarrollo)**:
-    *   **Host**: `localhost`
-    *   **Puerto**: `5433`
-    *   **Credenciales**: Las definidas en tu archivo `.env`.
+Una vez ejecutado, se crearán los siguientes usuarios de prueba. La contraseña para **todos** es: `administrador`
 
-### Detener los Servicios
+-   **Administrador**: `admin@edubyte.com`
+-   **Instructor**: `instructor@edubyte.com`
+-   **Estudiante**: `student@edubyte.com`
 
-*   **Desarrollo**: `docker-compose down`
-*   **Producción**: `docker-compose -f docker-compose.yml -f docker-compose.prod.yml down`
+## 🔧 Comandos Útiles de Docker
+
+-   **Ver estado de los contenedores:** `docker-compose ps`
+-   **Ver logs en tiempo real:** `docker-compose logs -f`
+-   **Detener todos los servicios:** `docker-compose down`
+-   **Detener y eliminar volúmenes de datos (¡borra la BD!):** `docker-compose down -v`
