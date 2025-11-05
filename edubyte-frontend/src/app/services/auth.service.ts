@@ -13,12 +13,30 @@ export class AuthService {
   readonly endpoints = API_ENDPOINTS;
 
   login(email: string, password: string): Observable<any> {
-    return this.http.post(this.endpoints.auth.login, { email, password });
+    return this.http.post(this.endpoints.auth.login,
+      {
+        "correo": email,
+        "clave": password
+      }
+    );
   }
 
-  register(email: string, password: string, name: string): Observable<any> {
-    return this.http.post(this.endpoints.auth.register, { email, password, name });
+  register(correo: string, clave: string, nombre: string, apellido: string): Observable<any> {
+    return this.http.post(this.endpoints.auth.register,
+      {
+        "nombre": nombre,
+        "apellido": apellido,
+        "correo": correo,
+        "clave": clave
+      });
   }
 
-  
+  logout(): void {
+    localStorage.removeItem('authToken');
+  }
+
+  isUserLoggedIn(): boolean {
+    return !!localStorage.getItem('authToken');
+  }
+
 }

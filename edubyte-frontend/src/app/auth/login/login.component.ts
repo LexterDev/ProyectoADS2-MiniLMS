@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router'; 
+import { RouterLink, Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -15,15 +16,16 @@ import { RouterLink } from '@angular/router';
 
 })
 export class LoginComponent {
+
   loginForm: FormGroup;
   submitted = false;
   errorMessage: string | null = null;
-  
+
   // Estado para el botón de mostrar/ocultar contraseña
   passwordFieldType: string = 'password';
   passwordIcon: string = 'visibility';
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
     // Esta es la lógica de formulario de tu compañero
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -41,27 +43,32 @@ export class LoginComponent {
   onSubmit() {
     this.submitted = true;
     this.errorMessage = null;
+    const correo = this.loginForm.get('email')?.value;
+    const clave = this.loginForm.get('password')?.value;
 
     // Detener si el formulario es inválido
     if (this.loginForm.invalid) {
       return;
     }
 
-    // --- Lógica de Autenticación ---
-    console.log('Datos de inicio de sesión:', this.loginForm.value);
-
-    // Simulación de un error de autenticación
-    if (this.f['email'].value !== 'admin@edubyte.com' || this.f['password'].value !== 'password') {
-      this.errorMessage = 'El correo electrónico o la contraseña son incorrectos.';
-    } else {
-      console.log('¡Inicio de sesión exitoso!');
-    }
-  }
-
-  // Método para "Continuar con Google"
-  loginWithGoogle() {
-    this.errorMessage = null;
-    console.log('Iniciando sesión con Google...');
+    this.authService.login(correo, clave).subscribe({
+      next: (response: any) => {
+        if (!response.token) {
+          this.errorMessage = 'Credenciales inválidas. Inténtalo de nuevo.';
+        } else {
+          localStorage.setItem('authToken', response.token);
+          if (response.rol == 'ESTUDIANTE') {
+            this.router.navigate(['/dashboard-student']);
+          } else {
+            this.router.navigate(['/']);
+          }
+        }
+      },
+      error: (error: any) => {
+        console.error('Error en el inicio de sesión:', error);
+        this.errorMessage = 'Credenciales inválidas. Inténtalo de nuevo.';
+      }
+    });
   }
 
   // Método para cambiar la visibilidad de la contraseña

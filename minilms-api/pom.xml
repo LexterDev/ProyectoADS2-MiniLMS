@@ -162,6 +162,7 @@
                             <version>${lombok.version}</version> <!-- ✅ CORRECCIÓN APLICADA AQUÍ -->
                         </path>
                     </annotationProcessorPaths>
+                    <enablePreview>true</enablePreview>
                 </configuration>
             </plugin>
             <plugin>
@@ -174,6 +175,7 @@
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
+                    <jvmArguments>--enable-preview</jvmArguments>
                 </configuration>
             </plugin>
         </plugins>

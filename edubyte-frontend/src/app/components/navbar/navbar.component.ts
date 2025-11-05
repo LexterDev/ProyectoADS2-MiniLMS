@@ -1,19 +1,28 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink, RouterLinkActive } from '@angular/router'; // <-- Importamos RouterLink y RouterLinkActive
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import { ProfileCardComponent } from '../profile-card/profile-card.component';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-navbar',
   standalone: true, 
   imports: [
     CommonModule,
-    RouterLink,         // <-- Lo añadimos aquí
-    RouterLinkActive    // <-- Y este para la "línea morada"
+    RouterLink,
+    RouterLinkActive,
+    ProfileCardComponent,
+    MatButtonModule,
+    MatIcon
   ],
   templateUrl: './navbar.component.html'
-  // No hay styleUrl, usamos Tailwind
 })
 export class NavbarComponent {
+
+  // Inyectamos el AuthService para verificar el estado de autenticación
+  private authService = inject(AuthService);
 
   // Inyectamos el Router para las funciones de navegación
   private router = inject(Router);
@@ -48,6 +57,12 @@ export class NavbarComponent {
   goToRegister() {
     this.router.navigate(['/register']);
   }
+
+  isUserLoggedIn(): boolean {
+    return this.authService.isUserLoggedIn();
+  }
+
+  
 
 }
 

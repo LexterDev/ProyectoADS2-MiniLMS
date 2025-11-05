@@ -1,11 +1,18 @@
+<header
+  class="flex items-center justify-between whitespace-nowrap border-b border-primary/20 dark:border-primary/30 px-10 py-4 text-background-dark bg-background-light dark:bg-background-dark dark:text-background-light">
 
-<header class="flex items-center justify-between whitespace-nowrap border-b border-primary/20 dark:border-primary/30 px-10 py-4 text-background-dark bg-background-light dark:bg-background-dark dark:text-background-light">
-  
+
   <!-- Logo y Título -->
   <div class="flex items-center gap-3">
+    <button matMiniFab      
+      type="button" data-drawer-target="drawer-body-scrolling" data-drawer-show="drawer-body-scrolling"
+      data-drawer-body-scrolling="true" aria-controls="drawer-body-scrolling">
+      <mat-icon>menu</mat-icon>
+    </button>
     <div class="h-8 w-8 text-primary">
       <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-        <path clip-rule="evenodd" d="M24 4H42V17.3333V30.6667H24V44H6V30.6667V17.3333H24V4Z" fill="currentColor" fill-rule="evenodd"></path>
+        <path clip-rule="evenodd" d="M24 4H42V17.3333V30.6667H24V44H6V30.6667V17.3333H24V4Z" fill="currentColor"
+          fill-rule="evenodd"></path>
       </svg>
     </div>
     <h2 class="text-xl font-bold">EduByte</h2>
@@ -16,37 +23,36 @@
   -->
   <nav class="hidden items-center gap-8 md:flex">
     @for (item of menuItems; track item.label) {
-      <a 
-        [routerLink]="item.link" 
-        routerLinkActive="text-primary underline underline-offset-4"
-        [routerLinkActiveOptions]="{exact: true}"
-        class="text-sm font-medium hover:text-primary transition-colors">
-        {{ item.label }}
-      </a>
+    <a [routerLink]="item.link" routerLinkActive="text-primary underline underline-offset-4"
+      [routerLinkActiveOptions]="{exact: true}" class="text-sm font-medium hover:text-primary transition-colors">
+      {{ item.label }}
+    </a>
     }
   </nav>
 
   <!-- 
     Botones de Acción del Usuario
   -->
+
   <div class="flex items-center gap-2">
-    <button 
-      (click)="goToRegister()"
-      class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-primary text-white text-sm font-bold tracking-wide hover:bg-primary/90 transition-all">
-      <span class="truncate">Regístrate</span>
-    </button>
-    <button 
-      (click)="goToLogin()"
-      class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary text-sm font-bold tracking-wide hover:bg-primary/20 transition-all">
-      <span class="truncate">Iniciar sesión</span>
-    </button>
-    
+    <div *ngIf="!isUserLoggedIn()" class="flex items-center gap-2">
+      <button (click)="goToRegister()"
+        class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-primary text-white text-sm font-bold tracking-wide hover:bg-primary/90 transition-all">
+        <span class="truncate">Regístrate</span>
+      </button>
+      <button (click)="goToLogin()"
+        class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary text-sm font-bold tracking-wide hover:bg-primary/20 transition-all">
+        <span class="truncate">Iniciar sesión</span>
+      </button>
+    </div>
+    <div *ngIf="isUserLoggedIn()" class="flex items-center gap-2 justify-center">
+      <app-profile-card></app-profile-card>
+    </div>
+
     <!-- Botón de Modo Oscuro -->
-    <button 
-      (click)="toggleDarkMode()"
+    <button (click)="toggleDarkMode()"
       class="flex h-10 w-10 cursor-pointer items-center justify-center overflow-hidden rounded-xl bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary hover:bg-primary/20 transition-all">
       <span class="material-symbols-outlined"> dark_mode </span>
     </button>
   </div>
 </header>
-

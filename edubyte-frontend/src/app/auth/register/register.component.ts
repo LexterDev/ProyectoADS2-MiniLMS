@@ -1,15 +1,16 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
 import { CommonModule } from '@angular/common'; // CommonModule incluye NgClass
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-register',
   standalone: true,
   imports: [
-    CommonModule,        // <-- Incluye *ngIf, *ngFor, [ngClass], etc.
-    ReactiveFormsModule, // <-- Para [formGroup]
-    RouterLink           // <-- Para [routerLink]
+    CommonModule,
+    ReactiveFormsModule,
+    RouterLink,    
   ],
   templateUrl: './register.component.html'
 
@@ -20,7 +21,7 @@ export class RegisterComponent {
   errorMessage: string | null = null;
   passwordStrengthClass: string = ''; 
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
     this.registerForm = this.fb.group({
       firstName: ['', [Validators.required]],
       lastName: ['', [Validators.required]],
@@ -103,13 +104,28 @@ export class RegisterComponent {
         const controlErrors = this.f[key].errors;
         if (controlErrors != null) {
           console.log('Control:', key, ', Errores:', controlErrors);
+          this.errorMessage = 'Por favor, corrige los errores en el formulario.';
         }
       });
       return;
     }
 
-    console.log('Datos de registro:', this.registerForm.value);
-    // ... aquí iría la llamada al servicio de API ...
+    const nombre = this.registerForm.get('firstName')?.value;
+    const apellido = this.registerForm.get('lastName')?.value;
+    const correo = this.registerForm.get('email')?.value;
+    const clave = this.registerForm.get('password')?.value;
+
+    this.authService.register(correo, clave, nombre, apellido).subscribe({
+      next: (response) => {
+        console.log('Registro exitoso:', response);
+        this.errorMessage = null;
+        this.router.navigate(['/login']);
+      },
+      error: (error) => {
+        console.error('Error en el registro:', error);
+        this.errorMessage = error.error?.errors[0] || 'Error en el registro. Inténtalo de nuevo.';
+      }
+    });
   }
 
   registerWithGoogle() {
