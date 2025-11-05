@@ -1,6 +1,6 @@
 # ---- Etapa de Compilación (Builder) ----
 # Usa una imagen con el JDK completo para compilar la aplicación
-FROM eclipse-temurin:21-jdk AS builder
+FROM eclipse-temurin:19-jdk AS builder
 
 # Establece el directorio de trabajo
 WORKDIR /app
