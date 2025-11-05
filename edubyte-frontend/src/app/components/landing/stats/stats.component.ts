@@ -1,8 +1,11 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-// 1. Eliminamos MatCardModule
 
-// Interfaz (¡buena práctica de tu compañero!)
+// 1. ✅ ASEGÚRATE DE QUE ESTA LÍNEA ESTÉ BIEN
+// (La ruta debe ser correcta desde 'landing/stats' hasta 'stat-card')
+import { StatCardComponent } from '../../stat-card/stat-card.component';
+
+// Interfaz
 interface Stat {
   label: string;
   value: string;
@@ -10,17 +13,16 @@ interface Stat {
 
 @Component({
   selector: 'app-stats',
-  standalone: true, // <-- 2. Lo mantenemos standalone
+  standalone: true, 
   imports: [
-    CommonModule
-    // 3. MatCardModule eliminado
+    CommonModule,
+    StatCardComponent // <-- 2. ✅ Y ASEGÚRATE DE QUE ESTÉ AQUÍ
   ],
   templateUrl: './stats.component.html'
-  // <-- 4. 'styleUrl' eliminado
 })
 export class StatsComponent {
 
-    // 5. La lógica del compañero se mantiene
+    // Tus datos
     stats: Stat[] = [
      { label: 'Cursos', value: '10,000+' },
      { label: 'Estudiantes', value: '500,000+' },
@@ -28,4 +30,3 @@ export class StatsComponent {
    ];
 
 }
-

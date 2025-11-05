@@ -1,22 +1,22 @@
 <!-- 
   Sección Stats
-  Refactorizada a 100% Tailwind, eliminando <mat-card>.
-  Nota: No se usa <section> ni 'max-width' aquí, porque este componente
-  vive dentro del '.content-wrapper' de la página de landing.
+  ¡Refactorizada para USAR el StatCardComponent!
 -->
 <div class="mt-16 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
   
-  <!-- 1. Reemplazamos *ngFor por @for -->
+  <!-- 1. Seguimos usando @for -->
   @for (stat of stats; track stat.label) {
     
-    <!-- 2. Reemplazamos <mat-card> por un <div> con clases de Tailwind (con bordes y soporte de modo oscuro) -->
-    <div class="flex flex-col gap-2 rounded-xl border border-primary/20 dark:border-primary/30 p-6 text-background-dark dark:text-background-light">
-      
-      <!-- 3. Añadimos clases de texto para modo claro/oscuro -->
-      <p class="text-base font-medium text-background-dark/70 dark:text-background-light/70">{{ stat.label }}</p>
-      <p class="text-3xl font-bold tracking-tight">{{ stat.value }}</p>
-    
-    </div>
+    <!-- 
+      2. Reemplazamos todo el <div>...</div> por <app-stat-card>
+      3. "Vinculamos" los datos:
+         - 'stat.label' (del @for) se pasa al @Input() [title]
+         - 'stat.value' (del @for) se pasa al @Input() [value]
+    -->
+    <app-stat-card 
+      [title]="stat.label" 
+      [value]="stat.value">
+    </app-stat-card>
+  
   }
 </div>
-
