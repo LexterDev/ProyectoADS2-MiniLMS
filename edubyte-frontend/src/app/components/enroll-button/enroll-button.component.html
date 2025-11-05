@@ -1,0 +1,21 @@
+<!-- 
+  ✅ ¡ESTE ES EL HTML CORREGIDO!
+  Este componente USA <app-button> y le *pasa* el estado [isLoading].
+-->
+@if (!isEnrolled) {
+  <app-button 
+    variant="primary" 
+    (click)="openConfirmationModal()" 
+    [fullWidth]="true"
+    [isLoading]="isLoading"> <!-- ✅ Le pasamos el 'isLoading' al componente hijo -->
+    Inscríbete ahora
+  </app-button>
+} @else {
+  <!-- Si ya está inscrito, mostramos un botón de enlace -->
+  <app-button 
+    variant="secondary" 
+    [fullWidth]="true" 
+    [routerLink]="['/my-courses']"> <!-- Asumiendo que /my-courses es la lista -->
+    Ir al curso
+  </app-button>
+}
