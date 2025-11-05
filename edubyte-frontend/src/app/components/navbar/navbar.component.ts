@@ -1,68 +1,59 @@
-import { Component, inject } from '@angular/core';
+// src/app/components/navbar/navbar.component.ts
+
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink, RouterLinkActive } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
-import { ProfileCardComponent } from '../profile-card/profile-card.component';
+import { Router, RouterModule } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { MatIcon } from '@angular/material/icon';
+
+// 1. ✅ AÑADE LA IMPORTACIÓN AQUÍ
+// (Ajusta la ruta si es diferente)
+import { ProfileCardComponent } from '../profile-card/profile-card.component'; 
 
 @Component({
   selector: 'app-navbar',
-  standalone: true, 
+  standalone: true,
   imports: [
     CommonModule,
-    RouterLink,
-    RouterLinkActive,
-    ProfileCardComponent,
+    RouterModule,
+    MatIconModule,
     MatButtonModule,
-    MatIcon
+    // 2. ✅ AÑÁDELO AL ARRAY DE IMPORTS
+    ProfileCardComponent 
   ],
   templateUrl: './navbar.component.html'
 })
 export class NavbarComponent {
 
-  // Inyectamos el AuthService para verificar el estado de autenticación
-  private authService = inject(AuthService);
+  // (El resto de tu código .ts va aquí...)
+  // ...
 
-  // Inyectamos el Router para las funciones de navegación
-  private router = inject(Router);
-  
-  // Array de enlaces de navegación
   menuItems = [
-     { label: 'Inicio', link: '/' },
-     { label: 'Cursos', link: '/courses' }, // <-- ¡CORREGIDO!
-     { label: 'Instructores', link: '/instructores' },
-     { label: 'Comunidad', link: '/comunidad' }
+    { label: 'Inicio', link: '/' },
+    { label: 'Cursos', link: '/courses' },
+    { label: 'Instructores', link: '/instructors' },
+    { label: 'Comunidad', link: '/community' }
   ];
 
-  /**
-   * Cambia el modo oscuro añadiendo/quitando la clase 'dark' del <html>
-   */
-  toggleDarkMode() {
-    document.documentElement.classList.toggle('dark');
+  constructor(private router: Router) { }
+
+  isUserLoggedIn(): boolean {
+    return false; 
   }
 
-  /**
-   * Navega a la página de login.
-   * Esta función es llamada por el botón (click) en el HTML.
-   */
-  goToLogin() {
-    this.router.navigate(['/login']);
-  }
-
-  /**
-   * Navega a la página de registro.
-   * Esta función es llamada por el botón (click) en el HTML.
-   */
   goToRegister() {
     this.router.navigate(['/register']);
   }
 
-  isUserLoggedIn(): boolean {
-    return this.authService.isUserLoggedIn();
+  goToLogin() {
+    this.router.navigate(['/login']);
   }
 
-  
+  goToProfile() {
+    this.router.navigate(['/profile']);
+  }
 
+  toggleDarkMode() {
+    document.documentElement.classList.toggle('dark');
+  }
 }
-
