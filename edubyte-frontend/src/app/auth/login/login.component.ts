@@ -59,6 +59,10 @@ export class LoginComponent {
           localStorage.setItem('authToken', response.token);
           if (response.rol == 'ESTUDIANTE') {
             this.router.navigate(['/dashboard-student']);
+          } else if (response.rol == 'INSTRUCTOR') {
+            this.router.navigate(['/dashboard-instructor']);
+          } else if (response.rol == 'ADMINISTRADOR') {
+            this.router.navigate(['/admin/dashboard']);
           } else {
             this.router.navigate(['/']);
           }

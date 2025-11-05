@@ -66,7 +66,7 @@ export const routes: Routes = [
     },
 
      {
-        path: 'instructor/dashboard',
+        path: 'dashboard-instructor',
         component: DashboardComponent
 
     },
