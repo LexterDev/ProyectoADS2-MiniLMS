@@ -26,10 +26,9 @@ A continuación se describen los pasos para ejecutar el proyecto en un entorno d
 
 Abre una terminal y ejecuta:
 ```bash
-git clone https://github.com/noerodas/ProyectoADS2-MiniLMS.git
+git clone https://github.com/LexterDev/ProyectoADS2-MiniLMS.git
 cd ProyectoADS2-MiniLMS
 ```
-*(Nota: Reemplaza `noerodas` con el usuario correcto si el repositorio está en otro lugar).*
 
 ### 3. Elegir un Método de Ejecución
 
