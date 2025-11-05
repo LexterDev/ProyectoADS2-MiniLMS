@@ -25,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/enroll")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = {"http://localhost:4200", "https://minilms-frontend.onrender.com"})
 @RequiredArgsConstructor
 @Tag(name = "Inscripciones y Progreso", description = "Endpoints para la inscripción de estudiantes y seguimiento del progreso.")
 public class EnrollController {
