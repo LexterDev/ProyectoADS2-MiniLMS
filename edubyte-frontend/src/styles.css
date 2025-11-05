@@ -1,14 +1,78 @@
-/* You can add global styles to this file, and also import other style files */
+/* 1. Importaciones estándar de Tailwind 
+  (Esto reemplaza a @import "tailwindcss";)
+*/
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@import "tailwindcss";
-
+/* 2. Tu código original (¡perfecto!)
+*/
 html,
 body {
     height: 100%;
 }
 
+/* 3. Corrección del 'body'
+   - Eliminamos 'background-color' (ahora lo maneja index.html)
+   - Eliminamos 'margin: 0' (Tailwind lo maneja)
+   - Eliminamos 'font-family: Roboto' (ahora lo maneja la clase 'font-display' en index.html)
+*/
 body {
-    margin: 0;
-    font-family: Roboto, "Helvetica Neue", sans-serif;
-    background-color: rgb(247, 246, 248);
+  /* La fuente 'Manrope' se aplica desde tu index.html con la clase 'font-display' */
+}
+
+
+/* 4. ¡AQUÍ ESTÁN LOS ESTILOS PARA EL SNACKBAR!
+  Estas clases coinciden con el 'panelClass' en tu SnackbarService.
+  - Reemplazamos @apply con CSS estándar para evitar errores de build.
+*/
+
+/* Estilo para notificaciones de ÉXITO */
+.success-snackbar .mdc-snackbar__surface {
+  background-color: #f0fdf4; /* Similar a bg-green-100 */
+  border-left-width: 4px;
+  border-color: #22c55e; /* Similar a border-green-500 */
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); /* shadow-lg */
+}
+.dark .success-snackbar .mdc-snackbar__surface {
+  background-color: #14532d; /* Similar a dark:bg-green-900 */
+}
+.success-snackbar .mdc-snackbar__label {
+  font-weight: 500;
+  color: #15803d; /* Similar a text-green-800 */
+}
+.dark .success-snackbar .mdc-snackbar__label {
+  color: #86efac; /* Similar a dark:text-green-200 */
+}
+.success-snackbar .mat-mdc-snack-bar-action {
+  color: #16a34a; /* Similar a text-green-600 */
+  font-weight: 700;
+}
+.dark .success-snackbar .mat-mdc-snack-bar-action {
+  color: #4ade80; /* Similar a dark:text-green-300 */
+}
+
+/* Estilo para notificaciones de ERROR */
+.error-snackbar .mdc-snackbar__surface {
+  background-color: #fef2f2; /* Similar a bg-red-100 */
+  border-left-width: 4px;
+  border-color: #ef4444; /* Similar a border-red-500 */
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+.dark .error-snackbar .mdc-snackbar__surface {
+  background-color: #7f1d1d; /* Similar a dark:bg-red-900 */
+}
+.error-snackbar .mdc-snackbar__label {
+  font-weight: 500;
+  color: #b91c1c; /* Similar a text-red-800 */
+}
+.dark .error-snackbar .mdc-snackbar__label {
+  color: #fca5a5; /* Similar a dark:text-red-200 */
+}
+.error-snackbar .mat-mdc-snack-bar-action {
+  color: #dc2626; /* Similar a text-red-600 */
+  font-weight: 700;
+}
+.dark .error-snackbar .mat-mdc-snack-bar-action {
+  color: #f87171; /* Similar a dark:text-red-300 */
 }
