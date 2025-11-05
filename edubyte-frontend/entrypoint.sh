@@ -14,7 +14,7 @@ if [ "$ENV_MODE" = "production" ]; then
   # 2. Reemplazar la URL de la API en los archivos de Angular.
   # Asegúrate de que la variable NG_API_URL esté definida en Render.
   echo "Replacing API URL placeholder with: $API_URL"
-  find /usr/share/nginx/html -type f -name "*.js" -exec sed -i "s|http://localhost:8080/api|${NG_API_URL}|g" {} +
+  find /usr/share/nginx/html -type f -name "*.js" -exec sed -i "s|http://localhost:8080/api|${API_URL}|g" {} +
 
 else
   # MODO DESARROLLO (DOCKER COMPOSE LOCAL)

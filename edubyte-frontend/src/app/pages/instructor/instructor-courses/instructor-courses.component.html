@@ -1,0 +1,124 @@
+<main class="min-h-screen py-10 bg-background-light dark:bg-background-dark text-black dark:text-white">
+  
+  <div class="mx-auto max-w-7xl px-4 md:px-8">
+
+    <div class="flex flex-wrap justify-between items-center gap-4 mb-6">
+      <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Mis Cursos</h1>
+      <button 
+        routerLink="/courses/create"
+        class="flex items-center gap-2 justify-center rounded-lg h-10 px-5 bg-primary text-white text-sm font-bold shadow-md hover:bg-primary/90 transition-all">
+        <span class="material-symbols-outlined">add</span>
+        <span class="truncate">Crear Nuevo Curso</span>
+      </button>
+    </div>
+
+    <div class="mb-6">
+      <div class="border-b border-primary/20 dark:border-primary/30 flex gap-2 sm:gap-8">
+        <button 
+          (click)="setTab('Todos')"
+          [ngClass]="activeTab === 'Todos' ? 'border-primary text-primary' : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary hover:border-primary/50'"
+          class="flex items-center justify-center border-b-2 px-2 sm:px-4 py-3 text-sm font-bold transition-colors">
+          Todos
+        </button>
+        <button 
+          (click)="setTab('Publicados')"
+          [ngClass]="activeTab === 'Publicados' ? 'border-primary text-primary' : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary hover:border-primary/50'"
+          class="flex items-center justify-center border-b-2 px-2 sm:px-4 py-3 text-sm font-bold transition-colors">
+          Publicados
+        </button>
+        <button 
+          (click)="setTab('Borrador')"
+          [ngClass]="activeTab === 'Borrador' ? 'border-primary text-primary' : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary hover:border-primary/50'"
+          class="flex items-center justify-center border-b-2 px-2 sm:px-4 py-3 text-sm font-bold transition-colors">
+          Borradores
+        </button>
+        <button 
+          (click)="setTab('En revisión')"
+          [ngClass]="activeTab === 'En revisión' ? 'border-primary text-primary' : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary hover:border-primary/50'"
+          class="flex items-center justify-center border-b-2 px-2 sm:px-4 py-3 text-sm font-bold transition-colors">
+          En revisión
+        </button>
+      </div>
+    </div>
+
+    <div class="bg-white dark:bg-background-dark rounded-lg shadow-sm overflow-x-auto border border-primary/10 dark:border-primary/20">
+      <table class="w-full text-sm text-left">
+        <thead class="text-xs text-gray-700 dark:text-gray-400 uppercase bg-primary/10 dark:bg-primary/20">
+          <tr>
+            <th class="px-6 py-3 min-w-[6rem]" scope="col">Miniatura</th>
+            <th class="px-6 py-3 min-w-[15rem]" scope="col">Título</th>
+            <th class="px-6 py-3 min-w-[8rem]" scope="col">Estado</th>
+            <th class="px-6 py-3" scope="col">Estudiantes</th>
+            <th class="px-6 py-3" scope="col">Rating</th>
+            <th class="px-6 py-3" scope="col">Ingresos</th>
+            <th class="px-6 py-3 min-w-[10rem]" scope="col">Última actualización</th>
+            <th class="px-6 py-3 text-center" scope="col">Acciones</th>
+          </tr>
+        </thead>
+        <tbody class="text-gray-800 dark:text-gray-300">
+          
+          @for (course of filteredCourses; track course.id) {
+            <tr class="border-b border-primary/20 dark:border-primary/30 hover:bg-primary/5 dark:hover:bg-primary/10">
+              
+              <td class="px-6 py-4">
+                <div class="bg-center bg-no-repeat aspect-video bg-cover rounded w-20" 
+                     [style.background-image]="'url(' + course.thumbnailUrl + ')'">
+                </div>
+              </td>
+              
+              <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">
+                {{ course.title }}
+              </td>
+              
+              <td class="px-6 py-4">
+                @switch (course.status) {
+                  @case ('Publicado') {
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">Publicado</span>
+                  }
+                  @case ('Borrador') {
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-300">Borrador</span>
+                  }
+                  @case ('En revisión') {
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">En revisión</span>
+                  }
+                  @case ('Rechazado') {
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">Rechazado</span>
+                  }
+                }
+              </td>
+              
+              <td class="px-6 py-4">{{ course.students | number }}</td>
+              <td class="px-6 py-4">{{ course.rating | number:'1.1-1' }}</td>
+              <td class="px-6 py-4">{{ course.revenue | currency:'USD':'symbol':'1.0-0' }}</td>
+              <td class="px-6 py-4">{{ course.lastUpdated | date:'dd/MM/yyyy' }}</td>
+              
+              <td class="px-6 py-4 text-center">
+                <button mat-icon-button [matMenuTriggerFor]="menu" 
+                        class="text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary">
+                  <span class="material-symbols-outlined">more_vert</span>
+                </button>
+                <mat-menu #menu="matMenu" xPosition="before">
+                  <button mat-menu-item (click)="editCourse(course.id)">
+                    <span class="material-symbols-outlined text-sm mr-2">edit</span>
+                    Editar
+                  </button>
+                  <button mat-menu-item class="text-red-600 dark:text-red-500" (click)="deleteCourse(course.id)">
+                    <span class="material-symbols-outlined text-sm mr-2">delete</span>
+                    Eliminar
+                  </button>
+                </mat-menu>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="8" class="text-center py-10 text-gray-500 dark:text-gray-400">
+                No se encontraron cursos que coincidan con tus filtros.
+              </td>
+            </tr>
+          }
+
+        </tbody>
+      </table>
+    </div>
+
+  </div> </main>
