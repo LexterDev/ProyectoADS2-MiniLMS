@@ -1,15 +1,27 @@
 #!/bin/sh
 
-# Establece la ruta donde Nginx sirve los archivos
-ROOT_DIR=/usr/share/nginx/html
+# El modo por defecto es 'development'
+# En Render, estableceremos ENV_MODE=production
+if [ "$ENV_MODE" = "production" ]; then
+  # MODO PRODUCCIÓN (RENDER)
+  echo "Running in PRODUCTION mode."
 
-# Reemplaza el marcador de posición con el valor de la variable de entorno API_URL
-echo "Replacing API_URL placeholder with: ${API_URL}"
-# Itera sobre los archivos JS principales para encontrar y reemplazar el marcador
-for file in $ROOT_DIR/main*.js;
-do
-  sed -i 's|__API_URL__|'${API_URL}'|g' $file
-done
+  # 1. Eliminar el bloque del proxy de Nginx, ya que no es necesario.
+  # Usa 'sed' para encontrar la línea 'location /api/ {' y eliminar hasta el '}' correspondiente.
+  sed -i '/location \/api\//,/}/d' /etc/nginx/conf.d/default.conf
+  echo "Nginx proxy for /api/ has been removed."
 
-# Inicia el servidor Nginx en primer plano
+  # 2. Reemplazar la URL de la API en los archivos de Angular.
+  # Asegúrate de que la variable NG_API_URL esté definida en Render.
+  echo "Replacing API URL placeholder with: $API_URL"
+  find /usr/share/nginx/html -type f -name "*.js" -exec sed -i "s|http://localhost:8080/api|${NG_API_URL}|g" {} +
+
+else
+  # MODO DESARROLLO (DOCKER COMPOSE LOCAL)
+  echo "Running in DEVELOPMENT mode. Nginx proxy for /api/ is active."
+  # No se hace nada, se usa el nginx.conf original con el proxy a http://api:8080
+fi
+
+# Inicia Nginx en primer plano para mantener el contenedor corriendo
+echo "Starting Nginx..."
 nginx -g 'daemon off;'
