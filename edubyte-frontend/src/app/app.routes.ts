@@ -7,30 +7,66 @@ import { RegisterComponent } from './auth/register/register.component';
 import { ForgotPasswordComponent } from './auth/forgot-password/forgot-password.component';
 import { CourseListComponent } from './pages/courses/course-list/course-list.component';
 import { DashboardStudentComponent } from './pages/dashboard-student/dashboard-student.component';
+import { CourseCreateComponent } from './pages/courses/course-create/course-create.component';
+import { DashboardComponent } from './pages/instructor/dashboard/dashboard.component';
 
 export const routes: Routes = [
-  {
-    path: '',
-    component: LandingComponent
-  },
-  {
-    path: 'login',
-    component: LoginComponent
-  },
-  { 
-    path: 'register', 
-    component: RegisterComponent 
-  },
-  { 
-    path: 'forgot-password', 
-    component: ForgotPasswordComponent 
-  },
-  {
-    path: 'courses',
-    component: CourseListComponent
-  },
-  {
-    path: 'dashboard-student',
-    component: DashboardStudentComponent
-  }
+    {
+        path: '',
+        component: LandingComponent
+    },
+    {
+        path: 'login',
+        component: LoginComponent
+    },
+    {
+        path: 'register',
+        component: RegisterComponent
+    },
+    {
+        path: 'forgot-password',
+        component: ForgotPasswordComponent
+    },
+
+    // --- RUTA DE LISTADO DE CURSOS ---
+    {
+        path: 'courses',
+        component: CourseListComponent
+    },
+
+    {
+        path: '',
+        component: LandingComponent
+    },
+    {
+        path: 'login',
+        component: LoginComponent
+    },
+    {
+        path: 'register',
+        component: RegisterComponent
+    },
+    {
+        path: 'forgot-password',
+        component: ForgotPasswordComponent
+    },
+    {
+        path: 'courses',
+        component: CourseListComponent
+    },
+    {
+        path: 'dashboard-student',
+        component: DashboardStudentComponent
+    },
+    {
+        path: 'courses/create',
+        component: CourseCreateComponent
+
+    },
+
+     {
+        path: 'instructor/dashboard',
+        component: DashboardComponent
+
+    }
 ];

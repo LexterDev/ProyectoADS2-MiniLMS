@@ -1,0 +1,329 @@
+<div class="flex min-h-screen w-full bg-background-light dark:bg-background-dark font-display text-black dark:text-white">
+  <div class="flex flex-1">
+    
+    <aside class="w-80 flex-shrink-0 p-6 space-y-6 hidden lg:block">
+      <div class="bg-white dark:bg-background-dark/50 rounded-xl shadow-sm p-4 border border-primary/10">
+        <div class="flex items-start justify-between gap-4">
+          <div class="flex flex-col gap-1">
+            <p class="text-primary text-sm font-medium">Progreso del Curso</p>
+            <p class="text-black dark:text-white text-lg font-bold">Crear Curso</p>
+            <p class="text-black/60 dark:text-white/60 text-sm">Completa los pasos para publicar tu curso.</p>
+          </div>
+          <div 
+            class="w-20 h-20 bg-center bg-no-repeat bg-cover rounded-lg flex-shrink-0" 
+            [style.background-image]="imagePreviewUrl ? 'url(' + imagePreviewUrl + ')' : 'url(https://placehold.co/80x80/f7f6f8/e9e5f0?text=?)'">
+          </div>
+        </div>
+        <div class="mt-4 space-y-2">
+          <div class="flex justify-between items-center">
+            <p class="text-black dark:text-white text-sm font-medium">Progreso</p>
+            <p class="text-primary text-sm font-bold">{{ progressPercentage }}%</p>
+          </div>
+          <div class="w-full bg-primary/20 rounded-full h-2">
+            <div class="bg-primary h-2 rounded-full transition-all" [style.width]="progressPercentage + '%'"></div>
+          </div>
+          <p class="text-black/60 dark:text-white/60 text-sm pt-2">{{ currentStepLabel }}</p>
+        </div>
+      </div>
+      <button routerLink="/courses" type="button" class="w-full h-12 px-4 flex items-center justify-center rounded-lg bg-primary/10 text-primary font-bold text-sm hover:bg-primary/20 transition-colors">
+        <span class="truncate">Guardar y salir</span>
+      </button>
+    </aside>
+
+    <main class="flex-1 p-6 overflow-y-auto">
+      <div class="max-w-4xl mx-auto">
+        <h1 class="text-4xl font-bold text-black dark:text-white tracking-tight mb-8">Crear Curso</h1>
+        
+        <ol class="flex items-center w-full text-sm font-medium text-center text-gray-500 dark:text-gray-400 mb-10">
+          
+          @for (step of steps; track $index; let isLast = $last) {
+            <li 
+              class="flex items-center"
+              [ngClass]="{
+                'text-primary dark:text-primary': $index + 1 <= currentStep,
+                'flex-1': !isLast
+              }"
+            >
+              <button 
+                type="button"
+                class="flex flex-col items-center justify-center sm:flex-row sm:items-center sm:justify-start"
+                (click)="goToStep($index + 1)"
+                [disabled]="$index + 1 >= currentStep" 
+              >
+                <span class="flex items-center justify-center w-8 h-8 rounded-full ring-2 sm:mr-3 shrink-0"
+                      [ngClass]="{
+                        'bg-primary ring-primary': $index + 1 <= currentStep, 'bg-gray-200 dark:bg-gray-700 ring-gray-400 dark:ring-gray-500': $index + 1 > currentStep
+                      }">
+                  
+                  <span *ngIf="$index + 1 < currentStep" class="material-symbols-outlined text-white text-lg">
+                    done
+                  </span>
+                  <span *ngIf="$index + 1 >= currentStep" 
+                        class="font-bold"
+                        [ngClass]="{
+                          'text-white': $index + 1 === currentStep,
+                          'text-gray-600 dark:text-gray-300': $index + 1 > currentStep
+                        }">
+                    {{ $index + 1 }}
+                  </span>
+                </span>
+                
+                <span class="hidden sm:block font-semibold"
+                      [ngClass]="{
+                        'text-primary dark:text-primary': $index + 1 <= currentStep,
+                        'text-gray-600 dark:text-gray-400': $index + 1 > currentStep
+                      }">
+                  {{ step.label }}
+                </span>
+              </button>
+
+              <div *ngIf="!isLast" 
+                   class="flex-1 h-0.5 w-full mx-4"
+                   [ngClass]="{
+                     'bg-primary': $index + 1 < currentStep,
+                     'bg-gray-200 dark:bg-gray-700': $index + 1 >= currentStep
+                   }">
+              </div>
+            </li>
+          }
+        </ol>
+        <form [formGroup]="courseForm" (ngSubmit)="onSubmit()" novalidate>
+          <div [ngSwitch]="currentStep" class="w-full">
+            
+            <div *ngSwitchCase="1">
+              <h2 class="text-2xl font-bold mb-1">Información Básica</h2>
+              <p class="text-black/60 dark:text-white/60 text-sm mb-6">Describe los detalles principales de tu curso.</p>
+              
+              <div formGroupName="info" class="grid grid-cols-1 gap-y-4 sm:grid-cols-2 sm:gap-x-6">
+                
+                <div class="sm:col-span-2">
+                  <label for="title" class="block text-sm font-medium text-black dark:text-white mb-1">Título del Curso</label>
+                  <input type="text" id="title" formControlName="title" placeholder="Ej. Introducción a la Programación en Python"
+                         class="block w-full rounded-lg border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm focus:border-primary focus:ring-primary"
+                         [class.border-red-500]="(submitted || f_info['title'].touched) && f_info['title'].errors">
+                  <div *ngIf="(submitted || f_info['title'].touched) && f_info['title'].errors" class="mt-1 text-xs text-red-500">
+                    <span *ngIf="f_info['title'].errors['required']">El título es requerido.</span>
+                    <span *ngIf="f_info['title'].errors['minlength']">Debe tener al menos 5 caracteres.</span>
+                  </div>
+                </div>
+
+                <div class="sm:col-span-2">
+                  <label for="subtitle" class="block text-sm font-medium text-black dark:text-white mb-1">Subtítulo del Curso</label>
+                  <input type="text" id="subtitle" formControlName="subtitle" placeholder="Ej. Aprende los fundamentos de Python..."
+                         class="block w-full rounded-lg border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm focus:border-primary focus:ring-primary"
+                         [class.border-red-500]="(submitted || f_info['subtitle'].touched) && f_info['subtitle'].errors">
+                  <div *ngIf="(submitted || f_info['subtitle'].touched) && f_info['subtitle'].errors" class="mt-1 text-xs text-red-500">
+                    <span *ngIf="f_info['subtitle'].errors['required']">El subtítulo es requerido.</span>
+                  </div>
+                </div>
+                
+                <div class="sm:col-span-2">
+                  <label for="shortDescription" class="block text-sm font-medium text-black dark:text-white mb-1">Descripción Corta</label>
+                  <textarea id="shortDescription" formControlName="shortDescription" rows="3" placeholder="Ej. Un curso introductorio..."
+                            class="block w-full rounded-lg border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm focus:border-primary focus:ring-primary"
+                            [class.border-red-500]="(submitted || f_info['shortDescription'].touched) && f_info['shortDescription'].errors"></textarea>
+                  <div *ngIf="(submitted || f_info['shortDescription'].touched) && f_info['shortDescription'].errors" class="mt-1 text-xs text-red-500">
+                    <span *ngIf="f_info['shortDescription'].errors['required']">La descripción corta es requerida.</span>
+                  </div>
+                </div>
+
+                <div class="sm:col-span-2">
+                  <label for="longDescription" class="block text-sm font-medium text-black dark:text-white mb-1">Descripción Larga</label>
+                  <textarea id="longDescription" formControlName="longDescription" rows="5" placeholder="Ej. Este curso te guiará..."
+                            class="block w-full rounded-lg border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm focus:border-primary focus:ring-primary"
+                            [class.border-red-500]="(submitted || f_info['longDescription'].touched) && f_info['longDescription'].errors"></textarea>
+                  <div *ngIf="(submitted || f_info['longDescription'].touched) && f_info['longDescription'].errors" class="mt-1 text-xs text-red-500">
+                    <span *ngIf="f_info['longDescription'].errors['required']">La descripción larga es requerida.</span>
+                  </div>
+                </div>
+
+                <div>
+                  <label for="category" class="block text-sm font-medium text-black dark:text-white mb-1">Categoría</label>
+                  <select id="category" formControlName="category" 
+                          class="block w-full rounded-lg border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm focus:border-primary focus:ring-primary"
+                          [class.border-red-500]="(submitted || f_info['category'].touched) && f_info['category'].errors">
+                    <option value="" disabled>Selecciona una categoría</option>
+                    <option value="Programación">Programación</option>
+                    <option value="Diseño">Diseño</option>
+                    <option value="Negocios">Negocios</option>
+                  </select>
+                  <div *ngIf="(submitted || f_info['category'].touched) && f_info['category'].errors" class="mt-1 text-xs text-red-500">
+                    La categoría es requerida.
+                  </div>
+                </div>
+
+                <div>
+                  <label for="subcategory" class="block text-sm font-medium text-black dark:text-white mb-1">Subcategoría</label>
+                  <select id="subcategory" formControlName="subcategory"
+                          class="block w-full rounded-lg border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm focus:border-primary focus:ring-primary"
+                          [class.border-red-500]="(submitted || f_info['subcategory'].touched) && f_info['subcategory'].errors">
+                    <option value="" disabled>Selecciona una subcategoría</option>
+                    <option value="Python">Python</option>
+                    <option value="Desarrollo Web">Desarrollo Web</option>
+                  </select>
+                  <div *ngIf="(submitted || f_info['subcategory'].touched) && f_info['subcategory'].errors" class="mt-1 text-xs text-red-500">
+                    La subcategoría es requerida.
+                  </div>
+                </div>
+
+                <div>
+                  <label for="level" class="block text-sm font-medium text-black dark:text-white mb-1">Nivel</label>
+                  <select id="level" formControlName="level"
+                          class="block w-full rounded-lg border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm focus:border-primary focus:ring-primary"
+                          [class.border-red-500]="(submitted || f_info['level'].touched) && f_info['level'].errors">
+                    <option value="" disabled>Selecciona un nivel</option>
+                    <option value="Principiante">Principiante</option>
+                    <option value="Intermedio">Intermedio</option>
+                    <option value="Avanzado">Avanzado</option>
+                  </select>
+                  <div *ngIf="(submitted || f_info['level'].touched) && f_info['level'].errors" class="mt-1 text-xs text-red-500">
+                    El nivel es requerido.
+                  </div>
+                </div>
+
+                <div>
+                  <label for="language" class="block text-sm font-medium text-black dark:text-white mb-1">Idioma</label>
+                  <select id="language" formControlName="language"
+                          class="block w-full rounded-lg border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm focus:border-primary focus:ring-primary"
+                          [class.border-red-500]="(submitted || f_info['language'].touched) && f_info['language'].errors">
+                    <option value="" disabled>Selecciona un idioma</option>
+                    <option value="Español">Español</option>
+                    <option value="Inglés">Inglés</option>
+                  </select>
+                  <div *ngIf="(submitted || f_info['language'].touched) && f_info['language'].errors" class="mt-1 text-xs text-red-500">
+                    El idioma es requerido.
+                  </div>
+                </div>
+
+                <div class="sm:col-span-2">
+                  <label class="block text-sm font-medium text-black dark:text-white mb-2">Imagen Thumbnail</label>
+                  <input type="file" class="hidden" id="thumbnail-upload" accept="image/*" (change)="onImageSelected($event)" />
+                  <label for="thumbnail-upload" class="mt-1 flex justify-center rounded-lg border-2 border-dashed border-primary/30 px-6 py-10 cursor-pointer hover:border-primary"
+                    [class.border-red-500]="(submitted || f_info['thumbnail'].touched) && f_info['thumbnail'].errors">
+                    <div class="text-center">
+                      <span class="material-symbols-outlined text-6xl text-primary/50">cloud_upload</span>
+                      <p class="mt-2 text-lg font-bold text-black dark:text-white">Arrastra y suelta una imagen</p>
+                      <p class="text-sm text-black/60 dark:text-white/60">o haz clic para seleccionar un archivo</p>
+                      <p *ngIf="imagePreviewUrl && selectedImageFile" class="mt-2 text-sm text-green-600">{{ selectedImageFile.name }}</p>
+                    </div>
+                  </label>
+                  <div *ngIf="(submitted || f_info['thumbnail'].touched) && f_info['thumbnail'].errors" class="mt-1 text-xs text-red-500">
+                    <span *ngIf="f_info['thumbnail'].errors['required']">La imagen es requerida.</span>
+                  </div>
+                </div>
+
+                <div class="sm:col-span-2">
+                  <label class="block text-sm font-medium text-black dark:text-white mb-2">Video Promocional (Opcional)</label>
+                  <input type="file" class="hidden" id="video-upload" accept="video/*" (change)="onVideoSelected($event)" />
+                  <label for="video-upload" class="mt-1 flex justify-center rounded-lg border-2 border-dashed border-primary/30 px-6 py-10 cursor-pointer hover:border-primary">
+                    <div class="text-center">
+                      <span class="material-symbols-outlined text-6xl text-primary/50">videocam</span>
+                      <p class="mt-2 text-lg font-bold text-black dark:text-white">Arrastra y suelta un video</p>
+                      <p class="text-sm text-black/60 dark:text-white/60">o haz clic para seleccionar un archivo</p>
+                      <p *ngIf="videoPreviewUrl" class="mt-2 text-sm text-green-600">{{ videoPreviewUrl }}</p>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              <div class="flex justify-end pt-6 mt-6 border-t border-black/10 dark:border-white/10">
+                <button type="button" (click)="nextStep()" 
+                        class="rounded-lg h-12 px-6 text-sm font-bold bg-primary text-white hover:bg-primary/90 transition-colors">
+                  Siguiente
+                </button>
+              </div>
+            </div> <div *ngSwitchCase="2">
+              <h2 class="text-2xl font-bold mb-1">Objetivos de Aprendizaje</h2>
+              <p class="text-black/60 dark:text-white/60 text-sm mb-6">¿Qué aprenderán los estudiantes en tu curso? (Define al menos 1)</p>
+              
+              <div formGroupName="objectives">
+                <div formArrayName="learningObjectives" class="space-y-4">
+                  
+                  @for (objective of learningObjectives.controls; track $index) {
+                    <div class="flex items-start gap-4">
+                      <div class="flex-1">
+                        <label for="obj-{{$index}}" class="sr-only">Objetivo #{{ $index + 1 }}</label>
+                        <input type="text" [id]="'obj-' + $index" [formControlName]="$index"
+                               placeholder="Ej: Aprender a crear variables..."
+                               class="block w-full rounded-lg border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm focus:border-primary focus:ring-primary"
+                               [class.border-red-500]="(submitted || objective.touched) && objective.errors">
+                        
+                        <div *ngIf="(submitted || objective.touched) && objective.errors" class="mt-1 text-xs text-red-500">
+                          El objetivo no puede estar vacío.
+                        </div>
+                      </div>
+                      
+                      <button 
+                        type="button" 
+                        (click)="removeObjective($index)"
+                        [disabled]="learningObjectives.length <= 1"
+                        aria-label="Eliminar objetivo"
+                        class="mt-2 text-red-500 hover:text-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                      >
+                        <span class="material-symbols-outlined">delete</span>
+                      </button>
+                    </div>
+                  }
+                </div>
+
+                <button 
+                  type="button" 
+                  (click)="addObjective()"
+                  class="mt-6 inline-flex items-center gap-2 rounded-lg h-11 px-4 border border-primary bg-primary/10 text-primary font-bold text-sm hover:bg-primary/20 transition-colors"
+                >
+                  <span class="material-symbols-outlined">add_circle</span>
+                  Añadir otro objetivo
+                </button>
+              </div>
+              
+              <div class="flex justify-end gap-3 pt-6 mt-6 border-t border-black/10 dark:border-white/10">
+                <button type="button" (click)="prevStep()" 
+                        class="rounded-lg h-12 px-6 text-sm font-bold bg-primary/10 text-primary hover:bg-primary/20 transition-colors">
+                  Anterior
+                </button>
+                <button type="button" (click)="nextStep()" 
+                        class="rounded-lg h-12 px-6 text-sm font-bold bg-primary text-white hover:bg-primary/90 transition-colors">
+                  Siguiente
+                </button>
+              </div>
+            </div> <div *ngSwitchCase="3">
+              <h2 class="text-2xl font-bold mb-1">Contenido del Curso</h2>
+              <p class="text-black/60 dark:text-white/60 text-sm mb-6">Esta sección (Paso 3) está en construcción.</p>
+              
+              <div class="flex justify-end gap-3 pt-6 mt-6 border-t border-black/10 dark:border-white/10">
+                <button type="button" (click)="prevStep()" class="rounded-lg h-12 px-6 text-sm font-bold bg-primary/10 text-primary hover:bg-primary/20">Anterior</button>
+                <button type="button" (click)="nextStep()" class="rounded-lg h-12 px-6 text-sm font-bold bg-primary text-white hover:bg-primary/90">Siguiente</button>
+              </div>
+            </div> <div *ngSwitchCase="4">
+              <h2 class="text-2xl font-bold mb-1">Precio</h2>
+              <p class="text-black/60 dark:text-white/60 text-sm mb-6">Esta sección (Paso 4) está en construcción.</p>
+              
+              <div class="flex justify-end gap-3 pt-6 mt-6 border-t border-black/10 dark:border-white/10">
+                <button type="button" (click)="prevStep()" class="rounded-lg h-12 px-6 text-sm font-bold bg-primary/10 text-primary hover:bg-primary/20">Anterior</button>
+                <button type="button" (click)="nextStep()" class="rounded-lg h-12 px-6 text-sm font-bold bg-primary text-white hover:bg-primary/90">Siguiente</button>
+              </div>
+            </div> <div *ngSwitchCase="5">
+              <h2 class="text-2xl font-bold mb-1">Configuración</h2>
+              <p class="text-black/60 dark:text-white/60 text-sm mb-6">Esta sección (Paso 5) está en construcción.</p>
+              
+              <div class="flex justify-end gap-3 pt-6 mt-6 border-t border-black/10 dark:border-white/10">
+                <button type="button" (click)="prevStep()" class="rounded-lg h-12 px-6 text-sm font-bold bg-primary/10 text-primary hover:bg-primary/20">Anterior</button>
+                <button type="button" (click)="nextStep()" class="rounded-lg h-12 px-6 text-sm font-bold bg-primary text-white hover:bg-primary/90">Siguiente</button>
+              </div>
+            </div> <div *ngSwitchCase="6">
+              <h2 class="text-2xl font-bold mb-1">Publicación</h2>
+              <p class="text-black/60 dark:text-white/60 text-sm mb-6">¡Último paso! Revisa todo y publica tu curso.</p>
+
+              <div class="flex justify-end gap-3 pt-6 mt-6 border-t border-black/10 dark:border-white/10">
+                <button type="button" (click)="prevStep()" class="rounded-lg h-12 px-6 text-sm font-bold bg-primary/10 text-primary hover:bg-primary/20">Anterior</button>
+                
+                <button type="submit" 
+                        class="rounded-lg h-12 px-6 text-sm font-bold bg-primary text-white hover:bg-primary/90 transition-colors"
+                        [class.opacity-50]="courseForm.invalid && submitted"
+                        [disabled]="courseForm.invalid && submitted">
+                  Guardar y Publicar
+                </button>
+              </div>
+            </div> </div> </form> </div> </main>
+  </div>
+</div>
