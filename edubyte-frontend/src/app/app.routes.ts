@@ -9,6 +9,7 @@ import { CourseListComponent } from './pages/courses/course-list/course-list.com
 import { DashboardStudentComponent } from './pages/dashboard-student/dashboard-student.component';
 import { CourseCreateComponent } from './pages/courses/course-create/course-create.component';
 import { DashboardComponent } from './pages/instructor/dashboard/dashboard.component';
+import { MyCoursesComponent } from './pages/student/my-courses/my-courses.component';
 
 export const routes: Routes = [
     {
@@ -68,5 +69,11 @@ export const routes: Routes = [
         path: 'instructor/dashboard',
         component: DashboardComponent
 
+    },
+    {
+        path: 'student/my-courses',
+        component: MyCoursesComponent
+
     }
+
 ];
