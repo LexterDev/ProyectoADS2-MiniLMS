@@ -1,24 +1,28 @@
-<!-- 
-  Sección Categorías
-
--->
-<section class="mt-16">
-  <h2 class="text-2xl font-bold tracking-tight text-background-dark dark:text-background-light">
-    Categorías populares
-  </h2>
+<!-- categories.component.html -->
+<div class="max-w-7xl mx-auto px-4 py-12 mt-5">
   
-  <!-- Grid de "chips" de categorías -->
-  <div class="mt-6 flex flex-wrap gap-3">
+  <div class="mb-8">
+    <h2 class="text-3xl font-bold text-gray-900 mb-2">Explora por Categoría</h2>
+    <p class="text-gray-600">Encuentra el curso perfecto para ti</p>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
     
-    <!-- Usamos @for para recorrer el array de categorías del .ts -->
-    @for (category of categories; track category) {
-      <div class="flex h-9 shrink-0 items-center justify-center rounded-full bg-primary/10 dark:bg-primary/20 px-4 cursor-pointer transition-colors hover:bg-primary/20 dark:hover:bg-primary/30">
-        <p class="text-sm font-medium text-primary">
-          {{ category }}
-        </p>
+    <div 
+      *ngFor="let category of categories"
+      (click)="onCategoryClick(category)"
+      [class]="category.bgColor + ' rounded-2xl p-6 hover:shadow-lg transition-shadow duration-300 cursor-pointer group'">
+      
+      <div class="flex items-center gap-4">
+        <div [class]="'w-20 h-20 bg-white rounded-full border-2 border-dashed flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300 ' + category.borderColor">
+          <svg [class]="'w-10 h-10 ' + category.iconColor" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+          </svg>
+        </div>
+        <h3 class="text-xl font-bold text-gray-900">{{ category.name }}</h3>
       </div>
-    }
+    </div>
 
   </div>
-</section>
 
+</div>

@@ -8,7 +8,8 @@ import { MatButtonModule } from '@angular/material/button';
 
 // 1. ✅ AÑADE LA IMPORTACIÓN AQUÍ
 // (Ajusta la ruta si es diferente)
-import { ProfileCardComponent } from '../profile-card/profile-card.component'; 
+import { ProfileCardComponent } from '../profile-card/profile-card.component';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -35,10 +36,10 @@ export class NavbarComponent {
     { label: 'Comunidad', link: '/community' }
   ];
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private authService: AuthService) { }
 
   isUserLoggedIn(): boolean {
-    return false; 
+    return this.authService.isUserLoggedIn();
   }
 
   goToRegister() {

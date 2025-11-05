@@ -9,11 +9,11 @@ export class FileService {
 
   // --- ¡IMPORTANTE! Reemplaza esto con tus datos de Cloudinary ---
   // 1. Ve a tu Dashboard de Cloudinary -> Settings -> "Cloud name"
-  private CLOUDINARY_CLOUD_NAME = 'TU_CLOUD_NAME'; 
+  private CLOUDINARY_CLOUD_NAME = 'djqtf9mwo'; 
   
   // 2. Ve a Settings -> Upload -> "Upload presets"
   //    Crea uno (si no tienes) y ponlo en modo "Unsigned"
-  private CLOUDINARY_UPLOAD_PRESET = 'TU_UPLOAD_PRESET'; 
+  private CLOUDINARY_UPLOAD_PRESET = 'ml_default'; 
   
   private CLOUDINARY_UPLOAD_URL = `https://api.cloudinary.com/v1_1/${this.CLOUDINARY_CLOUD_NAME}/image/upload`;
 

@@ -57,17 +57,16 @@
         </thead>
         <tbody class="text-gray-800 dark:text-gray-300">
           
-          @for (course of filteredCourses; track course.id) {
+          @for (course of allCourses; track course.id) {
             <tr class="border-b border-primary/20 dark:border-primary/30 hover:bg-primary/5 dark:hover:bg-primary/10">
               
               <td class="px-6 py-4">
                 <div class="bg-center bg-no-repeat aspect-video bg-cover rounded w-20" 
-                     [style.background-image]="'url(' + course.thumbnailUrl + ')'">
-                </div>
+[style.background-image]="'url(' + (course.adjunto?.url || 'default-product-card.png') + ')'"></div>
               </td>
               
               <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                {{ course.title }}
+                {{ course.titulo }}
               </td>
               
               <td class="px-6 py-4">
@@ -98,6 +97,10 @@
                   <span class="material-symbols-outlined">more_vert</span>
                 </button>
                 <mat-menu #menu="matMenu" xPosition="before">
+                  <button mat-menu-item (click)="addSections(course.id)">
+                    <span class="material-symbols-outlined text-sm mr-2">add</span>
+                    Agregar Secciones
+                  </button>
                   <button mat-menu-item (click)="editCourse(course.id)">
                     <span class="material-symbols-outlined text-sm mr-2">edit</span>
                     Editar

@@ -73,9 +73,9 @@
                         class="block w-full rounded-lg border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm focus:border-primary focus:ring-primary"
                         [class.border-red-500]="(submitted || f['category'].touched) && f['category'].errors">
                   <option value="" disabled>Selecciona una categoría</option>
-                  <option value="Programación">Programación</option>
-                  <option value="Diseño">Diseño</option>
-                  <option value="Negocios">Negocios</option>
+                  <option value="1">Desarrollo Web</option>
+                  <option value="2">Diseño UI/UX</option>
+                  <option value="3">Negocios y Finanzas</option>
                 </select>
                 @if ((submitted || f['category'].touched) && f['category'].errors) {
                   <div class="mt-1 text-xs text-red-500">

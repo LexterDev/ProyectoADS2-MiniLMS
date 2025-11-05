@@ -38,5 +38,18 @@ export class AuthService {
   isUserLoggedIn(): boolean {
     return !!localStorage.getItem('authToken');
   }
+  
+  getToken(): string | null {
+    return localStorage.getItem('authToken');
+  }
+  
+  getUserInfo(): any {
+    const userInfo = localStorage.getItem('userInfo');
+    return userInfo ? JSON.parse(userInfo) : null;
+  }
 
+  getUserRole(): string | null {
+    const userInfo = this.getUserInfo();
+    return userInfo ? userInfo.rol : null;
+  }
 }

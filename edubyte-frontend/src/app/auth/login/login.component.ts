@@ -57,6 +57,7 @@ export class LoginComponent {
           this.errorMessage = 'Credenciales inválidas. Inténtalo de nuevo.';
         } else {
           localStorage.setItem('authToken', response.token);
+          localStorage.setItem('userInfo', JSON.stringify(response));
           if (response.rol == 'ESTUDIANTE') {
             this.router.navigate(['/dashboard-student']);
           } else if (response.rol == 'INSTRUCTOR') {

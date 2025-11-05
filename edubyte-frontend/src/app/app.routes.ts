@@ -11,6 +11,9 @@ import { CourseCreateComponent } from './pages/courses/course-create/course-crea
 import { DashboardComponent } from './pages/instructor/dashboard/dashboard.component';
 import { MyCoursesComponent } from './pages/student/my-courses/my-courses.component';
 import { InstructorCoursesComponent } from './pages/instructor/instructor-courses/instructor-courses.component';
+import { CourseDetailsComponent } from './pages/courses/course-details/course-details.component';
+import { CourseSectionsComponent } from './pages/courses/course-sections/course-sections.component';
+import { CourseLessonsComponent } from './pages/courses/course-lessons/course-lessons.component';
 
 export const routes: Routes = [
     {
@@ -80,6 +83,17 @@ export const routes: Routes = [
         path: 'instructor/instructor-courses',
         component: InstructorCoursesComponent
 
+    },
+    {
+        path: 'course-details/:id',
+        component: CourseDetailsComponent
+    },
+    {
+        path: 'instructor/add-section/:courseId',
+        component: CourseSectionsComponent
+    },
+    {
+        path: 'instructor/add-lesson/:sectionId',
+        component: CourseLessonsComponent
     }
-
 ];

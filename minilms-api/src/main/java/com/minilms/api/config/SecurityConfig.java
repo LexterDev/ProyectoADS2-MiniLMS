@@ -62,6 +62,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/public/**").permitAll()
                 .requestMatchers("/h2-console/**").permitAll()
                 .requestMatchers("/api/test/**").permitAll()
+                .requestMatchers("/api/courses/**").permitAll()
                 
                 // Endpoints protegidos por rol
                 .requestMatchers("/api/admin/**").hasRole(UserRole.Administrador.getCodigo())
