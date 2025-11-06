@@ -1,6 +1,5 @@
 package com.minilms.api.entities;
 
-import com.minilms.api.enums.UserRole;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -8,6 +7,8 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
+
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
@@ -21,72 +22,66 @@ import java.util.Collections;
 @Entity
 @Table(name = "usuarios")
 @Data
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class User implements UserDetails {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "usuario_id")
     private Long id;
     
     @NotBlank(message = "El nombre es obligatorio")
-    @Size(min = 2, max = 50, message = "El nombre debe tener entre 2 y 50 caracteres")
-    @Column(name = "nombre", nullable = false, length = 50)
+    @Size(min = 2, max = 50)
+    @Column(nullable = false, length = 50)
     private String nombre;
     
     @NotBlank(message = "El apellido es obligatorio")
-    @Size(min = 2, max = 50, message = "El apellido debe tener entre 2 y 50 caracteres")
-    @Column(name = "apellido", nullable = false, length = 50)
+    @Size(min = 2, max = 50)
+    @Column(nullable = false, length = 50)
     private String apellido;
     
-    @NotBlank(message = "El email es obligatorio")
-    @Email(message = "El email debe tener un formato válido")
-    @Column(name = "email", nullable = false, unique = true, length = 100)
-    private String email;
+    @NotBlank(message = "El correo es obligatorio")
+    @Email(message = "El formato del correo no es válido")
+    @Column(nullable = false, unique = true, length = 100)
+    private String correo;
     
-    @NotBlank(message = "La contraseña es obligatoria")
-    @Size(min = 6, message = "La contraseña debe tener al menos 6 caracteres")
-    @Column(name = "password", nullable = false)
-    private String password;
+    @NotBlank(message = "La clave es obligatoria")
+    @Column(nullable = false)
+    private String clave;
     
-    @Enumerated(EnumType.STRING)
-    @Column(name = "rol", nullable = false)
-    private UserRole rol = UserRole.ESTUDIANTE;
+    @ManyToOne
+    @JoinColumn(name = "rol_id", nullable = false)
+    private Rol rol;
     
-    @Column(name = "activo", nullable = false)
-    private Boolean activo = true;
+    @ManyToOne
+    @JoinColumn(name = "estado_id", nullable = false)
+    private Estado estado;
     
     @CreationTimestamp
-    @Column(name = "fecha_registro", nullable = false, updatable = false)
-    private LocalDateTime fechaRegistro;
+    @Column(name = "creado_en", nullable = false, updatable = false)
+    private LocalDateTime creadoEn;
     
     @UpdateTimestamp
-    @Column(name = "fecha_actualizacion")
-    private LocalDateTime fechaActualizacion;
-    
-    // Constructor personalizado
-    public User(String nombre, String apellido, String email, String password, UserRole rol) {
-        this.nombre = nombre;
-        this.apellido = apellido;
-        this.email = email;
-        this.password = password;
-        this.rol = rol;
-    }
-    
-    // Métodos de UserDetails para Spring Security
+    @Column(name = "actualizado_en")
+    private LocalDateTime actualizadoEn;
+
+    // Métodos de UserDetails (adaptados)
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + rol.name()));
+        // CORREGIDO: Se usa getCodigo() en lugar de getId() porque la llave primaria de Rol es 'codigo'.
+        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + rol.getCodigo()));
     }
     
     @Override
     public String getUsername() {
-        return email;
+        return correo;
     }
     
     @Override
     public String getPassword() {
-        return password;
+        return clave;
     }
     
     @Override
@@ -96,7 +91,8 @@ public class User implements UserDetails {
     
     @Override
     public boolean isAccountNonLocked() {
-        return activo;
+        // CORREGIDO: Se usa getCodigo() en lugar de getId() porque la llave primaria de Estado es 'codigo'.
+        return this.estado != null && this.estado.getCodigo().equals("ACT");
     }
     
     @Override
@@ -106,6 +102,8 @@ public class User implements UserDetails {
     
     @Override
     public boolean isEnabled() {
-        return activo;
+        // CORREGIDO: Se usa getCodigo() en lugar de getId() porque la llave primaria de Estado es 'codigo'.
+        return this.estado != null && this.estado.getCodigo().equals("ACT");
     }
 }
+

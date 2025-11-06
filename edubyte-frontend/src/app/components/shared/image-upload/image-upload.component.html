@@ -1,0 +1,76 @@
+<!-- 
+  Este componente maneja 4 estados:
+  1. Estado inicial (prompt para subir)
+  2. Estado de Preview (archivo seleccionado, listo para subir)
+  3. Estado de Carga (mostrando barra de progreso)
+  4. Estado Final (imagen subida o 'currentImageUrl' existente)
+-->
+<div class="w-full">
+  
+  <!-- 1. El 'dropzone' es un <label> que activa el <input> -->
+  <label 
+    class="w-full flex justify-center rounded-lg border-2 border-dashed border-primary/30 p-10 cursor-pointer hover:border-primary transition-all"
+    [class.border-primary]="isDragging"
+    [class.hidden]="previewUrl || (currentImageUrl && !isLoading) || isLoading"
+    (dragover)="onDragOver($event)"
+    (dragleave)="onDragLeave($event)"
+    (drop)="onDrop($event)"
+    for="file-upload-input">
+    
+    <div class="text-center">
+      <span class="material-symbols-outlined text-6xl text-primary/50">cloud_upload</span>
+      <p class="mt-2 text-lg font-bold text-black dark:text-white">Arrastra y suelta una imagen</p>
+      <p class="text-sm text-black/60 dark:text-white/60">o haz clic para seleccionar un archivo</p>
+    </div>
+  </label>
+  
+  <!-- Input de archivo real (oculto) -->
+  <input 
+    type="file" 
+    class="hidden" 
+    id="file-upload-input" 
+    accept="image/*" 
+    (change)="onFileSelected($event)">
+
+  <!-- 2. Estado de VISTA PREVIA (Preview) -->
+  @if (previewUrl && !isLoading) {
+    <div class="w-full text-center p-4 border rounded-lg border-primary/30">
+      <p class="text-sm font-medium mb-2 text-black dark:text-white">Vista Previa:</p>
+      <img [src]="previewUrl" alt="Vista previa de imagen" class="max-h-60 w-auto mx-auto rounded-lg">
+      <div class="flex gap-3 justify-center mt-4">
+        <button (click)="clearSelection()" type="button" class="rounded-lg h-10 px-5 text-sm font-bold bg-primary/10 text-primary hover:bg-primary/20">
+          Cancelar
+        </button>
+        <button (click)="uploadFile()" type="button" class="rounded-lg h-10 px-5 text-sm font-bold bg-primary text-white hover:bg-primary/90">
+          <span class="material-symbols-outlined mr-1 text-sm">upload</span>
+          Subir Ahora
+        </button>
+      </div>
+    </div>
+  }
+
+  <!-- 3. Estado de CARGA (Progreso) -->
+  @if (isLoading) {
+    <div class="w-full text-center p-10 border rounded-lg border-primary/30">
+      <p class="text-lg font-bold text-black dark:text-white mb-3">Subiendo imagen...</p>
+      <!-- Barra de Progreso 100% Tailwind -->
+      <div class="w-full bg-primary/20 rounded-full h-2.5 dark:bg-primary/30">
+        <div class="bg-primary h-2.5 rounded-full" [style.width]="uploadProgress + '%'"></div>
+      </div>
+      <p class="text-xl font-bold text-primary mt-2">{{ uploadProgress }}%</p>
+    </div>
+  }
+
+  <!-- 4. Estado FINAL (Imagen subida o existente) -->
+  @if (currentImageUrl && !previewUrl && !isLoading) {
+    <div class="w-full text-center">
+      <p class="text-sm font-medium mb-2 text-black dark:text-white">Imagen Actual:</p>
+      <img [src]="currentImageUrl" alt="Imagen del curso" class="max-h-60 w-auto mx-auto rounded-lg shadow-md">
+      <!-- Botón para cambiar la imagen (vuelve a mostrar el input) -->
+      <label for="file-upload-input" class="mt-4 inline-block cursor-pointer text-sm font-medium text-primary hover:underline">
+        Cambiar imagen
+      </label>
+    </div>
+  }
+
+</div>

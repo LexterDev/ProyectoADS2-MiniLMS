@@ -1,0 +1,48 @@
+services:
+  db:
+    image: postgres:15
+    container_name: minilms-db
+    restart: always
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - minilms-db-data:/var/lib/postgresql/data
+    networks:
+      - minilms-network
+
+  api:
+    container_name: minilms-api
+    restart: always
+    build:
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+    env_file: ./.env
+    environment:
+      - JWT_SECRET=${JWT_SECRET}
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/${POSTGRES_DB}
+      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
+      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
+    networks:
+      - minilms-network
+
+  frontend:
+    container_name: minilms-frontend
+    restart: always
+    ports:
+      - "4200:80"
+    environment:
+      - API_URL=${FRONTEND_API_URL}
+    depends_on:
+      - api
+    networks:
+      - minilms-network
+
+volumes:
+  minilms-db-data:
+
+networks:
+  minilms-network:
+    driver: bridge

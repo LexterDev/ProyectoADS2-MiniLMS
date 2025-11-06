@@ -1,0 +1,38 @@
+
+<section class="mt-16">
+  
+  <!-- Título -->
+  <h2 class="text-2xl font-bold tracking-tight text-center text-background-dark dark:text-background-light">
+    Lo que dicen nuestros estudiantes
+  </h2>
+
+  <!-- Grid de 3 columnas -->
+  <div class="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+
+    <!-- Iteramos sobre los testimonios -->
+    @for (testimonial of testimonials; track testimonial.author) {
+      
+      <!-- Tarjeta de Testimonio -->
+      <div class="flex flex-col gap-4 rounded-xl bg-background-light dark:bg-background-dark border border-primary/20 dark:border-primary/30 p-6">
+        
+        <!-- 
+          Imagen del Testimonio 
+          - Usamos [style.background-image] para poner la URL
+          - aspect-[3/4] le da la proporción 3:4
+        -->
+        <div 
+          class="w-full aspect-[3/4] bg-cover bg-center rounded-lg" 
+          [style.background-image]="'url(' + testimonial.imageUrl + ')'">
+        </div>
+        
+        <!-- Info del Testimonio -->
+        <div class="text-background-dark dark:text-background-light">
+          <p class="font-semibold">{{ testimonial.author }}</p>
+          <p class="text-sm text-background-dark/70 dark:text-background-light/70">{{ testimonial.quote }}</p>
+        </div>
+
+      </div>
+    }
+
+  </div>
+</section>

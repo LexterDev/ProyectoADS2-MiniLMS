@@ -1,0 +1,10 @@
+<div class="flex flex-col gap-2 rounded-xl border border-primary/20 dark:border-primary/30 p-6 text-background-dark dark:text-background-light h-full">
+  
+  <p class="text-base font-medium text-background-dark/70 dark:text-background-light/70">{{ title }}</p>
+  
+  <p class="text-3xl font-bold tracking-tight">{{ value }}</p>
+
+  @if (change) {
+    <p class="text-sm text-green-600 font-medium mt-1">{{ change }}</p>
+  }
+</div>

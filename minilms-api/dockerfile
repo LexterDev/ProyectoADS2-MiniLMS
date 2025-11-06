@@ -1,0 +1,36 @@
+# ---- Etapa de Compilación (Builder) ----
+# Usa una imagen con el JDK completo para compilar la aplicación
+FROM eclipse-temurin:21-jdk AS builder
+
+# Establece el directorio de trabajo
+WORKDIR /app
+
+# Copia los archivos de Maven y descarga dependencias para aprovechar el cache de Docker
+COPY .mvn/ .mvn
+COPY mvnw .
+COPY pom.xml .
+
+#Otorga permisos de ejecución al script de Maven
+RUN chmod +x mvnw
+
+RUN ./mvnw dependency:go-offline
+
+# Copia el código fuente y construye el .jar
+COPY src ./src
+RUN ./mvnw clean package -DskipTests
+
+# ---- Etapa de Producción (Final) ----
+# Usa una imagen base mucho más pequeña solo con el entorno de ejecución de Java (JRE)
+FROM eclipse-temurin:21-jre
+
+# Establece el directorio de trabajo
+WORKDIR /app
+
+# Expone el puerto de la aplicación
+EXPOSE 8080
+
+# Copia únicamente el archivo .jar compilado desde la etapa 'builder'
+COPY --from=builder /app/target/minilms-api-0.0.1-SNAPSHOT.jar app.jar
+
+# Comando para ejecutar la aplicación
+CMD ["sh", "-c", "java -Dserver.port=${PORT:-8080} -jar app.jar"]

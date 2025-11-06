@@ -1,0 +1,27 @@
+
+<section class="mt-16">
+  <h2 class="text-2xl font-bold tracking-tight text-background-dark dark:text-background-light">
+    Cursos destacados
+  </h2>
+
+  <!-- 
+    Grid de 3 columnas
+    Usamos @for para recorrer el array 'featuredCourses' del .ts
+  -->
+  <div class="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    
+    @for (course of featuredCourses; track course.title) {
+      <!-- 
+        Llamamos a nuestro componente reutilizable <app-course-card>
+        y le pasamos los datos usando Property Binding ([imageUrl], [title], etc.)
+      -->
+      <app-course-card 
+        [imageUrl]="course.imageUrl"
+        [title]="course.title"
+        [description]="course.description">
+      </app-course-card>
+    }
+
+  </div>
+</section>
+

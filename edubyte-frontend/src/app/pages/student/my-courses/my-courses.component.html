@@ -1,0 +1,138 @@
+<main class="min-h-screen py-10 bg-background-light dark:bg-background-dark text-black dark:text-white">
+  
+  <div class="mx-auto max-w-7xl px-4 md:px-8">
+
+    <div class="flex flex-col sm:flex-row justify-between items-start gap-4 mb-6">
+      <div class="flex flex-col">
+        <h2 class="text-3xl font-bold text-black dark:text-white">Mis Cursos</h2>
+        <p class="text-neutral-500 dark:text-neutral-400">{{ allCourses.length }} cursos en total</p>
+      </div>
+      
+      <div class="flex flex-wrap gap-2">
+        <button 
+          (click)="setButtonFilter('Todos')" 
+          [ngClass]="activeButtonFilter === 'Todos' ? 'bg-primary text-white' : 'bg-background-light dark:bg-background-dark border border-primary/30 text-neutral-600 dark:text-neutral-300 hover:bg-primary/10 dark:hover:bg-primary/20'"
+          class="px-4 py-2 text-sm font-medium rounded-full transition-colors">
+          Todos
+        </button>
+        <button 
+          (click)="setButtonFilter('En progreso')" 
+          [ngClass]="activeButtonFilter === 'En progreso' ? 'bg-primary text-white' : 'bg-background-light dark:bg-background-dark border border-primary/30 text-neutral-600 dark:text-neutral-300 hover:bg-primary/10 dark:hover:bg-primary/20'"
+          class="px-4 py-2 text-sm font-medium rounded-full transition-colors">
+          En progreso
+        </button>
+        <button 
+          (click)="setButtonFilter('Completados')" 
+          [ngClass]="activeButtonFilter === 'Completados' ? 'bg-primary text-white' : 'bg-background-light dark:bg-background-dark border border-primary/30 text-neutral-600 dark:text-neutral-300 hover:bg-primary/10 dark:hover:bg-primary/20'"
+          class="px-4 py-2 text-sm font-medium rounded-full transition-colors">
+          Completados
+        </button>
+        <button 
+          (click)="setButtonFilter('Favoritos')" 
+          [ngClass]="activeButtonFilter === 'Favoritos' ? 'bg-primary text-white' : 'bg-background-light dark:bg-background-dark border border-primary/30 text-neutral-600 dark:text-neutral-300 hover:bg-primary/10 dark:hover:bg-primary/20'"
+          class="px-4 py-2 text-sm font-medium rounded-full transition-colors">
+          Favoritos
+        </button>
+      </div>
+    </div>
+
+    <div class="border-b border-primary/20 dark:border-primary/30 mb-6">
+      <nav class="flex gap-8 -mb-px">
+        <a 
+          href="javascript:void(0)" 
+          (click)="setTabFilter('Todos')"
+          [ngClass]="activeTabFilter === 'Todos' ? 'border-primary text-primary' : 'border-transparent text-neutral-500 dark:text-neutral-400 hover:text-primary hover:border-primary/50'"
+          class="px-1 py-4 border-b-2 font-semibold transition-colors">
+          Todos los cursos
+        </a>
+        <a 
+          href="javascript:void(0)" 
+          (click)="setTabFilter('Archivados')"
+          [ngClass]="activeTabFilter === 'Archivados' ? 'border-primary text-primary' : 'border-transparent text-neutral-500 dark:text-neutral-400 hover:text-primary hover:border-primary/50'"
+          class="px-1 py-4 border-b-2 font-semibold transition-colors">
+          Archivados
+        </a>
+      </nav>
+    </div>
+
+    <div class="flex flex-col sm:flex-row gap-4 mb-6">
+      <div class="relative flex-grow">
+        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-primary/70 dark:text-primary/80">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"><path d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"></path></svg>
+        </div>
+        <input 
+          (input)="onSearch($event)" 
+          class="form-input w-full pl-10 pr-4 py-2 rounded-lg border-none bg-primary/10 dark:bg-primary/20 text-black dark:text-white placeholder-primary/70 dark:placeholder-primary/80 focus:ring-2 focus:ring-primary" 
+          placeholder="Buscar cursos..." type="search"/>
+      </div>
+      
+      <div class="flex items-center bg-primary/10 dark:bg-primary/20 rounded-lg p-1 text-sm">
+        <label class="cursor-pointer px-3 py-1 rounded-md has-[:checked]:bg-background-light dark:has-[:checked]:bg-background-dark has-[:checked]:shadow-md has-[:checked]:text-black dark:has-[:checked]:text-white text-neutral-600 dark:text-neutral-300">
+          <input (change)="setSort('recent')" [checked]="sortOrder === 'recent'" class="sr-only" name="sort" type="radio" value="recent"/> Recientes
+        </label>
+        <label class="cursor-pointer px-3 py-1 rounded-md has-[:checked]:bg-background-light dark:has-[:checked]:bg-background-dark has-[:checked]:shadow-md has-[:checked]:text-black dark:has-[:checked]:text-white text-neutral-600 dark:text-neutral-300">
+          <input (change)="setSort('name')" [checked]="sortOrder === 'name'" class="sr-only" name="sort" type="radio" value="name"/> Nombre
+        </label>
+        <label class="cursor-pointer px-3 py-1 rounded-md has-[:checked]:bg-background-light dark:has-[:checked]:bg-background-dark has-[:checked]:shadow-md has-[:checked]:text-black dark:has-[:checked]:text-white text-neutral-600 dark:text-neutral-300">
+          <input (change)="setSort('progress')" [checked]="sortOrder === 'progress'" class="sr-only" name="sort" type="radio" value="progress"/> Progreso
+        </label>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      
+      @for (course of filteredCourses; track course.id) {
+        <div class="bg-white dark:bg-background-dark rounded-xl overflow-hidden shadow-md border border-primary/10 dark:border-primary/20 flex flex-col">
+          <div class="relative">
+            <div class="w-full bg-center bg-no-repeat aspect-video bg-cover" [style.background-image]="'url(' + course.imageUrl + ')'"></div>
+            <button class="absolute top-2 right-2 p-1.5 rounded-full bg-white/70 dark:bg-background-dark/70 text-neutral-700 dark:text-neutral-300 hover:bg-white dark:hover:bg-background-dark">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"><path d="M128,64a16,16,0,1,0-16-16A16,16,0,0,0,128,64Zm0,48a16,16,0,1,0,16,16A16,16,0,0,0,128,112Zm0,64a16,16,0,1,0,16,16A16,16,0,0,0,128,176Z"></path></svg>
+            </button>
+          </div>
+          <div class="p-4 flex flex-col flex-grow">
+            <h3 class="font-bold text-lg text-black dark:text-white">{{ course.title }}</h3>
+            <p class="text-sm text-neutral-500 dark:text-neutral-400 mb-4">{{ course.instructor }}</p>
+
+            @if (course.progress > 0 && !course.isCompleted) {
+              <div class="w-full bg-primary/20 dark:bg-primary/30 rounded-full h-2 mb-2">
+                <div class="bg-primary h-2 rounded-full" [style.width]="course.progress + '%'"></div>
+              </div>
+              <div class="mb-4">
+                <p class="text-sm font-medium text-neutral-700 dark:text-neutral-300">Progreso: {{ course.progress }}%</p>
+                <p class="text-xs text-neutral-500 dark:text-neutral-400 truncate">Última lección: {{ course.lastLesson }}</p>
+              </div>
+              
+              <div class="mt-auto">
+                <button class="w-full bg-primary text-white font-semibold py-2 rounded-lg hover:bg-primary/90 transition-colors">Continuar</button>
+              </div>
+
+            } @else if (course.isCompleted) {
+              <div class="mb-4">
+                 <p class="font-semibold text-green-600">¡Curso Completado!</p>
+                 <p class="text-xs text-neutral-500 dark:text-neutral-400">Felicidades</p>
+              </div>
+              <div class="h-2 mb-2"></div> <div class="mt-auto">
+                <button class="w-full bg-primary/10 text-primary font-semibold py-2 rounded-lg hover:bg-primary/20 transition-colors">Ver Certificado</button>
+              </div>
+
+            } @else {
+              <div class="h-2 mb-2"></div> <div class="mb-4">
+                <p class="text-sm font-medium text-neutral-700 dark:text-neutral-300">¡Listo para empezar!</p>
+                <p class="text-xs text-neutral-500 dark:text-neutral-400 truncate">Comienza con la lección 1</p>
+              </div>
+              <div class="mt-auto">
+                <button class="w-full bg-primary text-white font-semibold py-2 rounded-lg hover:bg-primary/90 transition-colors">Comenzar</button>
+              </div>
+            }
+            
+          </div>
+        </div>
+      } @empty {
+        <div class="sm:col-span-2 lg:col-span-3 text-center py-10 text-neutral-500 dark:text-neutral-400">
+          <span class="material-symbols-outlined text-6xl">search_off</span>
+          <p class="mt-4 text-lg font-medium">No se encontraron cursos</p>
+          <p>Intenta ajustar tus filtros o término de búsqueda.</p>
+        </div>
+      }
+
+    </div> </div> </main>
