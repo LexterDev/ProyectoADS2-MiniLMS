@@ -14,6 +14,7 @@ import { InstructorCoursesComponent } from './pages/instructor/instructor-course
 import { CourseDetailsComponent } from './pages/courses/course-details/course-details.component';
 import { CourseSectionsComponent } from './pages/courses/course-sections/course-sections.component';
 import { CourseLessonsComponent } from './pages/courses/course-lessons/course-lessons.component';
+import { LessonPlayerComponent } from './pages/courses/course-lessons/lesson-player/lesson-player.component';
 
 export const routes: Routes = [
     {
@@ -69,7 +70,7 @@ export const routes: Routes = [
 
     },
 
-     {
+    {
         path: 'dashboard-instructor',
         component: DashboardComponent
 
@@ -93,7 +94,12 @@ export const routes: Routes = [
         component: CourseSectionsComponent
     },
     {
-        path: 'instructor/add-lesson/:sectionId',
+        path: 'instructor/add-lesson/:courseId/:sectionId',
         component: CourseLessonsComponent
+    },
+    {
+        path: 'lesson/:id',
+        component: LessonPlayerComponent,
+        title: 'Reproducir Lección - EduByte'
     }
 ];
