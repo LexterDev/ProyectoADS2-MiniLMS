@@ -1,14 +1,22 @@
-<section class="py-12 bg-white">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <mat-card 
-        *ngFor="let stat of stats" 
-        class="!shadow-md hover:!shadow-xl transition-shadow duration-300 !rounded-xl">
-        <mat-card-content class="p-8">
-          <p class="text-sm font-medium text-gray-600 mb-2">{{ stat.label }}</p>
-          <p class="text-4xl font-bold text-gray-900">{{ stat.value }}</p>
-        </mat-card-content>
-      </mat-card>
-    </div>
-  </div>
-</section>
+<!-- 
+  Sección Stats
+  ¡Refactorizada para USAR el StatCardComponent!
+-->
+<div class="mt-16 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+  
+  <!-- 1. Seguimos usando @for -->
+  @for (stat of stats; track stat.label) {
+    
+    <!-- 
+      2. Reemplazamos todo el <div>...</div> por <app-stat-card>
+      3. "Vinculamos" los datos:
+         - 'stat.label' (del @for) se pasa al @Input() [title]
+         - 'stat.value' (del @for) se pasa al @Input() [value]
+    -->
+    <app-stat-card 
+      [title]="stat.label" 
+      [value]="stat.value">
+    </app-stat-card>
+  
+  }
+</div>

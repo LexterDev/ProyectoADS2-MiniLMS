@@ -1,0 +1,240 @@
+<div class="flex min-h-screen w-full bg-background-light dark:bg-background-dark font-display text-black dark:text-white">
+  <div class="flex flex-1">
+    
+    <main class="flex-1 p-6 overflow-y-auto">
+      <div class="max-w-4xl mx-auto">
+        
+        @if (!isPublished) {
+          <h1 class="text-4xl font-bold text-black dark:text-white tracking-tight mb-8">Crear Curso</h1>
+          
+          <form [formGroup]="courseForm" (ngSubmit)="onSubmit()" novalidate>
+              
+            <h2 class="text-2xl font-bold mb-1">Información Básica</h2>
+            <p class="text-black/60 dark:text-white/60 text-sm mb-6">Describe los detalles principales de tu curso.</p>
+            <div class="grid grid-cols-1 gap-y-4 sm:grid-cols-2 sm:gap-x-6">
+              
+              <!-- ... (Campos title, subtitle, shortDescription, longDescription, category, level, language) ... -->
+              <!-- (Estos campos se quedan igual que en tu archivo) -->
+              
+              <div class="sm:col-span-2">
+                <label for="title" class="block text-sm font-medium text-black dark:text-white mb-1">Título del Curso</label>
+                <input type="text" id="title" formControlName="title" placeholder="Ej. Introducción a la Programación en Python"
+                       class="block w-full rounded-lg border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm focus:border-primary focus:ring-primary"
+                       [class.border-red-500]="(submitted || f['title'].touched) && f['title'].errors">
+                @if ((submitted || f['title'].touched) && f['title'].errors) {
+                  <div class="mt-1 text-xs text-red-500">
+                    @if (f['title'].errors['required']) { <span>El título es requerido.</span> }
+                    @if (f['title'].errors['minlength']) { <span>Debe tener al menos 5 caracteres.</span> }
+                  </div>
+                }
+              </div>
+
+              <div class="sm:col-span-2">
+                <label for="subtitle" class="block text-sm font-medium text-black dark:text-white mb-1">Subtítulo del Curso</label>
+                <input type="text" id="subtitle" formControlName="subtitle" placeholder="Ej. Aprende los fundamentos de Python..."
+                       class="block w-full rounded-lg border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm focus:border-primary focus:ring-primary"
+                       [class.border-red-500]="(submitted || f['subtitle'].touched) && f['subtitle'].errors">
+                @if ((submitted || f['subtitle'].touched) && f['subtitle'].errors) {
+                  <div class="mt-1 text-xs text-red-500">
+                    @if (f['subtitle'].errors['required']) { <span>El subtítulo es requerido.</span> }
+                    @if (f['subtitle'].errors['minlength']) { <span>Debe tener al menos 10 caracteres.</span> }
+                  </div>
+                }
+              </div>
+              
+              <div class="sm:col-span-2">
+                <label for="shortDescription" class="block text-sm font-medium text-black dark:text-white mb-1">Descripción Corta</label>
+                <textarea id="shortDescription" formControlName="shortDescription" rows="3" placeholder="Ej. Un curso introductorio..."
+                          class="block w-full rounded-lg border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm focus:border-primary focus:ring-primary"
+                          [class.border-red-500]="(submitted || f['shortDescription'].touched) && f['shortDescription'].errors"></textarea>
+                @if ((submitted || f['shortDescription'].touched) && f['shortDescription'].errors) {
+                  <div class="mt-1 text-xs text-red-500">
+                    @if (f['shortDescription'].errors['required']) { <span>La descripción corta es requerida.</span> }
+                    @if (f['shortDescription'].errors['minlength']) { <span>Debe tener al menos 20 caracteres.</span> }
+                  </div>
+                }
+              </div>
+
+              <div class="sm:col-span-2">
+                <label for="longDescription" class="block text-sm font-medium text-black dark:text-white mb-1">Descripción Larga</label>
+                <textarea id="longDescription" formControlName="longDescription" rows="5" placeholder="Ej. Este curso te guiará..."
+                          class="block w-full rounded-lg border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm focus:border-primary focus:ring-primary"
+                          [class.border-red-500]="(submitted || f['longDescription'].touched) && f['longDescription'].errors"></textarea>
+                @if ((submitted || f['longDescription'].touched) && f['longDescription'].errors) {
+                  <div class="mt-1 text-xs text-red-500">
+                    @if (f['longDescription'].errors['required']) { <span>La descripción larga es requerida.</span> }
+                  </div>
+                }
+              </div>
+
+              <div>
+                <label for="category" class="block text-sm font-medium text-black dark:text-white mb-1">Categoría</label>
+                <select id="category" formControlName="category" 
+                        class="block w-full rounded-lg border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm focus:border-primary focus:ring-primary"
+                        [class.border-red-500]="(submitted || f['category'].touched) && f['category'].errors">
+                  <option value="" disabled>Selecciona una categoría</option>
+                  <option value="1">Desarrollo Web</option>
+                  <option value="2">Diseño UI/UX</option>
+                  <option value="3">Negocios y Finanzas</option>
+                </select>
+                @if ((submitted || f['category'].touched) && f['category'].errors) {
+                  <div class="mt-1 text-xs text-red-500">
+                    La categoría es requerida.
+                  </div>
+                }
+              </div>
+
+              <div>
+                <label for="level" class="block text-sm font-medium text-black dark:text-white mb-1">Nivel</label>
+                <select id="level" formControlName="level"
+                        class="block w-full rounded-lg border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm focus:border-primary focus:ring-primary"
+                        [class.border-red-500]="(submitted || f['level'].touched) && f['level'].errors">
+                  <option value="" disabled>Selecciona un nivel</option>
+                  <option value="Principiante">Principiante</option>
+                  <option value="Intermedio">Intermedio</option>
+                  <option value="Avanzado">Avanzado</option>
+                </select>
+                @if ((submitted || f['level'].touched) && f['level'].errors) {
+                  <div class="mt-1 text-xs text-red-500">
+                    El nivel es requerido.
+                  </div>
+                }
+              </div>
+
+              <div>
+                <label for="language" class="block text-sm font-medium text-black dark:text-white mb-1">Idioma</label>
+                <select id="language" formControlName="language"
+                        class="block w-full rounded-lg border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm focus:border-primary focus:ring-primary"
+                        [class.border-red-500]="(submitted || f['language'].touched) && f['language'].errors">
+                  <option value="" disabled>Selecciona un idioma</option>
+                  <option value="Español">Español</option>
+                  <option value="Inglés">Inglés</option>
+                </select>
+                @if ((submitted || f['language'].touched) && f['language'].errors) {
+                  <div class="mt-1 text-xs text-red-500">
+                    El idioma es requerido.
+                  </div>
+                }
+              </div>
+
+              <!-- 
+                =========================================
+                SECCIÓN DE IMAGEN (¡ACTUALIZADA!)
+                =========================================
+              -->
+              <div class="sm:col-span-2">
+                <label class="block text-sm font-medium text-black dark:text-white mb-2">Imagen Thumbnail</label>
+                
+                <!-- 
+                  AQUÍ ESTÁ EL CAMBIO:
+                  Reemplazamos el <input> y <label> por el nuevo componente
+                -->
+                <app-image-upload 
+                  [currentImageUrl]="f['thumbnail'].value"
+                  (uploadComplete)="onThumbnailUploaded($event)">
+                </app-image-upload>
+                
+                <!-- 
+                  Mantenemos el @if para los errores de validación del FormGroup
+                -->
+                @if ((submitted || f['thumbnail'].touched) && f['thumbnail'].errors) {
+                  <div class="mt-1 text-xs text-red-500">
+                    @if (f['thumbnail'].errors['required']) { 
+                      <span>La imagen es requerida.</span> 
+                    }
+                  </div>
+                }
+              </div>
+            </div> 
+            
+            <div class="my-10 border-t border-black/10 dark:border-white/10"></div>
+
+            <!-- 
+              =========================================
+              SECCIÓN OBJETIVOS (¡DESCOMENTADA!)
+              =========================================
+            -->
+            <!-- <h2 class="text-2xl font-bold mb-1">Objetivos de Aprendizaje</h2>
+            <p class="text-black/60 dark:text-white/60 text-sm mb-6">¿Qué aprenderán los estudiantes en tu curso? (Define al menos 1)</p>
+            <div formArrayName="learningObjectives" class="space-y-4">
+              @for (objective of learningObjectives.controls; track $index) {
+                <div class="flex items-start gap-4">
+                  <div class="flex-1">
+                    <label for="obj-{{$index}}" class="sr-only">Objetivo #{{ $index + 1 }}</label>
+                    <input type="text" [id]="'obj-' + $index" [formControlName]="$index"
+                           placeholder="Ej: Aprender a crear variables..."
+                           class="block w-full rounded-lg border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm focus:border-primary focus:ring-primary"
+                           [class.border-red-500]="(submitted || objective.touched) && objective.errors">
+                    @if ((submitted || objective.touched) && objective.errors) {
+                      <div class="mt-1 text-xs text-red-500">
+                        El objetivo no puede estar vacío.
+                      </div>
+                    }
+                  </div>
+                  <button type="button" (click)="removeObjective($index)" [disabled]="learningObjectives.length <= 1"
+                          aria-label="Eliminar objetivo"
+                          class="mt-2 text-red-500 hover:text-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+                    <span class="material-symbols-outlined">delete</span>
+                  </button> 
+                </div> 
+              } 
+            </div>
+            <button type="button" (click)="addObjective()"
+                    class="mt-6 inline-flex items-center gap-2 rounded-lg h-11 px-4 border border-primary bg-primary/10 text-primary font-bold text-sm hover:bg-primary/20 transition-colors">
+              <span class="material-symbols-outlined">add_circle</span>
+              Añadir otro objetivo
+            </button>-->
+            
+            <!-- Botones de Envío (Sin cambios) -->
+            <div class="flex justify-end gap-3 pt-6 mt-10 border-t border-black/10 dark:border-white/10">
+              <button 
+                routerLink="/instructor/dashboard" 
+                type="button" 
+                class="rounded-lg h-12 px-6 text-sm font-bold bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
+                [disabled]="isLoading">
+                Cancelar
+              </button>
+              <button 
+                type="submit" 
+                class="rounded-lg h-12 px-6 text-sm font-bold bg-primary text-white hover:bg-primary/90 transition-colors flex items-center justify-center min-w-[150px]"
+                [class.opacity-50]="(courseForm.invalid && submitted) || isLoading"
+                [disabled]="(courseForm.invalid && submitted) || isLoading">
+                
+                @if (isLoading) {
+                  <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  <span>Publicando...</span>
+                } @else {
+                  <span>Guardar y Publicar</span>
+                }
+              </button>
+            </div>
+            
+          </form> 
+        
+        } @else {
+          <!-- Pantalla de Éxito (Sin cambios) -->
+          <div class="flex flex-col items-center justify-center py-20 text-center">
+            <div class="p-6 bg-green-100 dark:bg-green-900 rounded-full">
+              <span class="material-symbols-outlined text-6xl text-green-600 dark:text-green-300">
+                check_circle
+              </span>
+            </div>
+            <h1 class="text-4xl font-bold text-black dark:text-white tracking-tight mt-8">
+              ¡Curso Publicado!
+            </h1>
+            <p class="text-lg text-black/60 dark:text-white/60 mt-2">
+              Tu curso ha sido guardado exitosamente.
+            </p> 
+            <p class="text-sm text-black/60 dark:text-white/60 mt-4">
+              Serás redirigido al dashboard en unos segundos...
+            </p>
+          </div>
+        }
+
+      </div> 
+    </main> 
+  </div>
+</div>

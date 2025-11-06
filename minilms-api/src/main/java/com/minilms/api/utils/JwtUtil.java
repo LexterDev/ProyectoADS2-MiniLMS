@@ -1,19 +1,28 @@
 package com.minilms.api.utils;
 
-import io.jsonwebtoken.*;
-import io.jsonwebtoken.security.Keys;
-import lombok.extern.slf4j.Slf4j;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.crypto.SecretKey;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import javax.crypto.SecretKey;
-import java.util.Date;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.security.Keys;
 
 @Component
-@Slf4j
 public class JwtUtil {
+    private static final Logger log = LoggerFactory.getLogger(JwtUtil.class);
     
     @Value("${jwt.secret}")
     private String jwtSecret;
@@ -23,6 +32,24 @@ public class JwtUtil {
     
     private SecretKey getSigningKey() {
         return Keys.hmacShaKeyFor(jwtSecret.getBytes());
+    }
+
+    // --- MÉTODO NUEVO AÑADIDO ---
+    /**
+     * Genera un token JWT a partir del correo y el rol del usuario.
+     * Este es el método que AuthService necesita.
+     */
+    public String generateTokenWithRole(String correo, String rol) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("rol", rol); // Añadimos el rol como un "claim" dentro del token
+
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(correo)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .compact();
     }
     
     public String generateJwtToken(Authentication authentication) {
@@ -70,3 +97,4 @@ public class JwtUtil {
         return false;
     }
 }
+

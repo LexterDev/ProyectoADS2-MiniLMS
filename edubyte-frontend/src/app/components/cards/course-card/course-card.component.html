@@ -1,0 +1,33 @@
+<!-- 
+  Este es el componente de la Tarjeta de Curso.
+  Está envuelto en un 'a' (enlace) para que toda la tarjeta sea clickeable
+  y (en el futuro) lleve a la página de detalles.
+-->
+<a [routerLink]="['/course', courseId]" 
+   class="flex flex-col h-full bg-white dark:bg-background-dark rounded-xl shadow-sm border border-primary/10 dark:border-primary/20 overflow-hidden hover:shadow-lg transition-shadow">
+
+  <!-- Imagen -->
+  <div class="w-full h-40 bg-cover bg-center" 
+       [style.background-image]="'url(' + imageUrl + ')'">
+  </div>
+  
+  <!-- Contenido -->
+  <div class="p-4 flex flex-col flex-grow">
+    <h3 class="font-bold text-lg text-black dark:text-white mb-1">{{ title }}</h3>
+    <p class="text-sm text-neutral-500 dark:text-neutral-400 mb-4 line-clamp-2">
+      {{ description }}
+    </p>
+    
+    <!-- 
+      ¡AQUÍ ESTÁ EL BOTÓN DE INSCRIPCIÓN! 
+      Lo ponemos al final de la tarjeta.
+      Usamos 'mt-auto' para empujarlo al fondo.
+    -->
+    <div class="mt-auto pt-4">
+      <app-enroll-button 
+        [courseId]="courseId" 
+        [courseName]="title">
+      </app-enroll-button>
+    </div>
+  </div>
+</a>

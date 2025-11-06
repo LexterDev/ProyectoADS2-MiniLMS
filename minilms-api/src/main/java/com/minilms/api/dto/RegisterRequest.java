@@ -11,21 +11,24 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RegisterRequest {
+    
     @NotBlank(message = "El nombre es obligatorio")
     @Size(min = 2, max = 50, message = "El nombre debe tener entre 2 y 50 caracteres")
     private String nombre;
-    
+
     @NotBlank(message = "El apellido es obligatorio")
     @Size(min = 2, max = 50, message = "El apellido debe tener entre 2 y 50 caracteres")
     private String apellido;
-    
-    @NotBlank(message = "El email es obligatorio")
-    @Email(message = "El email debe tener un formato válido")
-    private String email;
-    
-    @NotBlank(message = "La contraseña es obligatoria")
-    @Size(min = 6, message = "La contraseña debe tener al menos 6 caracteres")
-    private String password;
-    
-    private String rol = "ESTUDIANTE"; // Por defecto
+
+    // CORREGIDO: Nombre del campo y mensaje de validación actualizados.
+    @NotBlank(message = "El correo es obligatorio")
+    @Email(message = "El correo debe tener un formato válido")
+    @Size(max = 100)
+    private String correo;
+
+    // CORREGIDO: Nombre del campo y mensaje de validación actualizados.
+    @NotBlank(message = "La clave es obligatoria")
+    @Size(min = 6, message = "La clave debe tener al menos 6 caracteres")
+    private String clave;
 }
+

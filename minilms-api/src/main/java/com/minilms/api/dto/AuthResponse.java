@@ -13,16 +13,23 @@ public class AuthResponse {
     private Long id;
     private String nombre;
     private String apellido;
-    private String email;
+    private String correo; // CORREGIDO: de email a correo
     private String rol;
     
-    public AuthResponse(String token, Long id, String nombre, String apellido, String email, String rol) {
+    // CORREGIDO: El constructor ahora usa 'correo'
+    public AuthResponse(String token, Long id, String nombre, String apellido, String correo, String rol) {
         this.token = token;
         this.type = "Bearer";
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
-        this.email = email;
+        this.correo = correo;
         this.rol = rol;
     }
+
+    // Constructor simple solo con el token, por si se necesita
+    public AuthResponse(String token) {
+        this.token = token;
+    }
 }
+
