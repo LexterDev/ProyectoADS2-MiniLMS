@@ -1,7 +1,11 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatCardModule } from '@angular/material/card';
 
+// 1. ✅ ASEGÚRATE DE QUE ESTA LÍNEA ESTÉ BIEN
+// (La ruta debe ser correcta desde 'landing/stats' hasta 'stat-card')
+import { StatCardComponent } from '../../stat-card/stat-card.component';
+
+// Interfaz
 interface Stat {
   label: string;
   value: string;
@@ -9,19 +13,20 @@ interface Stat {
 
 @Component({
   selector: 'app-stats',
+  standalone: true, 
   imports: [
     CommonModule,
-    MatCardModule
+    StatCardComponent // <-- 2. ✅ Y ASEGÚRATE DE QUE ESTÉ AQUÍ
   ],
-  templateUrl: './stats.component.html',
-  styleUrl: './stats.component.css'
+  templateUrl: './stats.component.html'
 })
 export class StatsComponent {
 
-   stats: Stat[] = [
-    { label: 'Cursos', value: '10,000+' },
-    { label: 'Estudiantes', value: '500,000+' },
-    { label: 'Instructores', value: '1,000+' }
-  ];
+    // Tus datos
+    stats: Stat[] = [
+     { label: 'Cursos', value: '10,000+' },
+     { label: 'Estudiantes', value: '500,000+' },
+     { label: 'Instructores', value: '1,000+' }
+   ];
 
 }

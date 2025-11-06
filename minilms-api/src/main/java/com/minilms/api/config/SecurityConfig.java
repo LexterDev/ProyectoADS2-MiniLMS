@@ -1,5 +1,6 @@
 package com.minilms.api.config;
 
+import com.minilms.api.enums.UserRole;
 import com.minilms.api.security.AuthTokenFilter;
 import com.minilms.api.services.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -60,12 +61,20 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/public/**").permitAll()
                 .requestMatchers("/h2-console/**").permitAll()
+                .requestMatchers("/api/test/**").permitAll()
+                .requestMatchers("/api/courses/**").permitAll()
                 
                 // Endpoints protegidos por rol
-                .requestMatchers("/api/admin/**").hasRole("ADMINISTRADOR")
-                .requestMatchers("/api/moderator/**").hasRole("MODERADOR")
-                .requestMatchers("/api/instructor/**").hasAnyRole("INSTRUCTOR", "ADMINISTRADOR")
-                .requestMatchers("/api/student/**").hasAnyRole("ESTUDIANTE", "INSTRUCTOR", "ADMINISTRADOR")
+                .requestMatchers("/api/admin/**").hasRole(UserRole.Administrador.getCodigo())
+                .requestMatchers("/api/moderator/**").hasRole(UserRole.Moderador.getCodigo())
+                .requestMatchers("/api/instructor/**").hasAnyRole(UserRole.Instructor.getCodigo(), UserRole.Administrador.getCodigo())
+                .requestMatchers("/api/student/**").hasAnyRole(UserRole.Estudiante.getCodigo(), UserRole.Instructor.getCodigo(), UserRole.Administrador.getCodigo())
+
+                // Acceso a la UI de Swagger y al JSON de la API
+                .requestMatchers("/swagger-ui.html").permitAll()
+                .requestMatchers("/swagger-ui/**").permitAll()
+                .requestMatchers("/v3/api-docs").permitAll()
+                .requestMatchers("/v3/api-docs/**").permitAll()
                 
                 // Cualquier otra request requiere autenticación
                 .anyRequest().authenticated()
@@ -80,7 +89,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(Arrays.asList("http://localhost:4200", "http://localhost:3000"));
+        configuration.setAllowedOriginPatterns(Arrays.asList("http://localhost:4200", "http://localhost:3000", "https://minilms-frontend.onrender.com/"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);

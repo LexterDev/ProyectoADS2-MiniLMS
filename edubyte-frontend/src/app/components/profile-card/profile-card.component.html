@@ -1,0 +1,29 @@
+<button matFab [matMenuTriggerFor]="menu" class="!text-white text-center flex items-center justify-center rounded-full w-12 h-12 overflow-hidden bg-primary/10 dark:bg-primary/20 hover:bg-primary/20 transition-all mr-2">
+  <img [src]="userInformation.avatar" class="w-10 h-10" alt="Avatar" />
+</button>
+
+<mat-menu #menu="matMenu" class="!bg-[#ffffff] !w-80 !rounded-md !shadow-lg mt-3 border-2 border-[#e7e5e5] py-0">
+  <div class="px-4 flex flex-col items-center text-center !bg-[#e9e7e7] pb-3 pt-3">
+    <img [src]="userInformation.avatar" class="w-36 h-36 rounded-full mb-2" alt="Avatar" />
+    <div class="font-medium text-lg">{{ userInformation.nombre }}</div>
+    <div class="font-medium text-sm text-gray-500">{{ userInformation.rol }}</div>
+    <div class="font-medium text-sm text-gray-500">{{ userInformation.email }}</div>
+  </div>
+  <!-- <mat-divider></mat-divider> -->
+  <!-- <button mat-menu-item routerLink="/perfil" (click)="redirectTo('perfil')">
+    <mat-icon>person</mat-icon>
+    <span>Perfil</span>
+  </button> -->
+  <!-- <button mat-menu-item routerLink="/preferences">
+    <mat-icon>settings</mat-icon>
+    <span>Preferencias</span>
+  </button>
+  <button mat-menu-item routerLink="/informacion">
+    <mat-icon>info</mat-icon>
+    <span>Información</span>
+  </button> -->
+  <button mat-menu-item (click)="logout()">
+    <mat-icon>logout</mat-icon>
+    <span>Cerrar sesión</span>
+  </button>
+</mat-menu>

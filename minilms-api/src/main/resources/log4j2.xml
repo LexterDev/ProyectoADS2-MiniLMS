@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO">
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout
+                disableAnsi="false"
+                pattern="%highlight{[%-5level]-[MINILMS-API]-%d{${LOG_DATEFORMAT_PATTERN:-dd-MM-yyyy HH:mm:ss.SSS}} %logger{36} %msg%n}{FATAL=red, ERROR=red, WARN=yellow bold, INFO=green bold, DEBUG=black, TRACE=blue}" 
+            />
+        </Console>
+    </Appenders>
+
+    <Loggers>
+        <Logger name="org.hibernate" level="error" additivity="false" />
+        <Logger name="org.springframework.web" level="info" additivity="false">
+            <AppenderRef ref="Console" />
+        </Logger>
+        <Root level="INFO">
+            <AppenderRef ref="Console" />
+        </Root>
+    </Loggers>
+</Configuration>

@@ -1,0 +1,18 @@
+services:
+  db:
+    ports:
+      - "5433:5432" # Exponemos el puerto de la BD solo para desarrollo
+
+  api:
+    build:
+      context: ./minilms-api
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080" # Exponemos el puerto de la API solo para desarrollo
+    environment:
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update # 'update' es ideal para desarrollo
+
+  frontend:
+    build:
+      context: ./edubyte-frontend
+      dockerfile: Dockerfile
