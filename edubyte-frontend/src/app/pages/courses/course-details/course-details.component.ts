@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CoursesService } from '../../../services/courses.service';
 
 // Interfaces basadas en tu API
@@ -62,6 +62,7 @@ interface CourseDetails {
 export class CourseDetailsComponent implements OnInit {
   private coursesService = inject(CoursesService);
   private route = inject(ActivatedRoute);
+  private router = inject(Router);
 
   courseId: string = '';
   courseDetails: CourseDetails | null = null;
@@ -85,7 +86,7 @@ export class CourseDetailsComponent implements OnInit {
 
     this.coursesService.getCourseById(this.courseId).subscribe({
       next: (data: any) => {
-        console.log('📦 Datos del curso:', data);
+        console.log('Datos del curso:', data);
         
         // Extraer datos según la estructura de tu API
         const courseData = data.data || data;
@@ -103,11 +104,11 @@ export class CourseDetailsComponent implements OnInit {
           secciones: this.processSections(courseData.secciones || [])
         };
 
-        console.log('✅ Curso procesado:', this.courseDetails);
+        console.log('Curso procesado:', this.courseDetails);
         this.isLoading = false;
       },
       error: (error) => {
-        console.error('❌ Error:', error);
+        console.error('Error:', error);
         this.error = 'Error al cargar el curso';
         this.isLoading = false;
       }
@@ -178,11 +179,10 @@ export class CourseDetailsComponent implements OnInit {
   // Reproducir lección
   playLesson(leccion: Leccion): void {
     if (!leccion.visible) {
-      console.log('⚠️ Lección no disponible');
+      console.log('Lección no disponible');
       return;
     }
-    console.log('▶️ Reproduciendo:', leccion.titulo, leccion.url);
-    // Implementar lógica de reproducción
+    this.router.navigate(['/lesson', leccion.id]);
   }
 
   // Calcular duración total del curso

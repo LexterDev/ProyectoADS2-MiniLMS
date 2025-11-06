@@ -8,6 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../../../services/auth.service';
 import { CoursesService } from '../../../services/courses.service';
+import { SidebarInstructorComponent } from '../sidebar-instructor/sidebar-instructor.component';
 
 // Definimos la estructura de un curso del instructor
 type CourseStatus = 'Publicado' | 'Borrador' | 'En revisión' | 'Rechazado';
@@ -36,7 +37,8 @@ type CourseStatus = 'Publicado' | 'Borrador' | 'En revisión' | 'Rechazado';
     // Módulos de Material
     MatMenuModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    SidebarInstructorComponent
   ],
   templateUrl: './instructor-courses.component.html', // <-- Nombre del HTML
 })
@@ -98,9 +100,9 @@ export class InstructorCoursesComponent implements OnInit {
     // this.applyFilters(); // Actualiza la vista
   }
 
-  addSections(courseId: string): void {
-    this.router.navigate(['/instructor/add-section', courseId]);
-  }
+  // addSections(courseId: string): void {
+  //   this.router.navigate(['/instructor/add-section', courseId]);
+  // }
 
   getInstructorId(): number {
     const user = this.authService.getUserInfo();
