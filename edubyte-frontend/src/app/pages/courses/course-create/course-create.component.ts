@@ -13,6 +13,7 @@ import { Router, RouterLink } from '@angular/router';
 import { SnackbarService } from '../../../services/snackbar.service'; // (Ajusta la ruta)
 import { ImageUploadComponent } from '../../../components/shared/image-upload/image-upload.component';
 import { CoursesService } from '../../../services/courses.service';
+import { SidebarInstructorComponent } from '../../instructor/sidebar-instructor/sidebar-instructor.component';
 
 @Component({
   selector: 'app-course-create',
@@ -22,7 +23,8 @@ import { CoursesService } from '../../../services/courses.service';
     ReactiveFormsModule,
     RouterLink,
     // NgClass (si lo usas)
-    ImageUploadComponent // --- 2. AÑADIDO A IMPORTS ---
+    ImageUploadComponent,
+    SidebarInstructorComponent
   ],
   templateUrl: './course-create.component.html'
 })

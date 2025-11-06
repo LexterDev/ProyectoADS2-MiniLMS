@@ -1,0 +1,298 @@
+<!-- lesson-player.component.html -->
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900">
+  
+  <div class="mx-auto max-w-7xl px-4 md:px-8 py-10">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-0">
+      
+      <!-- Columna Principal (Video y Contenido) - 2/3 -->
+      <div class="lg:col-span-2 bg-white dark:bg-gray-800">
+        
+        <!-- Video Player -->
+        <div class="relative bg-[#c4b5a0] aspect-video">
+          <!-- Imagen de placeholder o video real -->
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class="text-center">
+              <!-- Ilustración de laptop -->
+              <div class="relative w-96 h-64 mx-auto mb-8">
+                <div class="absolute inset-0 bg-gray-800 rounded-lg" style="clip-path: polygon(10% 20%, 90% 20%, 95% 85%, 5% 85%);">
+                  <!-- Pantalla -->
+                  <div class="absolute top-8 left-12 right-12 bottom-16 bg-gray-600 rounded-sm flex items-center justify-center overflow-hidden">
+                    <!-- Imagen de montaña y árbol -->
+                    <svg class="w-full h-full" viewBox="0 0 400 300" fill="none">
+                      <!-- Árbol -->
+                      <path d="M80 200 L80 150 L60 170 L80 150 L70 160 L80 150 L90 160 L80 150 L100 170 L80 150 L80 200" fill="#2d5016"/>
+                      <!-- Montaña izquierda -->
+                      <path d="M0 250 L100 100 L200 250 Z" fill="#4a5d23"/>
+                      <!-- Montaña derecha -->
+                      <path d="M150 250 L280 120 L400 250 Z" fill="#5d6e2f"/>
+                      <!-- Sol -->
+                      <circle cx="320" cy="100" r="40" fill="#d4a574"/>
+                      <!-- Cielo -->
+                      <rect x="0" y="0" width="400" height="150" fill="#8b9c7a" opacity="0.3"/>
+                    </svg>
+                  </div>
+                  <!-- Base del laptop -->
+                  <div class="absolute bottom-0 left-0 right-0 h-4 bg-gray-900 rounded-b-lg"></div>
+                </div>
+              </div>
+              
+              <!-- Botón de Play -->
+              <button class="w-20 h-20 bg-purple-600 hover:bg-purple-700 rounded-full flex items-center justify-center shadow-2xl transition-all hover:scale-110">
+                <svg class="w-10 h-10 text-white ml-1" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Para video real, usa esto: -->
+          <!-- <iframe 
+            [src]="currentLesson.videoUrl" 
+            class="w-full h-full"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+          </iframe> -->
+        </div>
+
+        <!-- Contenido de la Lección -->
+        <div class="p-6 md:p-8">
+          
+          <!-- Título y Botón Completar -->
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+            <h1 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
+              {{ currentLesson.titulo }}
+            </h1>
+            <button 
+              (click)="markAsCompleted()"
+              class="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg transition-colors whitespace-nowrap">
+              Marcar como completada
+            </button>
+          </div>
+
+          <!-- Descripción Corta -->
+          <p class="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
+            {{ currentLesson.descripcion }}
+          </p>
+
+          <!-- Tabs -->
+          <div class="border-b border-gray-200 dark:border-gray-700 mb-6">
+            <nav class="flex gap-8">
+              <button 
+                (click)="setActiveTab('descripcion')"
+                [class.border-purple-600]="activeTab === 'descripcion'"
+                [class.text-purple-600]="activeTab === 'descripcion'"
+                [class.border-transparent]="activeTab !== 'descripcion'"
+                [class.text-gray-600]="activeTab !== 'descripcion'"
+                class="pb-4 border-b-2 font-medium transition-colors hover:text-purple-600 dark:text-gray-300">
+                Descripción
+              </button>
+              <button 
+                (click)="setActiveTab('recursos')"
+                [class.border-purple-600]="activeTab === 'recursos'"
+                [class.text-purple-600]="activeTab === 'recursos'"
+                [class.border-transparent]="activeTab !== 'recursos'"
+                [class.text-gray-600]="activeTab !== 'recursos'"
+                class="pb-4 border-b-2 font-medium transition-colors hover:text-purple-600 dark:text-gray-300">
+                Recursos
+              </button>
+              <button 
+                (click)="setActiveTab('comentarios')"
+                [class.border-purple-600]="activeTab === 'comentarios'"
+                [class.text-purple-600]="activeTab === 'comentarios'"
+                [class.border-transparent]="activeTab !== 'comentarios'"
+                [class.text-gray-600]="activeTab !== 'comentarios'"
+                class="pb-4 border-b-2 font-medium transition-colors hover:text-purple-600 dark:text-gray-300">
+                Comentarios
+              </button>
+              <button 
+                (click)="setActiveTab('transcripcion')"
+                [class.border-purple-600]="activeTab === 'transcripcion'"
+                [class.text-purple-600]="activeTab === 'transcripcion'"
+                [class.border-transparent]="activeTab !== 'transcripcion'"
+                [class.text-gray-600]="activeTab !== 'transcripcion'"
+                class="pb-4 border-b-2 font-medium transition-colors hover:text-purple-600 dark:text-gray-300">
+                Transcripción
+              </button>
+            </nav>
+          </div>
+
+          <!-- Contenido de Tabs -->
+          <div class="min-h-[300px]">
+            
+            <!-- Tab: Descripción -->
+            <div *ngIf="activeTab === 'descripcion'">
+              <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Descripción</h2>
+              <p class="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
+                {{ currentLesson.contenidoCompleto }}
+              </p>
+            </div>
+
+            <!-- Tab: Recursos -->
+            <div *ngIf="activeTab === 'recursos'">
+              <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Recursos</h2>
+              <div class="space-y-3">
+                <div *ngFor="let recurso of recursos" 
+                     class="flex items-center justify-between p-4 bg-purple-50 dark:bg-purple-900/20 rounded-xl hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-colors group">
+                  <div class="flex items-center gap-4">
+                    <!-- Icono según tipo -->
+                    <div class="w-12 h-12 bg-purple-100 dark:bg-purple-800 rounded-lg flex items-center justify-center">
+                      <!-- PDF Icon -->
+                      <svg *ngIf="recurso.tipo === 'PDF'" class="w-6 h-6 text-purple-600 dark:text-purple-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clip-rule="evenodd"/>
+                      </svg>
+                      <!-- ZIP Icon -->
+                      <svg *ngIf="recurso.tipo === 'ZIP'" class="w-6 h-6 text-purple-600 dark:text-purple-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"/>
+                      </svg>
+                    </div>
+                    <div>
+                      <p class="font-semibold text-gray-900 dark:text-white">{{ recurso.nombre }}</p>
+                      <p class="text-sm text-gray-500 dark:text-gray-400">{{ recurso.tipo }}</p>
+                    </div>
+                  </div>
+                  <button 
+                    (click)="downloadResource(recurso)"
+                    class="p-2 text-purple-600 dark:text-purple-400 hover:bg-purple-200 dark:hover:bg-purple-800 rounded-lg transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tab: Comentarios -->
+            <div *ngIf="activeTab === 'comentarios'">
+              <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Comentarios</h2>
+              <p class="text-gray-500 dark:text-gray-400">No hay comentarios aún.</p>
+            </div>
+
+            <!-- Tab: Transcripción -->
+            <div *ngIf="activeTab === 'transcripcion'">
+              <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Transcripción</h2>
+              <p class="text-gray-500 dark:text-gray-400">Transcripción no disponible.</p>
+            </div>
+
+          </div>
+
+          <!-- Botones de Navegación -->
+          <div class="flex items-center justify-between mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+            <button 
+              (click)="goToPreviousLesson()"
+              class="flex items-center gap-2 px-4 py-2 text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+              </svg>
+              <span class="font-medium">Lección anterior</span>
+            </button>
+            <button 
+              (click)="goToNextLesson()"
+              class="flex items-center gap-2 px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg transition-colors">
+              <span>Siguiente lección</span>
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+              </svg>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Sidebar Derecha (Contenido del Curso) - 1/3 -->
+      <div class="lg:col-span-1 bg-gray-50 dark:bg-gray-900 border-l border-gray-200 dark:border-gray-700 lg:h-screen lg:sticky lg:top-0 overflow-y-auto">
+        <div class="p-6">
+          
+          <!-- Header del Sidebar -->
+          <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Contenido del Curso</h2>
+          
+          <!-- Barra de Progreso -->
+          <div class="mb-6">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Progreso</span>
+              <span class="text-sm font-bold text-purple-600 dark:text-purple-400">{{ course.progreso }}%</span>
+            </div>
+            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+              <div class="bg-purple-600 h-2 rounded-full transition-all duration-500" [style.width.%]="course.progreso"></div>
+            </div>
+          </div>
+
+          <!-- Lista de Secciones -->
+          <div class="space-y-2">
+            <div *ngFor="let section of course.secciones" class="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden bg-white dark:bg-gray-800">
+              
+              <!-- Header de Sección -->
+              <button 
+                (click)="toggleSection(section.id)"
+                class="w-full flex items-center justify-between p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                <span class="font-semibold text-gray-900 dark:text-white text-left">{{ section.titulo }}</span>
+                <svg 
+                  class="w-5 h-5 text-gray-500 dark:text-gray-400 transition-transform duration-300"
+                  [class.rotate-180]="section.expanded"
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+              </button>
+
+              <!-- Lista de Lecciones -->
+              <div *ngIf="section.expanded" class="border-t border-gray-200 dark:border-gray-700">
+                <ng-container *ngFor="let lesson of section.lecciones">
+                  <div 
+                    (click)="selectLesson(lesson)"
+                    [attr.aria-disabled]="lesson.bloqueada"
+                    [ngClass]="{
+                      'bg-purple-50 dark:bg-purple-900/20': lesson.id === currentLesson.id && !lesson.bloqueada,
+                      'opacity-50': lesson.bloqueada,
+                      'cursor-not-allowed': lesson.bloqueada
+                    }"
+                    role="button"
+                    tabindex="0"
+                    class="w-full flex items-center gap-3 p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors border-b border-gray-100 dark:border-gray-700 last:border-b-0">
+                    
+                    <!-- Icono de Estado -->
+                    <div class="flex-shrink-0">
+                      <!-- Completada -->
+                      <div *ngIf="lesson.completada" class="w-6 h-6 bg-purple-600 rounded-full flex items-center justify-center">
+                        <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                          <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                      </div>
+                      <!-- En progreso -->
+                      <div *ngIf="!lesson.completada && !lesson.bloqueada" class="w-6 h-6 border-2 border-purple-600 rounded-full flex items-center justify-center">
+                        <div class="w-2 h-2 bg-purple-600 rounded-full"></div>
+                      </div>
+                      <!-- Bloqueada -->
+                      <div *ngIf="lesson.bloqueada" class="w-6 h-6 bg-gray-300 dark:bg-gray-600 rounded-full flex items-center justify-center">
+                        <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                          <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
+                        </svg>
+                      </div>
+                    </div>
+
+                    <!-- Info de la Lección -->
+                    <div class="flex-1 text-left min-w-0">
+                      <p class="text-sm font-medium text-gray-900 dark:text-white truncate">
+                        {{ lesson.orden }}. {{ lesson.titulo }}
+                      </p>
+                      <p class="text-xs text-gray-500 dark:text-gray-400">
+                        {{ lesson.duracion }}
+                      </p>
+                    </div>
+
+                  </div>
+                </ng-container>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>

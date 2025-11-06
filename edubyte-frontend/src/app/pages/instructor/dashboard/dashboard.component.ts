@@ -1,22 +1,17 @@
-// src/app/pages/instructor/dashboard/dashboard.component.ts
-
+// dashboard.component.ts
 import { Component } from '@angular/core';
-import { CommonModule, DecimalPipe } from '@angular/common'; // Importa DecimalPipe
+import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { SidebarInstructorComponent } from '../sidebar-instructor/sidebar-instructor.component';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    DecimalPipe // Añade DecimalPipe para el formateo de números
-  ],
+  imports: [CommonModule, RouterModule, SidebarInstructorComponent],
   templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent {
-
-  // 1. Datos para las "Métricas Clave"
   metrics = {
     totalStudents: 1250,
     monthlyRevenue: 5750,
@@ -24,42 +19,39 @@ export class DashboardComponent {
     publishedCourses: 12
   };
 
-  // 2. Datos para "Cursos Más Populares" (simulados)
   popularCourses = [
-    { title: 'Curso A (Spring Boot)', percentage: 75 },
-    { title: 'Curso B (Angular)', percentage: 60 },
-    { title: 'Curso C (Power Automate)', percentage: 45 }
+    { title: 'Curso A', percentage: 85 },
+    { title: 'Curso B', percentage: 70 },
+    { title: 'Curso C', percentage: 60 }
   ];
 
-  // 3. Datos para "Actividad Reciente" (simulados)
   recentActivity = [
-    { 
-      imageUrl: 'https://placehold.co/40x40/E9D8FD/7f13ec?text=UA', 
-      description: 'Nueva Inscripción en Curso de Angular', 
-      time: 'Hace 2 horas' 
+    {
+      description: 'Nueva Inscripción en Curso A',
+      time: 'Hace 2 horas',
+      imageUrl: 'https://via.placeholder.com/40'
     },
-    { 
-      imageUrl: 'https://placehold.co/40x40/E9D8FD/7f13ec?text=RB', 
-      description: 'Reseña de 5 estrellas en Curso de Java', 
-      time: 'Hace 4 horas' 
+    {
+      description: 'Reseña de 5 estrellas en Curso B',
+      time: 'Hace 4 horas',
+      imageUrl: 'https://via.placeholder.com/40'
     },
-    { 
-      imageUrl: 'https://placehold.co/40x40/E9D8FD/7f13ec?text=MC', 
-      description: 'Pregunta sin Responder en Curso de Spring', 
-      time: 'Hace 6 horas' 
+    {
+      description: 'Pregunta sin Responder en Curso C',
+      time: 'Hace 6 horas',
+      imageUrl: 'https://via.placeholder.com/40'
     },
-    { 
-      imageUrl: 'https://placehold.co/40x40/E9D8FD/7f13ec?text=ED', 
-      description: 'Curso de IEX Pendiente de Aprobación', 
-      time: 'Hace 8 horas' 
+    {
+      description: 'Curso D Pendiente de Aprobación',
+      time: 'Hace 8 horas',
+      imageUrl: 'https://via.placeholder.com/40'
     }
   ];
 
-  constructor() { }
-
-  // Helper para formatear la moneda
   formatCurrency(value: number): string {
-    // Usamos toLocaleString para un formato de moneda correcto
-    return `$${value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
+    return new Intl.NumberFormat('es-ES', {
+      style: 'currency',
+      currency: 'USD'
+    }).format(value);
   }
 }

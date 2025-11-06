@@ -18,5 +18,11 @@ export const API_ENDPOINTS = {
         getById: (id: string) => `${API_URL}/courses/${id}`,
         create: `${API_URL}/courses/create`,
         getByInstructorId: (instructorId: number) => `${API_URL}/courses/findByInstructor?instructorId=${instructorId}`,
+    },
+    sections: {
+        create: `${API_URL}/courses/createSection`,
+    },
+    lessons: {
+        create: `${API_URL}/courses/createLesson`,
     }
 }
