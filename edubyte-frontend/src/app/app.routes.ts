@@ -62,7 +62,7 @@ export const routes: Routes = [
     },
     {
         path: 'dashboard-student',
-        component: DashboardStudentComponent
+        component: MyCoursesComponent
     },
     {
         path: 'courses/create',
@@ -98,7 +98,7 @@ export const routes: Routes = [
         component: CourseLessonsComponent
     },
     {
-        path: 'lesson/:id',
+        path: 'lesson/:id/:courseId/:sectionId',
         component: LessonPlayerComponent,
         title: 'Reproducir Lección - EduByte'
     }

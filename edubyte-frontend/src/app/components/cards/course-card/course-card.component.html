@@ -3,7 +3,7 @@
   Está envuelto en un 'a' (enlace) para que toda la tarjeta sea clickeable
   y (en el futuro) lleve a la página de detalles.
 -->
-<a [routerLink]="['/course', courseId]" 
+<a href="#" 
    class="flex flex-col h-full bg-white dark:bg-background-dark rounded-xl shadow-sm border border-primary/10 dark:border-primary/20 overflow-hidden hover:shadow-lg transition-shadow">
 
   <!-- Imagen -->
@@ -18,16 +18,12 @@
       {{ description }}
     </p>
     
-    <!-- 
-      ¡AQUÍ ESTÁ EL BOTÓN DE INSCRIPCIÓN! 
-      Lo ponemos al final de la tarjeta.
-      Usamos 'mt-auto' para empujarlo al fondo.
-    -->
-    <div class="mt-auto pt-4">
+
+    <!-- <div class="mt-auto pt-4">
       <app-enroll-button 
         [courseId]="courseId" 
         [courseName]="title">
       </app-enroll-button>
-    </div>
+    </div> -->
   </div>
 </a>
