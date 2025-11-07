@@ -32,8 +32,8 @@ export class NavbarComponent {
   menuItems = [
     { label: 'Inicio', link: '/' },
     { label: 'Cursos', link: '/courses' },
-    { label: 'Instructores', link: '/instructors' },
-    { label: 'Comunidad', link: '/community' }
+    // { label: 'Instructores', link: '/instructors' },
+    // { label: 'Comunidad', link: '/community' }
   ];
 
   constructor(private router: Router, private authService: AuthService) { }

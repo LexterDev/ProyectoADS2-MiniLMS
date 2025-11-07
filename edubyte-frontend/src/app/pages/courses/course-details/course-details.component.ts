@@ -2,6 +2,9 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CoursesService } from '../../../services/courses.service';
+import { MatDialog } from '@angular/material/dialog';
+import { EnrollDialogComponent } from '../../../components/enroll-dialog/enroll-dialog.component';
+import { AuthService } from '../../../services/auth.service';
 
 // Interfaces basadas en tu API
 interface Leccion {
@@ -63,6 +66,8 @@ export class CourseDetailsComponent implements OnInit {
   private coursesService = inject(CoursesService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private dialog = inject(MatDialog);
+  private authService = inject(AuthService);
 
   courseId: string = '';
   courseDetails: CourseDetails | null = null;
@@ -73,11 +78,15 @@ export class CourseDetailsComponent implements OnInit {
   expandedSections: Set<number> = new Set();
   expandedLessons: Set<number> = new Set();
 
+  //Guardar los id de los cursos del estudiante
+  studentCourseIds: number[] = [];
+
   ngOnInit(): void {
     this.courseId = this.route.snapshot.paramMap.get('id') || '';
     if (this.courseId) {
       this.loadCourseDetails();
     }
+    this.getCoursesByStudent();
   }
 
   private loadCourseDetails(): void {
@@ -87,10 +96,10 @@ export class CourseDetailsComponent implements OnInit {
     this.coursesService.getCourseById(this.courseId).subscribe({
       next: (data: any) => {
         console.log('Datos del curso:', data);
-        
+
         // Extraer datos según la estructura de tu API
         const courseData = data.data || data;
-        
+
         this.courseDetails = {
           id: courseData.id,
           titulo: courseData.titulo,
@@ -177,18 +186,18 @@ export class CourseDetailsComponent implements OnInit {
   }
 
   // Reproducir lección
-  playLesson(leccion: Leccion): void {
+  playLesson(leccion: Leccion, courseId: number, seccionId: number): void {
     if (!leccion.visible) {
       console.log('Lección no disponible');
       return;
     }
-    this.router.navigate(['/lesson', leccion.id]);
+    this.router.navigate(['/lesson', leccion.id, courseId, seccionId]);
   }
 
   // Calcular duración total del curso
   getTotalCourseDuration(): string {
     if (!this.courseDetails) return '0min';
-    
+
     const totalMinutes = this.courseDetails.secciones.reduce((total, seccion) => {
       return total + seccion.duracionEstimada;
     }, 0);
@@ -245,5 +254,57 @@ export class CourseDetailsComponent implements OnInit {
       return this.courseDetails.instructor;
     }
     return `${this.courseDetails.instructor.nombre} ${this.courseDetails.instructor.apellido}`;
+  }
+
+  getCoursesByStudent() {
+    this.coursesService.getCoursesByStudentId(1).subscribe({
+      next: (data: any) => {
+        console.log('Cursos del estudiante:', data);
+        this.studentCourseIds = data.data.map((course: any) => course.id);
+        console.log('IDs de cursos del estudiante:', this.studentCourseIds);
+      },
+      error: (error) => {
+        console.error('Error al obtener cursos del estudiante:', error);
+      }
+    });
+  }
+
+  openEnrollDialog(): void {
+    /**Verifica que el usuario esté logueado y además sea estudiante.
+     * 
+     * Si no está logueado, lo redirige al login.
+     * Si está logueado pero no es estudiante, no hace nada.
+     * Si está logueado y es estudiante, abre el diálogo de inscripción.
+    */
+    if (!this.authService.isUserLoggedIn()) {
+      this.router.navigate(['/login']);
+      return;
+    } else if (this.authService.getUserRole() !== 'ESTUDIANTE') {
+      return;
+    }
+    const dialogRef = this.dialog.open(EnrollDialogComponent, {
+      width: '600px',
+      data: { courseId: this.courseId, courseName: this.courseDetails?.titulo, coursePrice: this.courseDetails?.precio }
+    });
+    dialogRef.componentInstance.onConfirm.subscribe((confirmed: any) => {
+      if (confirmed) {
+        // Lógica para manejar la confirmación de la inscripción
+        console.log('Inscripción confirmada');
+
+        dialogRef.close();
+
+        // Fuerza la recarga del componente actual
+        this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+          this.router.navigate(['/course-details', this.courseId]);
+        });
+      }
+    });
+  }
+
+  /*Verificar si el usuario es instructor
+  */
+  get isUserInstructor(): boolean {
+    const userRole = this.authService.getUserRole();
+    return userRole === 'INSTRUCTOR' ? true : false;
   }
 }
