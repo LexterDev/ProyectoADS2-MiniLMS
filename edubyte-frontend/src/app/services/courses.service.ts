@@ -43,6 +43,24 @@ export class CoursesService {
     });
   }
 
+  getCoursesByStudentId(studentId: number) {
+    return this.http.get(API_ENDPOINTS.courses.getCoursesByStudentId, {
+      headers: {
+        Authorization: `Bearer ${this.authService.getToken()}`
+      }
+    });
+  }
+
+  enrollInCourse(courseId: number) {
+    return this.http.post(API_ENDPOINTS.courses.enroll, {
+      "cursoId": courseId
+    }, {
+      headers: {
+        Authorization: `Bearer ${this.authService.getToken()}`
+      }
+    });
+  }
+
   constructor() { }
 
 

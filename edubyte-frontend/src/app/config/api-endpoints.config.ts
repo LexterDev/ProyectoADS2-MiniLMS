@@ -18,6 +18,8 @@ export const API_ENDPOINTS = {
         getById: (id: string) => `${API_URL}/courses/${id}`,
         create: `${API_URL}/courses/create`,
         getByInstructorId: (instructorId: number) => `${API_URL}/courses/findByInstructor?instructorId=${instructorId}`,
+        getCoursesByStudentId: `${API_URL}/student/dashboard`,
+        enroll: `${API_URL}/enroll/`,
     },
     sections: {
         create: `${API_URL}/courses/createSection`,

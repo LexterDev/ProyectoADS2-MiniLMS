@@ -3,6 +3,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
+import { CoursesService } from '../../../../services/courses.service';
+import { DomSanitizer } from '@angular/platform-browser';
 
 interface Lesson {
   id: number;
@@ -44,11 +46,18 @@ interface Resource {
   styleUrls: ['./lesson-player.component.css']
 })
 export class LessonPlayerComponent implements OnInit, OnDestroy {
-  
+
+  LessonId: string = '';
+  CourseId: string = '';
+  sectionId: string = '';
+  lessonsbySection: any[] = [];
+  currentLessonObject: any = {};
+  safeUrl: any;
+
   private destroy$ = new Subject<void>();
-  
+
   activeTab: 'descripcion' | 'recursos' | 'comentarios' | 'transcripcion' = 'descripcion';
-  
+
   currentLesson = {
     id: 1,
     titulo: 'Introducción al Desarrollo Web',
@@ -113,18 +122,29 @@ export class LessonPlayerComponent implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router
-  ) {}
+    private router: Router,
+    private coursesService: CoursesService,
+    private sanitizer: DomSanitizer
+  ) { }
 
   ngOnInit(): void {
-    this.route.paramMap
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(params => {
-        const lessonId = params.get('id');
-        console.log('Lesson ID:', lessonId);
-        // Cargar datos de la lección
-      });
-  }
+  this.route.paramMap
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(params => {
+      this.LessonId = params.get('id') ?? '';
+      this.CourseId = params.get('courseId') ?? '';
+      this.sectionId = params.get('sectionId') ?? '';
+      
+      console.log('Lesson ID:', this.LessonId);
+      console.log('Course ID:', this.CourseId);
+      console.log('Section ID:', this.sectionId);
+      
+      // Cargar datos solo si tenemos los IDs necesarios
+      if (this.CourseId && this.LessonId) {
+        this.getCourseDetails();
+      }
+    });
+}
 
   ngOnDestroy(): void {
     this.destroy$.next();
@@ -167,4 +187,77 @@ export class LessonPlayerComponent implements OnInit, OnDestroy {
   setActiveTab(tab: 'descripcion' | 'recursos' | 'comentarios' | 'transcripcion'): void {
     this.activeTab = tab;
   }
+
+  getCourseDetails(): void {
+  this.coursesService.getCourseById(this.CourseId)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe({
+      next: (data: any) => {
+        console.log('Detalles del curso desde lesson:', data);
+        
+        // Procesar y asignar los datos del curso
+        const courseData = data.data || data;
+        this.course = courseData;
+        
+        // Encontrar las lecciones de la sección actual
+        this.lessonsbySection = this.course.secciones.find(
+          s => s.id === +this.sectionId
+        )?.lecciones || [];
+        console.log('Lecciones de la sección actual:', this.lessonsbySection);
+        
+        // Encontrar la lección actual
+        this.currentLessonObject = this.lessonsbySection.find(
+          (l: any) => l.id === +this.LessonId
+        ) || {};
+        console.log('Lección actual:', this.currentLessonObject);
+        
+        // ✅ Sanitizar URL DESPUÉS de obtener los datos
+        this.getSafeUrl();
+      },
+      error: (error) => {
+        console.error('Error al cargar detalles del curso:', error);
+        // this.error = 'No se pudo cargar el curso';
+      }
+    });
+}
+
+getSafeUrl(): void {
+  if (!this.currentLessonObject?.url) {
+    console.warn('⚠️ La lección no tiene URL de video');
+    this.safeUrl = null;
+    return;
+  }
+
+  try {
+    let videoUrl = this.currentLessonObject.url;
+    
+    console.log('🎬 URL original del video:', videoUrl);
+
+    // Convertir URL de YouTube a formato embed si es necesario
+    if (videoUrl.includes('youtube.com/watch')) {
+      const url = new URL(videoUrl);
+      const videoId = url.searchParams.get('v');
+      if (videoId) {
+        videoUrl = `https://www.youtube.com/embed/${videoId}`;
+        console.log('🔄 URL convertida a embed:', videoUrl);
+      }
+    } 
+    // Si es URL corta de YouTube (youtu.be)
+    else if (videoUrl.includes('youtu.be/')) {
+      const videoId = videoUrl.split('youtu.be/')[1]?.split('?')[0];
+      if (videoId) {
+        videoUrl = `https://www.youtube.com/embed/${videoId}`;
+        console.log('🔄 URL convertida a embed:', videoUrl);
+      }
+    }
+
+    // Sanitizar la URL
+    this.safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(videoUrl);
+    console.log('✅ URL sanitizada correctamente');
+
+  } catch (error) {
+    console.error('❌ Error al sanitizar URL:', error);
+    this.safeUrl = null;
+  }
+}
 }
