@@ -16,90 +16,82 @@ import { CourseSectionsComponent } from './pages/courses/course-sections/course-
 import { CourseLessonsComponent } from './pages/courses/course-lessons/course-lessons.component';
 import { LessonPlayerComponent } from './pages/courses/course-lessons/lesson-player/lesson-player.component';
 
+// Guards
+import { authGuard } from './auth/auth.guard';
+import { noAuthGuard } from './auth/no-auth.guard';
+
 export const routes: Routes = [
     {
         path: '',
         component: LandingComponent
     },
+    // Rutas públicas (solo accesibles si NO estás logeado)
     {
         path: 'login',
-        component: LoginComponent
+        component: LoginComponent,
+        canActivate: [noAuthGuard]
     },
     {
         path: 'register',
-        component: RegisterComponent
+        component: RegisterComponent,
+        canActivate: [noAuthGuard]
     },
     {
         path: 'forgot-password',
-        component: ForgotPasswordComponent
+        component: ForgotPasswordComponent,
+        canActivate: [noAuthGuard]
     },
 
-    // --- RUTA DE LISTADO DE CURSOS ---
+    // Rutas públicas (accesibles para todos)
     {
         path: 'courses',
         component: CourseListComponent
-    },
-
-    {
-        path: '',
-        component: LandingComponent
-    },
-    {
-        path: 'login',
-        component: LoginComponent
-    },
-    {
-        path: 'register',
-        component: RegisterComponent
-    },
-    {
-        path: 'forgot-password',
-        component: ForgotPasswordComponent
-    },
-    {
-        path: 'courses',
-        component: CourseListComponent
-    },
-    {
-        path: 'dashboard-student',
-        component: MyCoursesComponent
-    },
-    {
-        path: 'courses/create',
-        component: CourseCreateComponent
-
-    },
-
-    {
-        path: 'dashboard-instructor',
-        component: DashboardComponent
-
-    },
-    {
-        path: 'student/my-courses',
-        component: MyCoursesComponent
-
-    },
-    {
-        path: 'instructor/instructor-courses',
-        component: InstructorCoursesComponent
-
     },
     {
         path: 'course-details/:id',
         component: CourseDetailsComponent
     },
+
+    // Rutas protegidas (requieren autenticación)
+    {
+        path: 'dashboard-student',
+        component: MyCoursesComponent,
+        canActivate: [authGuard]
+    },
+    {
+        path: 'student/my-courses',
+        component: MyCoursesComponent,
+        canActivate: [authGuard]
+    },
+    {
+        path: 'dashboard-instructor',
+        component: DashboardComponent,
+        canActivate: [authGuard]
+    },
+    {
+        path: 'instructor/instructor-courses',
+        component: InstructorCoursesComponent,
+        canActivate: [authGuard]
+    },
+    {
+        path: 'courses/create',
+        component: CourseCreateComponent,
+        canActivate: [authGuard]
+    },
     {
         path: 'instructor/add-section/:courseId',
-        component: CourseSectionsComponent
+        component: CourseSectionsComponent,
+        canActivate: [authGuard]
     },
     {
         path: 'instructor/add-lesson/:courseId/:sectionId',
-        component: CourseLessonsComponent
+        component: CourseLessonsComponent,
+        canActivate: [authGuard]
     },
     {
         path: 'lesson/:id/:courseId/:sectionId',
         component: LessonPlayerComponent,
-        title: 'Reproducir Lección - EduByte'
+        title: 'Reproducir Lección - EduByte',
+        canActivate: [authGuard]
     }
 ];
