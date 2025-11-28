@@ -1,7 +1,9 @@
 -- -----------------------------------------------------------------
 -- MINILMS - SCRIPT DE DATOS INICIALES
 -- -----------------------------------------------------------------
-TRUNCATE TABLE 
+TRUNCATE TABLE
+    pagos,
+    resenas,
     inscripciones_progreso,
     inscripciones,
     cursos_lecciones,
@@ -10,6 +12,7 @@ TRUNCATE TABLE
     adjunto,
     usuarios,
     cursos_categorias,
+    formas_pago,
     estados,
     roles
 RESTART IDENTITY CASCADE;
@@ -34,13 +37,20 @@ VALUES
 ('BOR', 'Borrador'),
 ('REV', 'En Revisión'),
 ('PUB', 'Publicado'),
-('INS', 'Inscrito');
+('INS', 'Inscrito'),
+('COMPLETADO', 'Completado');
 
 INSERT INTO cursos_categorias (nombre, descripcion)
 VALUES
 ('Desarrollo Web', 'Cursos de programación frontend y backend'),
 ('Diseño UX/UI', 'Cursos de diseño, prototipado y experiencia de usuario'),
 ('Negocios y Finanzas', 'Cursos de administración, marketing y finanzas');
+
+INSERT INTO formas_pago (forma_pago_id, nombre)
+VALUES
+('TARJETA', 'Tarjeta de Crédito/Débito'),
+('PAYPAL', 'PayPal'),
+('TRANSFERENCIA', 'Transferencia Bancaria');
 
 -- 2. USUARIOS
 -- -----------------------------------------------------------------

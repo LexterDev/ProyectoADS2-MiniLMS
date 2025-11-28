@@ -51,4 +51,10 @@ public class InscripcionProgreso {
     @Column(name = "nota_evaluacion", precision = 5, scale = 2)
     private BigDecimal notaEvaluacion;
 
+    @Column(name = "tiempo_dedicado", columnDefinition = "BIGINT DEFAULT 0")
+    private Long tiempoDedicado = 0L; // Tiempo en segundos
+
+    @Column(name = "ultima_actualizacion")
+    private LocalDateTime ultimaActualizacion;
+
 }

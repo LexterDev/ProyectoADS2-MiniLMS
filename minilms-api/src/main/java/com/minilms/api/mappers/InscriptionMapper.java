@@ -59,6 +59,8 @@ public class InscriptionMapper {
         dto.setFechaCompletado(LmsUtils.formatDateTime(entity.getFechaCompletado()));
         dto.setNotaEvaluacion(entity.getNotaEvaluacion());
         dto.setProgresoCurso(entity.getInscripcion().getProgreso());
+        dto.setTiempoDedicado(entity.getTiempoDedicado());
+        dto.setUltimaActualizacion(LmsUtils.formatDateTime(entity.getUltimaActualizacion()));
 
         return dto;
     }

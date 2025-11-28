@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface LeccionRepository extends JpaRepository<Leccion, Long> {
@@ -20,4 +21,9 @@ public interface LeccionRepository extends JpaRepository<Leccion, Long> {
             SELECT COUNT(l) FROM Leccion l WHERE l.seccion.curso.id = :cursoId
             """)
     Long countByCursoId(@Param("cursoId") Long cursoId);
+
+    /**
+     * Busca una lección por sección y orden para validar unicidad
+     */
+    Optional<Leccion> findBySeccionIdAndOrden(Long seccionId, Integer orden);
 }

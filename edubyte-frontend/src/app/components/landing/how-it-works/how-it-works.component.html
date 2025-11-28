@@ -1,46 +1,166 @@
-<!-- 
-  Sección "¿Cómo funciona?"
-  ¡100% Tailwind!
--->
-<section class="mt-16 text-background-dark dark:text-background-light">
-  
-  <!-- Títulos -->
-  <h2 class="text-2xl font-bold tracking-tight text-center">¿Cómo funciona?</h2>
-  <h3 class="mt-2 text-3xl font-bold tracking-tight text-center sm:text-4xl">Empieza a aprender en 3 sencillos pasos</h3>
+<!-- Sección ¿Cómo Funciona? Mejorada -->
+<section class="py-20 bg-gradient-to-b from-purple-50 to-white dark:from-gray-900 dark:to-gray-800 relative overflow-hidden">
 
-  <!-- 
-    Grid de 3 columnas
-    - 'sm:grid-cols-3' lo hace responsivo
-  -->
-  <div class="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-3">
-    
-    <!-- Paso 1 -->
-    <div class="flex flex-col items-center gap-4 text-center">
-      <div class="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 dark:bg-primary/20 text-primary">
-        <span class="material-symbols-outlined text-3xl"> search </span>
+  <!-- Decoración de fondo -->
+  <div class="absolute inset-0 overflow-hidden pointer-events-none">
+    <div class="absolute top-0 right-0 w-96 h-96 bg-pink-300/10 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-0 left-0 w-96 h-96 bg-purple-300/10 rounded-full blur-3xl"></div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 relative z-10">
+
+    <!-- Encabezado -->
+    <div class="text-center mb-16 animate-fade-in">
+      <div class="inline-flex items-center gap-2 px-4 py-2 bg-purple-100 dark:bg-purple-900/30 rounded-full mb-4">
+        <svg class="w-5 h-5 text-purple-600 dark:text-purple-400" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+        </svg>
+        <span class="text-sm font-semibold text-purple-700 dark:text-purple-300">¿Cómo Funciona?</span>
       </div>
-      <h4 class="text-lg font-bold">Explora nuestra biblioteca</h4>
-      <p class="text-sm text-background-dark/70 dark:text-background-light/70">Descubre miles de cursos en diversas áreas, desde tecnología hasta artes.</p>
+      <h2 class="text-4xl md:text-5xl font-black text-gray-900 dark:text-white mb-4">
+        Empieza a Aprender en <span class="bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-600">3 Sencillos Pasos</span>
+      </h2>
+      <p class="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+        Tu camino al éxito profesional comienza aquí
+      </p>
     </div>
 
-    <!-- Paso 2 -->
-    <div class="flex flex-col items-center gap-4 text-center">
-      <div class="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 dark:bg-primary/20 text-primary">
-        <span class="material-symbols-outlined text-3xl"> rule_folder </span>
+    <!-- Grid de Pasos con Líneas Conectoras -->
+    <div class="relative">
+
+      <!-- Línea Conectora (oculta en móvil) -->
+      <div class="hidden lg:block absolute top-24 left-0 right-0 h-1 bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600" style="top: 80px; left: 20%; right: 20%;"></div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-8">
+
+        <!-- Paso 1 -->
+        <div class="relative flex flex-col items-center text-center animate-fade-in">
+          <!-- Número del Paso -->
+          <div class="relative w-32 h-32 mb-6 group">
+            <!-- Círculo externo con animación -->
+            <div class="absolute inset-0 bg-gradient-to-br from-purple-600 to-pink-600 rounded-3xl group-hover:scale-110 group-hover:rotate-6 transition-all duration-300"></div>
+            <!-- Círculo interno -->
+            <div class="absolute inset-2 bg-white dark:bg-gray-800 rounded-3xl flex items-center justify-center">
+              <svg class="w-12 h-12 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+              </svg>
+            </div>
+            <!-- Badge con número -->
+            <div class="absolute -top-2 -right-2 w-10 h-10 bg-purple-600 text-white rounded-full flex items-center justify-center font-black text-lg shadow-lg">
+              1
+            </div>
+          </div>
+
+          <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-3">
+            Explora Nuestra Biblioteca
+          </h3>
+          <p class="text-gray-600 dark:text-gray-400 leading-relaxed max-w-xs">
+            Descubre miles de cursos en diversas áreas, desde tecnología hasta artes creativas y negocios.
+          </p>
+        </div>
+
+        <!-- Paso 2 -->
+        <div class="relative flex flex-col items-center text-center animate-fade-in" style="animation-delay: 0.1s;">
+          <!-- Número del Paso -->
+          <div class="relative w-32 h-32 mb-6 group">
+            <!-- Círculo externo con animación -->
+            <div class="absolute inset-0 bg-gradient-to-br from-purple-600 to-pink-600 rounded-3xl group-hover:scale-110 group-hover:rotate-6 transition-all duration-300"></div>
+            <!-- Círculo interno -->
+            <div class="absolute inset-2 bg-white dark:bg-gray-800 rounded-3xl flex items-center justify-center">
+              <svg class="w-12 h-12 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              </svg>
+            </div>
+            <!-- Badge con número -->
+            <div class="absolute -top-2 -right-2 w-10 h-10 bg-pink-600 text-white rounded-full flex items-center justify-center font-black text-lg shadow-lg">
+              2
+            </div>
+          </div>
+
+          <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-3">
+            Inscríbete en un Curso
+          </h3>
+          <p class="text-gray-600 dark:text-gray-400 leading-relaxed max-w-xs">
+            Elige el curso que mejor se adapte a tus intereses y objetivos profesionales y comienza a aprender.
+          </p>
+        </div>
+
+        <!-- Paso 3 -->
+        <div class="relative flex flex-col items-center text-center animate-fade-in" style="animation-delay: 0.2s;">
+          <!-- Número del Paso -->
+          <div class="relative w-32 h-32 mb-6 group">
+            <!-- Círculo externo con animación -->
+            <div class="absolute inset-0 bg-gradient-to-br from-purple-600 to-pink-600 rounded-3xl group-hover:scale-110 group-hover:rotate-6 transition-all duration-300"></div>
+            <!-- Círculo interno -->
+            <div class="absolute inset-2 bg-white dark:bg-gray-800 rounded-3xl flex items-center justify-center">
+              <svg class="w-12 h-12 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+              </svg>
+            </div>
+            <!-- Badge con número -->
+            <div class="absolute -top-2 -right-2 w-10 h-10 bg-purple-600 text-white rounded-full flex items-center justify-center font-black text-lg shadow-lg">
+              3
+            </div>
+          </div>
+
+          <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-3">
+            Alcanza Tus Metas
+          </h3>
+          <p class="text-gray-600 dark:text-gray-400 leading-relaxed max-w-xs">
+            Obtén nuevas habilidades, certificados reconocidos y avanza en tu carrera profesional.
+          </p>
+        </div>
+
       </div>
-      <h4 class="text-lg font-bold">Inscríbete en un curso</h4>
-      <p class="text-sm text-background-dark/70 dark:text-background-light/70">Elige el curso que mejor se adapte a tus intereses y comienza a aprender.</p>
     </div>
 
-    <!-- Paso 3 -->
-    <div class="flex flex-col items-center gap-4 text-center">
-      <div class="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 dark:bg-primary/20 text-primary">
-        <span class="material-symbols-outlined text-3xl"> school </span>
-      </div>
-      <h4 class="text-lg font-bold">Alcanza tus metas</h4>
-      <p class="text-sm text-background-dark/70 dark:text-background-light/70">Obtén nuevas habilidades y conocimientos para avanzar en tu carrera.</p>
+    <!-- Botón de CTA -->
+    <div class="text-center mt-16">
+      <button class="relative px-8 py-4 font-bold text-white rounded-2xl overflow-hidden group hover:scale-105 transition-transform duration-300">
+        <div class="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 bg-[length:200%_100%] animate-gradient"></div>
+        <span class="relative flex items-center justify-center gap-2">
+          <span>Comienza Tu Viaje</span>
+          <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+          </svg>
+        </span>
+      </button>
     </div>
-    
+
   </div>
 </section>
+
+<style>
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes gradient {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.8s ease-out;
+  }
+
+  .animate-gradient {
+    background-size: 200% 200%;
+    animation: gradient 3s ease infinite;
+  }
+</style>
 

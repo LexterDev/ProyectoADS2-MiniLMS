@@ -13,6 +13,30 @@
       </button>
     </div>
 
+    <!-- Search Bar -->
+    <div class="mb-6">
+      <div class="relative max-w-md">
+        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">search</span>
+        <input
+          type="text"
+          [(ngModel)]="searchQuery"
+          (input)="onSearch()"
+          placeholder="Buscar por título o descripción..."
+          class="w-full pl-10 pr-10 py-2 border border-gray-300 dark:border-gray-600 rounded-lg
+            bg-white dark:bg-gray-800 text-gray-900 dark:text-white
+            focus:ring-2 focus:ring-primary focus:border-transparent
+            placeholder-gray-400 dark:placeholder-gray-500">
+        @if (searchQuery) {
+          <button
+            (click)="clearSearch()"
+            class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+            <span class="material-symbols-outlined text-xl">close</span>
+          </button>
+        }
+      </div>
+    </div>
+
+    <!-- Tabs -->
     <div class="mb-6">
       <div class="border-b border-primary/20 dark:border-primary/30 flex gap-2 sm:gap-8">
         <button (click)="setTab('Todos')"
@@ -55,7 +79,7 @@
         </thead>
         <tbody class="text-gray-800 dark:text-gray-300">
 
-          @for (course of allCourses; track course.id) {
+          @for (course of filteredCourses; track course.id) {
           <tr class="border-b border-primary/20 dark:border-primary/30 hover:bg-primary/5 dark:hover:bg-primary/10">
 
             <td class="px-6 py-4">
@@ -91,15 +115,24 @@
                 <span class="material-symbols-outlined">more_vert</span>
               </button>
               <mat-menu #menu="matMenu" xPosition="before">
-                <a [routerLink]="['/instructor/add-section', course.id]">
-                  <button mat-menu-item >
-                    <span class="material-symbols-outlined text-sm mr-2">add</span>
-                    Agregar Secciones
-                  </button>
-                </a>
+                <button mat-menu-item (click)="togglePublishStatus(course)">
+                  <span class="material-symbols-outlined text-sm mr-2">
+                    {{ course.estadoCodigo === 'PUBLICADO' ? 'visibility_off' : 'publish' }}
+                  </span>
+                  {{ course.estadoCodigo === 'PUBLICADO' ? 'Despublicar' : 'Publicar' }}
+                </button>
                 <button mat-menu-item (click)="editCourse(course.id)">
                   <span class="material-symbols-outlined text-sm mr-2">edit</span>
-                  Editar
+                  Editar Curso
+                </button>
+                <button mat-menu-item (click)="addSection(course.id)">
+                  <span class="material-symbols-outlined text-sm mr-2">add_circle</span>
+                  Gestionar Contenido
+                </button>
+                <mat-divider></mat-divider>
+                <button mat-menu-item (click)="duplicateCourse(course.id)">
+                  <span class="material-symbols-outlined text-sm mr-2">content_copy</span>
+                  Duplicar
                 </button>
                 <button mat-menu-item class="text-red-600 dark:text-red-500" (click)="deleteCourse(course.id)">
                   <span class="material-symbols-outlined text-sm mr-2">delete</span>

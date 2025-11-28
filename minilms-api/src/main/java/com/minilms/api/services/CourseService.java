@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.minilms.api.config.responseApi.ApiException;
 import com.minilms.api.config.responseApi.PageResponse;
+import com.minilms.api.dto.course.CourseCreationBatchDTO;
 import com.minilms.api.dto.course.CourseDTO;
 import com.minilms.api.dto.course.LessonDTO;
 import com.minilms.api.dto.course.SectionDTO;
@@ -19,7 +20,9 @@ import com.minilms.api.entities.Adjunto;
 import com.minilms.api.entities.Categoria;
 import com.minilms.api.entities.Curso;
 import com.minilms.api.entities.Estado;
+import com.minilms.api.entities.Leccion;
 import com.minilms.api.entities.Seccion;
+import com.minilms.api.enums.LeccionTipoEnum;
 import com.minilms.api.enums.EstadoEnum;
 import com.minilms.api.mappers.CourseMapper;
 import com.minilms.api.mappers.FileMapper;
@@ -214,5 +217,108 @@ public class CourseService extends LmsUtils {
 
     public List<CourseDTO> findCoursesDashboardByInstructor() {
         return repository.findByInstructorId(getLoggedInUserId()).stream().map(CourseMapper::toDTOToInstructor).toList();
+    }
+
+    /**
+     * Crea un curso completo con sus secciones y lecciones en una sola transacción
+     */
+    public CourseDTO createCourseBatch(CourseCreationBatchDTO batchDTO) {
+        // 1. Validar y obtener dependencias
+        Estado estado = estadoRepository.findByCodigo(EstadoEnum.BORRADOR.getCodigo())
+                .orElseThrow(() -> new ApiException(
+                        "No se encontró el estado BORRADOR",
+                        HttpStatus.INTERNAL_SERVER_ERROR));
+
+        Categoria categoria = categoriaRepository.findById(batchDTO.getCategoriaId())
+                .orElseThrow(() -> new ApiException(
+                        "No se encontró una categoría con el id: " + batchDTO.getCategoriaId(),
+                        HttpStatus.BAD_REQUEST));
+
+        // 2. Crear el curso
+        Curso curso = new Curso();
+        curso.setTitulo(batchDTO.getTitulo());
+        curso.setDescripcion(batchDTO.getDescripcion());
+        curso.setPrecio(batchDTO.getPrecio());
+        curso.setEstado(estado);
+        curso.setCategoria(categoria);
+        curso.setInstructor(getUserLoggedIn());
+        curso.setEliminado(Short.valueOf("0"));
+
+        // 3. Guardar curso para obtener ID
+        curso = repository.save(curso);
+
+        // 4. Procesar imagen si existe
+        if (batchDTO.getAdjunto() != null && batchDTO.getAdjunto().getBase64() != null) {
+            final Curso cursoFinal = curso;
+            FileMapper.toMultipartFile(batchDTO.getAdjunto()).ifPresent(multipartFile -> {
+                fileService.uploadFile(multipartFile).ifPresent(adjunto -> {
+                    cursoFinal.setAdjunto(adjunto);
+                    repository.save(cursoFinal);
+                });
+            });
+        }
+
+        // 5. Crear secciones y lecciones si existen
+        if (batchDTO.getSecciones() != null && !batchDTO.getSecciones().isEmpty()) {
+            for (CourseCreationBatchDTO.SectionCreationDTO sectionDTO : batchDTO.getSecciones()) {
+                // Validar orden único de sección
+                if (sectionRepository.findByCursoIdAndOrden(curso.getId(), sectionDTO.getOrden()).isPresent()) {
+                    throw new ApiException(
+                            "Ya existe una sección con el orden " + sectionDTO.getOrden() + " en este curso",
+                            HttpStatus.BAD_REQUEST);
+                }
+
+                // Crear sección
+                Seccion seccion = new Seccion();
+                seccion.setTitulo(sectionDTO.getTitulo());
+                seccion.setOrden(sectionDTO.getOrden());
+                seccion.setDuracionEstimada(sectionDTO.getDuracionEstimada());
+                seccion.setVisible(true);
+                seccion.setCurso(curso);
+                seccion = sectionRepository.save(seccion);
+
+                // Crear lecciones si existen
+                if (sectionDTO.getLecciones() != null && !sectionDTO.getLecciones().isEmpty()) {
+                    final Seccion seccionFinal = seccion;
+
+                    for (CourseCreationBatchDTO.LessonCreationDTO lessonDTO : sectionDTO.getLecciones()) {
+                        // Validar orden único de lección
+                        if (lecturaRepository.findBySeccionIdAndOrden(seccionFinal.getId(), lessonDTO.getOrden()).isPresent()) {
+                            throw new ApiException(
+                                    "Ya existe una lección con el orden " + lessonDTO.getOrden() + " en esta sección",
+                                    HttpStatus.BAD_REQUEST);
+                        }
+
+                        // Crear lección
+                        Leccion leccion = new Leccion();
+                        leccion.setTitulo(lessonDTO.getTitulo());
+                        leccion.setUrl(lessonDTO.getUrl());
+                        leccion.setContenido(lessonDTO.getContenido());
+                        leccion.setOrden(lessonDTO.getOrden());
+                        leccion.setVisible(true);
+                        leccion.setSeccion(seccionFinal);
+
+                        // Asignar tipo de lección
+                        if (lessonDTO.getTipo() != null && !lessonDTO.getTipo().isEmpty()) {
+                            try {
+                                leccion.setTipo(LeccionTipoEnum.valueOf(lessonDTO.getTipo().toUpperCase()));
+                            } catch (IllegalArgumentException e) {
+                                leccion.setTipo(LeccionTipoEnum.VIDEO);
+                            }
+                        } else {
+                            leccion.setTipo(LeccionTipoEnum.VIDEO);
+                        }
+
+                        lecturaRepository.save(leccion);
+                    }
+                }
+            }
+        }
+
+        // 6. Recargar el curso con todas sus relaciones
+        Curso cursoCompleto = repository.findDetailsById(curso.getId())
+                .orElse(curso);
+
+        return CourseMapper.toDetailsDTO(cursoCompleto);
     }
 }

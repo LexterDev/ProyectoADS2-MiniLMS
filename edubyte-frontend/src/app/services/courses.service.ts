@@ -20,10 +20,16 @@ export class CoursesService {
   }
 
   getCourseById(id: string) {
+    const token = this.authService.getToken();
+    const headers: any = {};
+
+    // Only add Authorization header if user is logged in
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+
     return this.http.get(API_ENDPOINTS.courses.getById(id), {
-      headers: {
-        Authorization: `Bearer ${this.authService.getToken()}`
-      }
+      headers: headers
     });
   }
 
@@ -61,8 +67,101 @@ export class CoursesService {
     });
   }
 
+  createCourseBatch(courseData: any) {
+    return this.http.post(API_ENDPOINTS.courses.createBatch, courseData, {
+      headers: {
+        Authorization: `Bearer ${this.authService.getToken()}`
+      }
+    });
+  }
+
+  /**
+   * Update existing course
+   */
+  updateCourse(courseData: any) {
+    return this.http.put(API_ENDPOINTS.courses.update, courseData, {
+      headers: {
+        Authorization: `Bearer ${this.authService.getToken()}`
+      }
+    });
+  }
+
+  /**
+   * Delete course (soft delete)
+   */
+  deleteCourse(courseId: number) {
+    return this.http.delete(API_ENDPOINTS.courses.delete(courseId), {
+      headers: {
+        Authorization: `Bearer ${this.authService.getToken()}`
+      }
+    });
+  }
+
+  /**
+   * Create a new section for a course
+   */
+  createSection(sectionData: any) {
+    return this.http.post(API_ENDPOINTS.sections.create, sectionData, {
+      headers: {
+        Authorization: `Bearer ${this.authService.getToken()}`
+      }
+    });
+  }
+
+  /**
+   * Update existing section
+   */
+  updateSection(sectionData: any) {
+    return this.http.put(API_ENDPOINTS.sections.update, sectionData, {
+      headers: {
+        Authorization: `Bearer ${this.authService.getToken()}`
+      }
+    });
+  }
+
+  /**
+   * Delete section
+   */
+  deleteSection(sectionId: number) {
+    return this.http.delete(API_ENDPOINTS.sections.delete(sectionId), {
+      headers: {
+        Authorization: `Bearer ${this.authService.getToken()}`
+      }
+    });
+  }
+
+  /**
+   * Create a new lesson for a section
+   */
+  createLesson(lessonData: any) {
+    return this.http.post(API_ENDPOINTS.lessons.create, lessonData, {
+      headers: {
+        Authorization: `Bearer ${this.authService.getToken()}`
+      }
+    });
+  }
+
+  /**
+   * Update existing lesson
+   */
+  updateLesson(lessonData: any) {
+    return this.http.put(API_ENDPOINTS.lessons.update, lessonData, {
+      headers: {
+        Authorization: `Bearer ${this.authService.getToken()}`
+      }
+    });
+  }
+
+  /**
+   * Delete lesson
+   */
+  deleteLesson(lessonId: number) {
+    return this.http.delete(API_ENDPOINTS.lessons.delete(lessonId), {
+      headers: {
+        Authorization: `Bearer ${this.authService.getToken()}`
+      }
+    });
+  }
+
   constructor() { }
-
-
-
 }

@@ -6,9 +6,14 @@ import { RouterModule, Router } from '@angular/router';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatDialogModule, MatDialog } from '@angular/material/dialog';
+import { MatDividerModule } from '@angular/material/divider';
+import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../services/auth.service';
 import { CoursesService } from '../../../services/courses.service';
+import { SnackbarService } from '../../../services/snackbar.service';
 import { SidebarInstructorComponent } from '../sidebar-instructor/sidebar-instructor.component';
+import { ConfirmationDialogComponent } from '../../../components/shared/confirmation-dialog/confirmation-dialog.component';
 
 // Definimos la estructura de un curso del instructor
 type CourseStatus = 'Publicado' | 'Borrador' | 'En revisión' | 'Rechazado';
@@ -30,14 +35,16 @@ type CourseStatus = 'Publicado' | 'Borrador' | 'En revisión' | 'Rechazado';
   imports: [
     CommonModule,
     RouterModule,
+    FormsModule,
     // Pipes para formatear la tabla
     DatePipe,
     CurrencyPipe,
-    DecimalPipe,
     // Módulos de Material
     MatMenuModule,
     MatButtonModule,
     MatIconModule,
+    MatDialogModule,
+    MatDividerModule,
     SidebarInstructorComponent
   ],
   templateUrl: './instructor-courses.component.html', // <-- Nombre del HTML
@@ -56,14 +63,19 @@ export class InstructorCoursesComponent implements OnInit {
 
   filteredCourses: any[] = [];
   activeTab: string = 'Todos'; // Coincide con el texto de la pestaña
+  loading: boolean = false;
+  searchQuery: string = '';
 
-  constructor(private router: Router, private authService: AuthService, private coursesService: CoursesService) { }
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private coursesService: CoursesService,
+    private snackbarService: SnackbarService,
+    private dialog: MatDialog
+  ) { }
 
   ngOnInit(): void {
-    // Carga inicial de todos los cursos
-    // this.applyFilters();
     this.getCoursesByInstructor();
-    // console.log('Cursos del instructor cargados:', this.allCourses);
   }
 
   /**
@@ -71,38 +83,203 @@ export class InstructorCoursesComponent implements OnInit {
    */
   setTab(tab: string): void {
     this.activeTab = tab;
-    // this.applyFilters();
+    this.applyFilters();
   }
 
   /**
-   * Filtra la lista 'allCourses' basándose en 'activeTab'.
+   * Filtra la lista 'allCourses' basándose en 'activeTab' y 'searchQuery'.
    */
-  // applyFilters(): void {
-  //   if (this.activeTab === 'Todos') {
-  //     this.filteredCourses = [...this.allCourses];
-  //   } else {
-  //     // Filtra para que coincida con el estado (ej. 'Publicados' -> 'Publicado')
-  //     const filterStatus = this.activeTab.replace('s', ''); // 'Publicados' -> 'Publicado'
-  //     this.filteredCourses = this.allCourses.filter(course => course.status === filterStatus);
-  //   }
-  // }
+  applyFilters(): void {
+    let filtered = [...this.allCourses];
 
-  // --- Métodos de Acciones (Simulados) ---
+    // Apply tab filter
+    if (this.activeTab === 'Publicados') {
+      filtered = filtered.filter(course => course.estadoCodigo === 'PUBLICADO');
+    } else if (this.activeTab === 'Borrador') {
+      filtered = filtered.filter(course => course.estadoCodigo === 'BORRADOR');
+    } else if (this.activeTab === 'En revisión') {
+      filtered = filtered.filter(course => course.estadoCodigo === 'EN_REVISION');
+    }
+
+    // Apply search filter
+    if (this.searchQuery.trim()) {
+      const query = this.searchQuery.toLowerCase();
+      filtered = filtered.filter(course =>
+        course.titulo.toLowerCase().includes(query) ||
+        course.descripcion?.toLowerCase().includes(query)
+      );
+    }
+
+    this.filteredCourses = filtered;
+  }
+
+  /**
+   * Handler for search input
+   */
+  onSearch(): void {
+    this.applyFilters();
+  }
+
+  /**
+   * Clear search
+   */
+  clearSearch(): void {
+    this.searchQuery = '';
+    this.applyFilters();
+  }
+
+  // --- Métodos de Acciones ---
   editCourse(courseId: string): void {
-    console.log('Editando curso:', courseId);
-    // this.router.navigate(['/courses/edit', courseId]);
+    this.router.navigate(['/instructor/edit-course', courseId]);
   }
 
   deleteCourse(courseId: string): void {
-    console.log('Eliminando curso:', courseId);
-    // (Aquí iría la lógica para llamar al servicio y eliminar)
-    // this.allCourses = this.allCourses.filter((c: InstructorCourse) => c.id !== courseId);
-    // this.applyFilters(); // Actualiza la vista
+    const course = this.allCourses.find(c => c.id == courseId);
+
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '500px',
+      data: {
+        title: 'Eliminar Curso',
+        message: `¿Estás seguro de eliminar el curso "${course?.titulo}"? Esta acción no se puede deshacer.`,
+        confirmText: 'Eliminar',
+        cancelText: 'Cancelar',
+        type: 'danger'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+      if (confirmed) {
+        this.loading = true;
+        this.coursesService.deleteCourse(Number(courseId)).subscribe({
+          next: () => {
+            this.snackbarService.showSuccess('Curso eliminado exitosamente');
+            this.getCoursesByInstructor();
+          },
+          error: (error) => {
+            console.error('Error al eliminar curso:', error);
+            this.snackbarService.showError('Error al eliminar el curso');
+            this.loading = false;
+          }
+        });
+      }
+    });
   }
 
-  // addSections(courseId: string): void {
-  //   this.router.navigate(['/instructor/add-section', courseId]);
-  // }
+  togglePublishStatus(course: any): void {
+    const newStatus = course.estadoCodigo === 'PUBLICADO' ? 'BORRADOR' : 'PUBLICADO';
+    const newStatusName = newStatus === 'PUBLICADO' ? 'publicar' : 'despublicar';
+
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '500px',
+      data: {
+        title: newStatus === 'PUBLICADO' ? 'Publicar Curso' : 'Despublicar Curso',
+        message: `¿Deseas ${newStatusName} el curso "${course.titulo}"?`,
+        confirmText: newStatus === 'PUBLICADO' ? 'Publicar' : 'Despublicar',
+        cancelText: 'Cancelar',
+        type: newStatus === 'PUBLICADO' ? 'info' : 'warning'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+      if (confirmed) {
+        this.loading = true;
+        const updateData = {
+          id: course.id,
+          titulo: course.titulo,
+          descripcion: course.descripcion,
+          precio: course.precio,
+          estadoCodigo: newStatus,
+          categoriaId: course.categoriaId,
+          instructorId: this.getInstructorId()
+        };
+
+        this.coursesService.updateCourse(updateData).subscribe({
+          next: () => {
+            const actionText = newStatus === 'PUBLICADO' ? 'publicado' : 'despublicado';
+            this.snackbarService.showSuccess(`Curso ${actionText} exitosamente`);
+            this.getCoursesByInstructor();
+          },
+          error: (error) => {
+            console.error('Error al cambiar estado del curso:', error);
+            this.snackbarService.showError('Error al actualizar el curso');
+            this.loading = false;
+          }
+        });
+      }
+    });
+  }
+
+  addSection(courseId: string): void {
+    this.router.navigate(['/instructor/manage-course', courseId]);
+  }
+
+  duplicateCourse(courseId: string): void {
+    const course = this.allCourses.find(c => c.id == courseId);
+
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '500px',
+      data: {
+        title: 'Duplicar Curso',
+        message: `¿Deseas crear una copia del curso "${course?.titulo}"? Se creará un nuevo curso con el estado "Borrador".`,
+        confirmText: 'Duplicar',
+        cancelText: 'Cancelar',
+        type: 'info'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+      if (confirmed) {
+        this.loading = true;
+
+        // Fetch the full course details including sections and lessons
+        this.coursesService.getCourseById(courseId).subscribe({
+          next: (response: any) => {
+            const originalCourse = response.data;
+
+            // Prepare the duplicate course data
+            const duplicateCourseData = {
+              titulo: `${originalCourse.titulo} (Copia)`,
+              descripcion: originalCourse.descripcion,
+              precio: originalCourse.precio,
+              estadoCodigo: 'BORRADOR',
+              categoriaId: originalCourse.categoriaId,
+              instructorId: this.getInstructorId(),
+              secciones: originalCourse.secciones?.map((seccion: any) => ({
+                titulo: seccion.titulo,
+                orden: seccion.orden,
+                duracionEstimada: seccion.duracionEstimada,
+                lecciones: seccion.lecciones?.map((leccion: any) => ({
+                  titulo: leccion.titulo,
+                  url: leccion.url,
+                  contenido: leccion.contenido,
+                  orden: leccion.orden,
+                  tipoCodigo: leccion.tipoCodigo
+                })) || []
+              })) || []
+            };
+
+            // Create the duplicate course using batch endpoint
+            this.coursesService.createCourseBatch(duplicateCourseData).subscribe({
+              next: () => {
+                this.snackbarService.showSuccess('Curso duplicado exitosamente');
+                this.getCoursesByInstructor();
+              },
+              error: (error) => {
+                console.error('Error al duplicar curso:', error);
+                this.snackbarService.showError('Error al duplicar el curso');
+                this.loading = false;
+              }
+            });
+          },
+          error: (error) => {
+            console.error('Error al obtener detalles del curso:', error);
+            this.snackbarService.showError('Error al obtener los detalles del curso');
+            this.loading = false;
+          }
+        });
+      }
+    });
+  }
 
   getInstructorId(): number {
     const user = this.authService.getUserInfo();
@@ -110,14 +287,17 @@ export class InstructorCoursesComponent implements OnInit {
   }
 
   getCoursesByInstructor(): void {
+    this.loading = true;
     this.coursesService.getCoursesByInstructorId(this.getInstructorId()).subscribe({
       next: (courses: any) => {
         this.allCourses = courses.data;
-        console.log('Cursos del instructor:', this.allCourses);
-        // this.applyFilters();
+        this.applyFilters();
+        this.loading = false;
       },
       error: (error: any) => {
         console.error('Error al obtener cursos del instructor:', error);
+        this.snackbarService.showError('Error al cargar los cursos');
+        this.loading = false;
       }
     });
   }

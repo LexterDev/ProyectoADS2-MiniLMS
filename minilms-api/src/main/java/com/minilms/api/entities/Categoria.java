@@ -19,7 +19,18 @@ public class Categoria {
     @Size(max = 100)
     @Column(nullable = false, unique = true, length = 100)
     private String nombre;
-    
+
     @Column(length = 500, nullable = false)
     private String descripcion;
+
+    @Size(max = 50)
+    @Column(length = 50)
+    private String icono;
+
+    @Size(max = 50)
+    @Column(length = 50)
+    private String color;
+
+    @Column(name = "activa", nullable = false, columnDefinition = "SMALLINT DEFAULT 1")
+    private Short activa = 1;
 }

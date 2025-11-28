@@ -32,5 +32,10 @@ public class CourseDTO {
 
     private List<SectionDTO> secciones;
     private List<StudentDTO> estudiantes;
+    private List<ReviewDTO> resenas;
+
+    // Review statistics
+    private Double promedioCalificacion;
+    private Long totalResenas;
 
 }

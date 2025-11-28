@@ -7,14 +7,18 @@ import { RegisterComponent } from './auth/register/register.component';
 import { ForgotPasswordComponent } from './auth/forgot-password/forgot-password.component';
 import { CourseListComponent } from './pages/courses/course-list/course-list.component';
 import { DashboardStudentComponent } from './pages/dashboard-student/dashboard-student.component';
-import { CourseCreateComponent } from './pages/courses/course-create/course-create.component';
+import { CourseWizardComponent } from './pages/courses/course-wizard/course-wizard.component';
 import { DashboardComponent } from './pages/instructor/dashboard/dashboard.component';
 import { MyCoursesComponent } from './pages/student/my-courses/my-courses.component';
 import { InstructorCoursesComponent } from './pages/instructor/instructor-courses/instructor-courses.component';
 import { CourseDetailsComponent } from './pages/courses/course-details/course-details.component';
-import { CourseSectionsComponent } from './pages/courses/course-sections/course-sections.component';
-import { CourseLessonsComponent } from './pages/courses/course-lessons/course-lessons.component';
 import { LessonPlayerComponent } from './pages/courses/course-lessons/lesson-player/lesson-player.component';
+import { CoursePlayerComponent } from './pages/student/course-player/course-player.component';
+import { CheckoutComponent } from './components/checkout/checkout.component';
+import { PaymentConfirmationComponent } from './components/payment-confirmation/payment-confirmation.component';
+import { CourseEditComponent } from './pages/instructor/course-edit/course-edit.component';
+import { ManageCourseComponent } from './pages/instructor/manage-course/manage-course.component';
+import { CategoryManagementComponent } from './pages/admin/category-management/category-management.component';
 
 // Guards
 import { authGuard } from './auth/auth.guard';
@@ -64,6 +68,12 @@ export const routes: Routes = [
         canActivate: [authGuard]
     },
     {
+        path: 'student/course/:courseId/lesson/:lessonId',
+        component: CoursePlayerComponent,
+        title: 'Reproducir Curso - EduByte',
+        canActivate: [authGuard]
+    },
+    {
         path: 'dashboard-instructor',
         component: DashboardComponent,
         canActivate: [authGuard]
@@ -75,23 +85,44 @@ export const routes: Routes = [
     },
     {
         path: 'courses/create',
-        component: CourseCreateComponent,
+        component: CourseWizardComponent,
+        title: 'Crear Curso - EduByte',
         canActivate: [authGuard]
     },
     {
-        path: 'instructor/add-section/:courseId',
-        component: CourseSectionsComponent,
+        path: 'instructor/edit-course/:id',
+        component: CourseEditComponent,
+        title: 'Editar Curso - EduByte',
         canActivate: [authGuard]
     },
     {
-        path: 'instructor/add-lesson/:courseId/:sectionId',
-        component: CourseLessonsComponent,
+        path: 'instructor/manage-course/:id',
+        component: ManageCourseComponent,
+        title: 'Gestionar Contenido - EduByte',
+        canActivate: [authGuard]
+    },
+    {
+        path: 'admin/categories',
+        component: CategoryManagementComponent,
+        title: 'Gestión de Categorías - EduByte',
         canActivate: [authGuard]
     },
     {
         path: 'lesson/:id/:courseId/:sectionId',
         component: LessonPlayerComponent,
         title: 'Reproducir Lección - EduByte',
+        canActivate: [authGuard]
+    },
+    {
+        path: 'checkout',
+        component: CheckoutComponent,
+        title: 'Checkout - EduByte',
+        canActivate: [authGuard]
+    },
+    {
+        path: 'payment-confirmation',
+        component: PaymentConfirmationComponent,
+        title: 'Confirmación de Pago - EduByte',
         canActivate: [authGuard]
     }
 ];

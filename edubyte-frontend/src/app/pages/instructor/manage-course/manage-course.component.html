@@ -1,0 +1,217 @@
+<main class="min-h-screen py-10 bg-background-light dark:bg-background-dark text-black dark:text-white">
+
+  <app-sidebar-instructor></app-sidebar-instructor>
+
+  <div class="lg:ml-64 min-h-screen px-4 md:px-10">
+
+    <!-- Header -->
+    <div class="flex flex-wrap justify-between items-center gap-4 mb-6">
+      <div>
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Gestionar Contenido</h1>
+        @if (course) {
+          <p class="text-gray-600 dark:text-gray-400 mt-1">{{ course.titulo }}</p>
+        }
+      </div>
+      <button (click)="goBack()" type="button"
+        class="flex items-center gap-2 px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors">
+        <span class="material-symbols-outlined text-xl">arrow_back</span>
+        <span>Volver</span>
+      </button>
+    </div>
+
+    <!-- Loading State -->
+    @if (isLoading) {
+      <div class="flex justify-center items-center py-20">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    }
+
+    <!-- Content Management -->
+    @if (!isLoading) {
+      <div class="max-w-5xl">
+
+        <!-- Add Section Button -->
+        <div class="mb-6">
+          <button (click)="addSection()" type="button"
+            class="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors">
+            <span class="material-symbols-outlined text-xl">add</span>
+            <span>Agregar Sección</span>
+          </button>
+        </div>
+
+        <!-- Sections List -->
+        @if (secciones.length === 0) {
+          <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-8 border border-primary/10 dark:border-primary/20 text-center">
+            <span class="material-symbols-outlined text-6xl text-gray-300 dark:text-gray-600 mb-4 block">folder_open</span>
+            <h3 class="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-2">No hay secciones aún</h3>
+            <p class="text-gray-500 dark:text-gray-400">Comienza agregando la primera sección de tu curso</p>
+          </div>
+        }
+
+        <!-- Sections Accordion -->
+        <mat-accordion class="space-y-4">
+          @for (section of secciones.controls; track $index; let sectionIndex = $index) {
+            <mat-expansion-panel
+              class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-primary/10 dark:border-primary/20">
+
+              <mat-expansion-panel-header class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                <mat-panel-title class="text-gray-900 dark:text-white font-semibold">
+                  <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-primary">folder</span>
+                    <span>Sección {{ sectionIndex + 1 }}: {{ section.get('titulo')?.value }}</span>
+                  </div>
+                </mat-panel-title>
+                <mat-panel-description class="text-gray-500 dark:text-gray-400">
+                  {{ getLecciones(sectionIndex).length }} {{ getLecciones(sectionIndex).length === 1 ? 'lección' : 'lecciones' }}
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+
+              <!-- Section Content -->
+              <div [formGroup]="getSectionFormGroup(sectionIndex)" class="p-4 space-y-4">
+
+                <!-- Section Details -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Título de la Sección *
+                    </label>
+                    <input type="text" formControlName="titulo"
+                      class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent
+                        bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600
+                        text-gray-900 dark:text-white"
+                      placeholder="Ej: Introducción al curso">
+                  </div>
+
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Duración Estimada (minutos)
+                    </label>
+                    <input type="number" formControlName="duracionEstimada" min="0"
+                      class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent
+                        bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600
+                        text-gray-900 dark:text-white"
+                      placeholder="60">
+                  </div>
+                </div>
+
+                <!-- Section Actions -->
+                <div class="flex justify-between items-center pt-2 border-t border-gray-200 dark:border-gray-700">
+                  <button (click)="saveSection(sectionIndex)" type="button"
+                    class="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm">
+                    <span class="material-symbols-outlined text-lg">save</span>
+                    <span>Guardar Sección</span>
+                  </button>
+                  <button (click)="removeSection(sectionIndex)" type="button"
+                    class="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm">
+                    <span class="material-symbols-outlined text-lg">delete</span>
+                    <span>Eliminar Sección</span>
+                  </button>
+                </div>
+
+                <!-- Lessons Header -->
+                <div class="pt-4">
+                  <div class="flex justify-between items-center mb-3">
+                    <h4 class="text-lg font-semibold text-gray-900 dark:text-white">Lecciones</h4>
+                    <button (click)="addLesson(sectionIndex)" type="button"
+                      class="flex items-center gap-2 px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm">
+                      <span class="material-symbols-outlined text-lg">add</span>
+                      <span>Agregar Lección</span>
+                    </button>
+                  </div>
+
+                  <!-- Lessons List -->
+                  @if (getLecciones(sectionIndex).length === 0) {
+                    <div class="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-6 text-center">
+                      <p class="text-gray-500 dark:text-gray-400 text-sm">No hay lecciones en esta sección</p>
+                    </div>
+                  }
+
+                  <div class="space-y-3">
+                    @for (lesson of getLecciones(sectionIndex).controls; track $index; let lessonIndex = $index) {
+                      <div [formGroup]="getLessonFormGroup(sectionIndex, lessonIndex)"
+                        class="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4 border border-gray-200 dark:border-gray-600">
+
+                        <div class="space-y-3">
+                          <!-- Lesson Title and Type -->
+                          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div>
+                              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                Título de la Lección *
+                              </label>
+                              <input type="text" formControlName="titulo"
+                                class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent
+                                  bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600
+                                  text-gray-900 dark:text-white text-sm"
+                                placeholder="Ej: ¿Qué aprenderás en este curso?">
+                            </div>
+
+                            <div>
+                              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                Tipo de Lección *
+                              </label>
+                              <select formControlName="tipo"
+                                class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent
+                                  bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600
+                                  text-gray-900 dark:text-white text-sm">
+                                @for (type of lessonTypes; track type.value) {
+                                  <option [value]="type.value">{{ type.label }}</option>
+                                }
+                              </select>
+                            </div>
+                          </div>
+
+                          <!-- URL -->
+                          <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                              URL (para videos)
+                            </label>
+                            <input type="text" formControlName="url"
+                              class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent
+                                bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600
+                                text-gray-900 dark:text-white text-sm"
+                              placeholder="https://youtube.com/watch?v=...">
+                          </div>
+
+                          <!-- Content -->
+                          <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                              Contenido (para lecturas)
+                            </label>
+                            <textarea formControlName="contenido" rows="3"
+                              class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent
+                                bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600
+                                text-gray-900 dark:text-white text-sm"
+                              placeholder="Escribe el contenido de la lección aquí..."></textarea>
+                          </div>
+
+                          <!-- Lesson Actions -->
+                          <div class="flex justify-end gap-2 pt-2">
+                            <button (click)="saveLesson(sectionIndex, lessonIndex)" type="button"
+                              class="flex items-center gap-1 px-3 py-1.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-xs">
+                              <span class="material-symbols-outlined text-sm">save</span>
+                              <span>Guardar</span>
+                            </button>
+                            <button (click)="removeLesson(sectionIndex, lessonIndex)" type="button"
+                              class="flex items-center gap-1 px-3 py-1.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-xs">
+                              <span class="material-symbols-outlined text-sm">delete</span>
+                              <span>Eliminar</span>
+                            </button>
+                          </div>
+                        </div>
+
+                      </div>
+                    }
+                  </div>
+                </div>
+
+              </div>
+
+            </mat-expansion-panel>
+          }
+        </mat-accordion>
+
+      </div>
+    }
+
+  </div>
+</main>

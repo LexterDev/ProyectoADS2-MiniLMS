@@ -1,0 +1,252 @@
+<div class="min-h-screen bg-gray-50 py-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900">Finalizar Compra</h1>
+      <p class="mt-2 text-sm text-gray-600">Complete el pago para inscribirse en el curso</p>
+    </div>
+
+    @if (isLoading) {
+      <div class="flex justify-center items-center py-12">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+      </div>
+    } @else if (course) {
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+        <!-- Left Column - Payment Form -->
+        <div class="lg:col-span-2">
+          <form [formGroup]="checkoutForm" (ngSubmit)="processPayment()">
+
+            <!-- Payment Method Selection -->
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+              <h2 class="text-xl font-semibold mb-4">Método de Pago</h2>
+
+              <div class="space-y-3">
+                @for (method of paymentMethods; track method.id) {
+                  <label class="flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all"
+                    [class.border-primary-600]="checkoutForm.get('paymentMethod')?.value === method.id"
+                    [class.bg-primary-50]="checkoutForm.get('paymentMethod')?.value === method.id"
+                    [class.border-gray-200]="checkoutForm.get('paymentMethod')?.value !== method.id">
+                    <input
+                      type="radio"
+                      formControlName="paymentMethod"
+                      [value]="method.id"
+                      class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300">
+                    <div class="ml-3 flex items-center">
+                      @if (method.id === 'TARJETA') {
+                        <svg class="h-6 w-6 text-gray-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+                        </svg>
+                      } @else if (method.id === 'PAYPAL') {
+                        <svg class="h-6 w-6 text-blue-600 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a3.35 3.35 0 0 0-.607-.541c-.013.076-.026.175-.041.254-.93 4.778-4.005 7.201-9.138 7.201h-2.19a.563.563 0 0 0-.556.479l-1.187 7.527h-.506L9.99 14.48a1.012 1.012 0 0 1 .997-1.172h2.19c4.937 0 8.835-2.007 9.68-7.886.102-.716.089-1.535-.635-2.505z"/>
+                        </svg>
+                      } @else {
+                        <svg class="h-6 w-6 text-gray-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                      }
+                      <span class="font-medium text-gray-900">{{ method.nombre }}</span>
+                    </div>
+                  </label>
+                }
+              </div>
+
+              @if (checkoutForm.get('paymentMethod')?.invalid && checkoutForm.get('paymentMethod')?.touched) {
+                <p class="text-red-500 text-sm mt-2">Por favor, seleccione un método de pago</p>
+              }
+            </div>
+
+            <!-- Card Details (Only shown for card payment) -->
+            @if (isCardPayment) {
+              <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <h2 class="text-xl font-semibold mb-4">Información de la Tarjeta</h2>
+
+                <div class="space-y-4">
+                  <!-- Card Number -->
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                      Número de Tarjeta <span class="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      formControlName="cardNumber"
+                      (input)="formatCardNumber($event)"
+                      placeholder="1234 5678 9012 3456"
+                      maxlength="19"
+                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                    @if (checkoutForm.get('cardNumber')?.invalid && checkoutForm.get('cardNumber')?.touched) {
+                      <p class="text-red-500 text-sm mt-1">Número de tarjeta inválido</p>
+                    }
+                    <p class="text-xs text-gray-500 mt-1">Para pruebas: use cualquier número excepto terminado en 0000</p>
+                  </div>
+
+                  <!-- Card Holder Name -->
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                      Nombre del Titular <span class="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      formControlName="cardHolderName"
+                      placeholder="Juan Pérez"
+                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                    @if (checkoutForm.get('cardHolderName')?.invalid && checkoutForm.get('cardHolderName')?.touched) {
+                      <p class="text-red-500 text-sm mt-1">Nombre del titular requerido</p>
+                    }
+                  </div>
+
+                  <!-- Expiry Date and CVV -->
+                  <div class="grid grid-cols-2 gap-4">
+                    <div>
+                      <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Fecha de Vencimiento <span class="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        formControlName="expiryDate"
+                        (input)="formatExpiryDate($event)"
+                        placeholder="MM/AA"
+                        maxlength="5"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                      @if (checkoutForm.get('expiryDate')?.invalid && checkoutForm.get('expiryDate')?.touched) {
+                        <p class="text-red-500 text-sm mt-1">Formato: MM/AA</p>
+                      }
+                    </div>
+
+                    <div>
+                      <label class="block text-sm font-medium text-gray-700 mb-2">
+                        CVV <span class="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        formControlName="cvv"
+                        placeholder="123"
+                        maxlength="4"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                      @if (checkoutForm.get('cvv')?.invalid && checkoutForm.get('cvv')?.touched) {
+                        <p class="text-red-500 text-sm mt-1">CVV inválido</p>
+                      }
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Security Notice -->
+                <div class="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                  <div class="flex items-start">
+                    <svg class="h-5 w-5 text-blue-600 mt-0.5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                    </svg>
+                    <div>
+                      <p class="text-sm font-medium text-blue-900">Pago Seguro</p>
+                      <p class="text-xs text-blue-700 mt-1">Esta es una simulación de pago. No se procesarán cargos reales.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            }
+
+            <!-- Action Buttons -->
+            <div class="flex gap-4">
+              <button
+                type="button"
+                (click)="cancel()"
+                [disabled]="isProcessing"
+                class="flex-1 bg-gray-200 text-gray-700 py-3 px-6 rounded-lg hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium">
+                Cancelar
+              </button>
+              <button
+                type="submit"
+                [disabled]="checkoutForm.invalid || isProcessing"
+                class="flex-1 bg-primary-600 text-white py-3 px-6 rounded-lg hover:bg-primary-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors font-medium flex items-center justify-center">
+                @if (isProcessing) {
+                  <svg class="animate-spin h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Procesando...
+                } @else {
+                  Completar Pago
+                }
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Right Column - Order Summary -->
+        <div class="lg:col-span-1">
+          <div class="bg-white rounded-lg shadow-md p-6 sticky top-6">
+            <h2 class="text-xl font-semibold mb-4">Resumen del Pedido</h2>
+
+            <!-- Course Info -->
+            <div class="border-b border-gray-200 pb-4 mb-4">
+              @if (course.adjunto?.url) {
+                <img [src]="course.adjunto.url" [alt]="course.titulo" class="w-full h-32 object-cover rounded-lg mb-3">
+              }
+              <h3 class="font-medium text-gray-900">{{ course.titulo }}</h3>
+              @if (course.instructor) {
+                <p class="text-sm text-gray-600 mt-1">
+                  Por {{ course.instructor.nombre }} {{ course.instructor.apellido }}
+                </p>
+              }
+            </div>
+
+            <!-- Price Breakdown -->
+            <div class="space-y-2 mb-4">
+              <div class="flex justify-between text-sm">
+                <span class="text-gray-600">Precio del curso</span>
+                <span class="font-medium">{{ course.precio | currency }}</span>
+              </div>
+              <div class="flex justify-between text-sm">
+                <span class="text-gray-600">Descuento</span>
+                <span class="font-medium text-green-600">-{{ 0 | currency }}</span>
+              </div>
+            </div>
+
+            <!-- Total -->
+            <div class="border-t border-gray-200 pt-4">
+              <div class="flex justify-between items-center">
+                <span class="text-lg font-semibold text-gray-900">Total</span>
+                <span class="text-2xl font-bold text-primary-600">{{ totalAmount | currency }}</span>
+              </div>
+            </div>
+
+            <!-- Benefits -->
+            <div class="mt-6 pt-6 border-t border-gray-200">
+              <p class="text-sm font-medium text-gray-900 mb-3">Al completar la compra obtendrás:</p>
+              <ul class="space-y-2">
+                <li class="flex items-start text-sm text-gray-600">
+                  <svg class="h-5 w-5 text-green-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  Acceso de por vida al curso
+                </li>
+                <li class="flex items-start text-sm text-gray-600">
+                  <svg class="h-5 w-5 text-green-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  Certificado de finalización
+                </li>
+                <li class="flex items-start text-sm text-gray-600">
+                  <svg class="h-5 w-5 text-green-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  Recursos descargables
+                </li>
+                <li class="flex items-start text-sm text-gray-600">
+                  <svg class="h-5 w-5 text-green-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  Soporte del instructor
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    }
+
+  </div>
+</div>

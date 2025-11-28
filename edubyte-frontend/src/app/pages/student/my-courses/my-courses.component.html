@@ -1,6 +1,13 @@
 <main class="min-h-screen py-10 bg-background-light dark:bg-background-dark text-black dark:text-white">
-  
+
   <div class="mx-auto max-w-7xl px-4 md:px-8">
+
+    <!-- Loading State -->
+    @if (loading) {
+      <div class="flex items-center justify-center min-h-[400px]">
+        <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div>
+      </div>
+    } @else {
 
     <div class="flex flex-col sm:flex-row justify-between items-start gap-4 mb-6">
       <div class="flex flex-col">
@@ -100,16 +107,26 @@
               <div class="mb-4">
                 <p class="text-sm font-medium text-neutral-700 dark:text-neutral-300">Progreso: {{ course.progress }}%</p>
                 <p class="text-xs text-neutral-500 dark:text-neutral-400 truncate">Última lección: {{ course.lastLesson }}</p>
+                @if (course.timeSpent) {
+                  <p class="text-xs text-neutral-500 dark:text-neutral-400 mt-1">Tiempo dedicado: {{ formatTimeSpent(course.timeSpent) }}</p>
+                }
               </div>
               
               <div class="mt-auto">
-                <button class="w-full bg-primary text-white font-semibold py-2 rounded-lg hover:bg-primary/90 transition-colors">Continuar</button>
+                <button
+                  [routerLink]="['/student/course', course.id, 'lesson', getFirstLessonId(course.id)]"
+                  class="w-full bg-primary text-white font-semibold py-2 rounded-lg hover:bg-primary/90 transition-colors">
+                  Continuar
+                </button>
               </div>
 
             } @else if (course.isCompleted) {
               <div class="mb-4">
                  <p class="font-semibold text-green-600">¡Curso Completado!</p>
                  <p class="text-xs text-neutral-500 dark:text-neutral-400">Felicidades</p>
+                 @if (course.timeSpent) {
+                   <p class="text-xs text-neutral-500 dark:text-neutral-400 mt-1">Tiempo total: {{ formatTimeSpent(course.timeSpent) }}</p>
+                 }
               </div>
               <div class="h-2 mb-2"></div> <div class="mt-auto">
                 <button class="w-full bg-primary/10 text-primary font-semibold py-2 rounded-lg hover:bg-primary/20 transition-colors">Ver Certificado</button>
@@ -121,7 +138,11 @@
                 <p class="text-xs text-neutral-500 dark:text-neutral-400 truncate">Comienza con la lección 1</p>
               </div>
               <div class="mt-auto">
-                <button class="w-full bg-primary text-white font-semibold py-2 rounded-lg hover:bg-primary/90 transition-colors">Comenzar</button>
+                <button
+                  [routerLink]="['/student/course', course.id, 'lesson', getFirstLessonId(course.id)]"
+                  class="w-full bg-primary text-white font-semibold py-2 rounded-lg hover:bg-primary/90 transition-colors">
+                  Comenzar
+                </button>
               </div>
             }
             
@@ -135,4 +156,9 @@
         </div>
       }
 
-    </div> </div> </main>
+    </div>
+
+    }
+
+  </div>
+</main>

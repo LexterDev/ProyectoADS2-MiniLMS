@@ -1,27 +1,155 @@
-<!-- 
-  Sección CTA (Call to Action)
-  ¡100% Tailwind!
--->
-<section class="mt-20 rounded-xl bg-primary/10 dark:bg-primary/20 px-6 py-16 text-center">
-  <div class="flex flex-col items-center gap-4">
-    
-    <!-- Título -->
-    <h2 class="text-3xl font-bold tracking-tight text-background-dark dark:text-background-light">
-      ¡Empieza a aprender hoy mismo!
-    </h2>
-    
-    <!-- Subtítulo -->
-    <p class="max-w-xl text-base text-background-dark/70 dark:text-background-light/70">
-      Regístrate gratis y descubre un mundo de conocimiento a tu alcance.
-    </p>
-    
-    <!-- 
-      Botón 
-      - Usamos nuestro rounded-lg (0.5rem) estándar de los botones de auth
-    -->
-    <button class="mt-4 flex h-12 items-center justify-center rounded-lg bg-primary px-8 text-base font-bold text-white transition-colors hover:bg-primary/90">
-      Explora nuestros cursos
-    </button>
+<!-- Sección CTA Mejorada con Efectos Visuales -->
+<section class="py-20 bg-gradient-to-br from-purple-600 via-pink-600 to-purple-600 dark:from-purple-900 dark:via-pink-900 dark:to-purple-900 relative overflow-hidden">
+
+  <!-- Elementos de Fondo Animados -->
+  <div class="absolute inset-0 overflow-hidden pointer-events-none">
+    <!-- Patrón de puntos -->
+    <div class="absolute inset-0 opacity-20">
+      <div class="absolute top-0 left-0 w-full h-full" style="background-image: radial-gradient(circle, white 1px, transparent 1px); background-size: 30px 30px;"></div>
+    </div>
+
+    <!-- Círculos decorativos animados -->
+    <div class="absolute -top-20 -left-20 w-64 h-64 bg-white/10 rounded-full blur-3xl animate-pulse"></div>
+    <div class="absolute -bottom-20 -right-20 w-96 h-96 bg-white/10 rounded-full blur-3xl animate-pulse" style="animation-delay: 1s;"></div>
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-white/5 rounded-full blur-3xl animate-spin" style="animation-duration: 30s;"></div>
+
+    <!-- Formas geométricas flotantes -->
+    <div class="absolute top-20 left-20 w-20 h-20 border-4 border-white/20 rounded-2xl rotate-45 animate-float"></div>
+    <div class="absolute bottom-32 right-32 w-16 h-16 border-4 border-white/20 rounded-full animate-float" style="animation-delay: 0.5s;"></div>
+    <div class="absolute top-40 right-20 w-12 h-12 bg-white/10 rounded-lg rotate-12 animate-float" style="animation-delay: 1s;"></div>
+  </div>
+
+  <div class="max-w-5xl mx-auto px-4 relative z-10">
+
+    <!-- Contenido Principal -->
+    <div class="text-center animate-fade-in">
+
+      <!-- Badge Decorativo -->
+      <div class="inline-flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full mb-6">
+        <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"></path>
+        </svg>
+        <span class="text-sm font-semibold text-white">Comienza Tu Transformación</span>
+      </div>
+
+      <!-- Título Principal -->
+      <h2 class="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-6 leading-tight">
+        ¡Empieza a Aprender <br class="hidden sm:block" />
+        <span class="inline-block animate-bounce-slow">Hoy Mismo!</span>
+      </h2>
+
+      <!-- Subtítulo -->
+      <p class="text-xl md:text-2xl text-white/90 mb-8 max-w-3xl mx-auto leading-relaxed">
+        Únete a miles de estudiantes que ya están transformando sus carreras.<br />
+        Regístrate gratis y accede a cursos de alta calidad impartidos por expertos.
+      </p>
+
+      <!-- Características Rápidas -->
+      <div class="flex flex-wrap justify-center gap-6 mb-10">
+        <div class="flex items-center gap-2 text-white">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+          </svg>
+          <span class="font-semibold">Acceso Inmediato</span>
+        </div>
+        <div class="flex items-center gap-2 text-white">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+          </svg>
+          <span class="font-semibold">Sin Tarjeta de Crédito</span>
+        </div>
+        <div class="flex items-center gap-2 text-white">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+          </svg>
+          <span class="font-semibold">Certificados Incluidos</span>
+        </div>
+      </div>
+
+      <!-- Botones de Acción -->
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <!-- Botón Primario -->
+        <button class="group relative px-8 py-4 bg-white text-purple-600 font-bold rounded-2xl overflow-hidden hover:scale-105 transition-all duration-300 shadow-2xl hover:shadow-white/50">
+          <span class="relative flex items-center justify-center gap-2">
+            <span>Regístrate Gratis</span>
+            <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+            </svg>
+          </span>
+        </button>
+
+        <!-- Botón Secundario -->
+        <button class="group px-8 py-4 bg-white/10 backdrop-blur-sm border-2 border-white text-white font-bold rounded-2xl hover:bg-white/20 transition-all duration-300 hover:scale-105">
+          <span class="flex items-center justify-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span>Ver Demo</span>
+          </span>
+        </button>
+      </div>
+
+      <!-- Contador de Beneficios -->
+      <div class="mt-16 grid grid-cols-1 sm:grid-cols-3 gap-8">
+        <div class="text-white animate-fade-in">
+          <div class="text-5xl font-black mb-2">10K+</div>
+          <div class="text-white/80 font-medium">Estudiantes Activos</div>
+        </div>
+        <div class="text-white animate-fade-in" style="animation-delay: 0.1s;">
+          <div class="text-5xl font-black mb-2">500+</div>
+          <div class="text-white/80 font-medium">Cursos Disponibles</div>
+        </div>
+        <div class="text-white animate-fade-in" style="animation-delay: 0.2s;">
+          <div class="text-5xl font-black mb-2">98%</div>
+          <div class="text-white/80 font-medium">Tasa de Satisfacción</div>
+        </div>
+      </div>
+
+    </div>
 
   </div>
 </section>
+
+<style>
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+
+  @keyframes bounce-slow {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  .animate-fade-in {
+    animation: fade-in 1s ease-out;
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-bounce-slow {
+    animation: bounce-slow 3s ease-in-out infinite;
+  }
+</style>

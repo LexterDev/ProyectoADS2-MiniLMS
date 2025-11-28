@@ -17,6 +17,16 @@ public class ResponseHandler {
                 HttpStatus.OK.value(), message), HttpStatus.OK);
     }
 
+    public static <T> ResponseEntity<ApiResponse<T>> generateResponse(T data, HttpStatus status) {
+        return new ResponseEntity<>(new ApiResponse<>(
+                status.value(), "Operación realizada con éxito", data), status);
+    }
+
+    public static <T> ResponseEntity<ApiResponse<T>> success(T data, String message, HttpStatus status) {
+        return new ResponseEntity<>(new ApiResponse<>(
+                status.value(), message, data), status);
+    }
+
     public static <T> ResponseEntity<ApiResponse<Object>> generateErrorResponse(String message, HttpStatus status) {
         return new ResponseEntity<>(new ApiResponse<>(status.value(), message), status);
     }

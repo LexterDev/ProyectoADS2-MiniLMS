@@ -48,8 +48,13 @@ public interface CursoRepository extends JpaRepository<Curso, Long> {
     @Query("""
             SELECT i.curso
             FROM Inscripcion i
-            WHERE 
+            WHERE
                 i.estudiante.id = :usuario_id
                 """)
     List<Curso> findCoursesByEstudiante(@Param("usuario_id") Long usuarioId);
+
+    /**
+     * Count courses by category ID
+     */
+    long countByCategoriaId(Long categoriaId);
 }

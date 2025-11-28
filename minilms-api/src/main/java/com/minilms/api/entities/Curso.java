@@ -60,6 +60,13 @@ public class Curso {
     @Column(nullable = false, precision = 6, scale = 2)
     private BigDecimal precio;
 
+    @Column(name = "es_gratis", nullable = false, columnDefinition = "SMALLINT DEFAULT 0")
+    private Short esGratis = 0;
+
+    @PositiveOrZero
+    @Column(name = "precio_original", precision = 6, scale = 2)
+    private BigDecimal precioOriginal;
+
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "estado_id", referencedColumnName = "codigo", nullable = false, foreignKey = @ForeignKey(name = "cursos_fk_estado_id"))
@@ -95,4 +102,7 @@ public class Curso {
 
     @OneToMany(mappedBy = "curso", fetch = FetchType.LAZY)
     private List<Inscripcion> inscripciones;
+
+    @OneToMany(mappedBy = "curso", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Descuento> descuentos;
 }

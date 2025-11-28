@@ -36,7 +36,7 @@
                 </div>
                 <div class="flex items-center gap-2">
                     <span>Fecha de creación:</span>
-                    <span>{{ courseDetails?.creadoEn | date: 'mediumDate' }}</span>
+                    <span>{{ courseDetails?.creadoEn }}</span>
                 </div>
                 <div class="flex items-center gap-2">
                     <span>5,000 estudiantes</span>
@@ -423,5 +423,13 @@
             </div>
         </div>
 
+    </div>
+
+    <!-- Reviews Section -->
+    <div class="mt-12" *ngIf="courseDetails">
+        <app-course-reviews
+            [cursoId]="courseDetails.id"
+            [isEnrolled]="isStudentEnrolled()">
+        </app-course-reviews>
     </div>
 </div>

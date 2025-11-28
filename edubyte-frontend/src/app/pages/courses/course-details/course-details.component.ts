@@ -2,9 +2,8 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CoursesService } from '../../../services/courses.service';
-import { MatDialog } from '@angular/material/dialog';
-import { EnrollDialogComponent } from '../../../components/enroll-dialog/enroll-dialog.component';
 import { AuthService } from '../../../services/auth.service';
+import { CourseReviewsComponent } from '../../../components/course-reviews/course-reviews.component';
 
 // Interfaces basadas en tu API
 interface Leccion {
@@ -58,7 +57,7 @@ interface CourseDetails {
 @Component({
   selector: 'app-course-details',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, CourseReviewsComponent],
   templateUrl: './course-details.component.html',
   styleUrls: ['./course-details.component.css']
 })
@@ -66,7 +65,6 @@ export class CourseDetailsComponent implements OnInit {
   private coursesService = inject(CoursesService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
-  private dialog = inject(MatDialog);
   private authService = inject(AuthService);
 
   courseId: string = '';
@@ -256,6 +254,11 @@ export class CourseDetailsComponent implements OnInit {
     return `${this.courseDetails.instructor.nombre} ${this.courseDetails.instructor.apellido}`;
   }
 
+  isStudentEnrolled(): boolean {
+    if (!this.courseDetails) return false;
+    return this.studentCourseIds.includes(this.courseDetails.id);
+  }
+
   getCoursesByStudent() {
     this.coursesService.getCoursesByStudentId(1).subscribe({
       next: (data: any) => {
@@ -271,10 +274,10 @@ export class CourseDetailsComponent implements OnInit {
 
   openEnrollDialog(): void {
     /**Verifica que el usuario esté logueado y además sea estudiante.
-     * 
+     *
      * Si no está logueado, lo redirige al login.
      * Si está logueado pero no es estudiante, no hace nada.
-     * Si está logueado y es estudiante, abre el diálogo de inscripción.
+     * Si está logueado y es estudiante, navega al checkout.
     */
     if (!this.authService.isUserLoggedIn()) {
       this.router.navigate(['/login']);
@@ -282,21 +285,12 @@ export class CourseDetailsComponent implements OnInit {
     } else if (this.authService.getUserRole() !== 'ESTUDIANTE') {
       return;
     }
-    const dialogRef = this.dialog.open(EnrollDialogComponent, {
-      width: '600px',
-      data: { courseId: this.courseId, courseName: this.courseDetails?.titulo, coursePrice: this.courseDetails?.precio }
-    });
-    dialogRef.componentInstance.onConfirm.subscribe((confirmed: any) => {
-      if (confirmed) {
-        // Lógica para manejar la confirmación de la inscripción
-        console.log('Inscripción confirmada');
 
-        dialogRef.close();
-
-        // Fuerza la recarga del componente actual
-        this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-          this.router.navigate(['/course-details', this.courseId]);
-        });
+    // Navigate to checkout with course information
+    this.router.navigate(['/checkout'], {
+      queryParams: {
+        courseId: this.courseId,
+        price: this.courseDetails?.precio
       }
     });
   }

@@ -19,10 +19,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.minilms.api.config.responseApi.ApiResponse;
 import com.minilms.api.config.responseApi.PageResponse;
 import com.minilms.api.config.responseApi.ResponseHandler;
+import com.minilms.api.dto.course.CourseCreationBatchDTO;
 import com.minilms.api.dto.course.CourseDTO;
 import com.minilms.api.dto.course.LessonDTO;
 import com.minilms.api.dto.course.SectionDTO;
 import com.minilms.api.services.CourseService;
+
+import jakarta.validation.Valid;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -97,6 +100,19 @@ public class CourseController {
     public ResponseEntity<ApiResponse<CourseDTO>> createCourse(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Datos del curso a crear. El 'id' se ignora.", required = true, content = @Content(schema = @Schema(implementation = CourseDTO.class))) @RequestBody CourseDTO dto) {
         return ResponseHandler.generateResponse(courseService.createCourse(dto));
+    }
+
+    @Operation(summary = "Crear curso completo en batch (Rol: INSTRUCTOR)", description = "Crea un curso completo con sus secciones y lecciones en una sola petición. Ideal para el wizard de creación.", security = @SecurityRequirement(name = "bearerAuth"))
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "Curso creado exitosamente con todas sus secciones y lecciones", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CourseDTO.class))),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Datos de entrada inválidos (ej. categoría no existe, orden duplicado)"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Acceso denegado (No es INSTRUCTOR)")
+    })
+    @PostMapping("/create-batch")
+    @PreAuthorize("hasRole('INSTRUCTOR')")
+    public ResponseEntity<ApiResponse<CourseDTO>> createCourseBatch(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Datos completos del curso con secciones y lecciones", required = true, content = @Content(schema = @Schema(implementation = CourseCreationBatchDTO.class))) @Valid @RequestBody CourseCreationBatchDTO batchDTO) {
+        return ResponseHandler.generateResponse(courseService.createCourseBatch(batchDTO));
     }
 
     @Operation(summary = "Crear una nueva sección (Rol: INSTRUCTOR)", description = "Crea una nueva sección para un curso existente.", security = @SecurityRequirement(name = "bearerAuth"))
