@@ -54,15 +54,20 @@ VALUES
 
 -- 2. USUARIOS
 -- -----------------------------------------------------------------
--- Se crean 2 Instructores y 3 Estudiantes.
+-- Se crean 1 Administrador, 2 Instructores y 3 Estudiantes.
 
--- Instructores (El ID 1 será 'David Instructor')
+-- Administrador (El ID 1 será 'Admin')
+INSERT INTO usuarios (nombre, apellido, correo, clave, rol_id, estado_id, creado_en)
+VALUES
+('Admin', 'MiniLMS', 'admin@minilms.com', '$2a$10$RfhXx/dOuTEzkNPiUJhDZu06HM8RtPwi1JUCoDoKeJ9iw6c5NZDg.', 'ADMINISTRADOR', 'ACT', CURRENT_TIMESTAMP);
+
+-- Instructores (Iniciarán en ID 2)
 INSERT INTO usuarios (nombre, apellido, correo, clave, rol_id, estado_id, creado_en)
 VALUES
 ('David', 'Instructor', 'instructor@minilms.com', '$2a$10$RfhXx/dOuTEzkNPiUJhDZu06HM8RtPwi1JUCoDoKeJ9iw6c5NZDg.', 'INSTRUCTOR', 'ACT', CURRENT_TIMESTAMP),
 ('Maria', 'Maestra', 'maria.profe@minilms.com', '$2a$10$RfhXx/dOuTEzkNPiUJhDZu06HM8RtPwi1JUCoDoKeJ9iw6c5NZDg.', 'INSTRUCTOR', 'ACT', CURRENT_TIMESTAMP);
 
--- Estudiantes (Iniciarán en ID 3)
+-- Estudiantes (Iniciarán en ID 4)
 INSERT INTO usuarios (nombre, apellido, correo, clave, rol_id, estado_id, creado_en)
 VALUES
 ('Jose', 'Estudiante', 'estudiante@minilms.com', '$2a$10$RfhXx/dOuTEzkNPiUJhDZu06HM8RtPwi1JUCoDoKeJ9iw6c5NZDg.', 'ESTUDIANTE', 'ACT', CURRENT_TIMESTAMP),
@@ -79,13 +84,13 @@ VALUES
 
 -- 4. CURSOS
 -- -----------------------------------------------------------------
--- Se usan los IDs de usuario (1 = David Instructor) y categoría (1 = Desarrollo Web, 2 = Diseño)
+-- Se usan los IDs de usuario (2 = David Instructor) y categoría (1 = Desarrollo Web, 2 = Diseño)
 -- Se usan los estados 'PUB' (Publicado) y 'BOR' (Borrador)
-INSERT INTO cursos (titulo, descripcion, precio, estado_id, instructor_id, categoria_id, adjunto_id, eliminado) 
-VALUES 
-('Curso de Java 21', 'Aprende las novedades de Java 21', 129.99, 'PUB', 1, 1, 1, 0),
-('Spring Boot 3 Avanzado', 'Microservicios con Spring Boot y Spring Cloud', 149.50, 'PUB', 1, 1, null, 0),
-('Fundamentos de React', 'Crea interfaces de usuario modernas con React', 99.00, 'BOR', 1, 1, null, 0);
+INSERT INTO cursos (titulo, descripcion, precio, estado_id, instructor_id, categoria_id, adjunto_id, eliminado)
+VALUES
+('Curso de Java 21', 'Aprende las novedades de Java 21', 129.99, 'PUB', 2, 1, 1, 0),
+('Spring Boot 3 Avanzado', 'Microservicios con Spring Boot y Spring Cloud', 149.50, 'PUB', 2, 1, null, 0),
+('Fundamentos de React', 'Crea interfaces de usuario modernas con React', 99.00, 'BOR', 2, 1, null, 0);
 
 -- 5. SECCIONES
 -- -----------------------------------------------------------------
@@ -165,24 +170,24 @@ VALUES ('Lectura: El Hook useState', null, 'useState nos permite añadir estado 
 
 -- 7. INSCRIPCIONES
 -- -----------------------------------------------------------------
--- Inscribimos a los estudiantes (IDs 3, 4, 5) en los cursos (IDs 1, 2)
+-- Inscribimos a los estudiantes (IDs 4, 5, 6) en los cursos (IDs 1, 2)
 -- Se asume que las inscripciones serán ID 1, 2, 3, 4
 
--- Jose (ID 3) se inscribe en Curso 1
-INSERT INTO inscripciones (progreso, estado_id, estudiante_id, curso_id, completado)
-VALUES (0, 'INS', 3, 1, false);
-
--- Ana (ID 4) se inscribe en Curso 1 y 2
+-- Jose (ID 4) se inscribe en Curso 1
 INSERT INTO inscripciones (progreso, estado_id, estudiante_id, curso_id, completado)
 VALUES (0, 'INS', 4, 1, false);
-INSERT INTO inscripciones (progreso, estado_id, estudiante_id, curso_id, completado)
-VALUES (0, 'INS', 4, 2, false);
 
--- Carlos (ID 5) se inscribe en Curso 2 y 3
+-- Ana (ID 5) se inscribe en Curso 1 y 2
+INSERT INTO inscripciones (progreso, estado_id, estudiante_id, curso_id, completado)
+VALUES (0, 'INS', 5, 1, false);
 INSERT INTO inscripciones (progreso, estado_id, estudiante_id, curso_id, completado)
 VALUES (0, 'INS', 5, 2, false);
+
+-- Carlos (ID 6) se inscribe en Curso 2 y 3
 INSERT INTO inscripciones (progreso, estado_id, estudiante_id, curso_id, completado)
-VALUES (0, 'INS', 5, 3, false);
+VALUES (0, 'INS', 6, 2, false);
+INSERT INTO inscripciones (progreso, estado_id, estudiante_id, curso_id, completado)
+VALUES (0, 'INS', 6, 3, false);
 
 
 -- 8. PROGRESO DE LECCIONES

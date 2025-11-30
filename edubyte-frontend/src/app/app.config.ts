@@ -2,7 +2,8 @@ import { ApplicationConfig, provideZoneChangeDetection, importProvidersFrom } fr
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { authInterceptor } from './interceptors/auth.interceptor';
 
 // Importaciones para Angular Material
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
@@ -11,15 +12,15 @@ import { MatDialogModule } from '@angular/material/dialog'; // <-- 1. IMPORTAR M
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideZoneChangeDetection({ eventCoalescing: true }), 
-    provideRouter(routes), 
-    provideHttpClient(),
+    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideRouter(routes),
+    provideHttpClient(withInterceptors([authInterceptor])),
 
     // --- Proveedores de Material ---
     provideAnimationsAsync(), // Necesario para las animaciones
     importProvidersFrom(
       MatSnackBarModule,
       MatDialogModule // <-- 2. AÑADIR EL PROVIDER AQUÍ
-    ) 
+    )
   ]
 };

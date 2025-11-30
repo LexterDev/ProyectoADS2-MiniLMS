@@ -12,6 +12,9 @@ export const API_ENDPOINTS = {
         login: `${API_URL}/auth/login`,
         register: `${API_URL}/auth/register`,
         refreshToken: `${API_URL}/auth/refresh-token`,
+        forgotPassword: `${API_URL}/auth/forgot-password`,
+        validateResetToken: (token: string) => `${API_URL}/auth/validate-reset-token?token=${token}`,
+        resetPassword: `${API_URL}/auth/reset-password`,
     },
     courses: {
         getAll: (page: number, size: number) => `${API_URL}/courses/findAll?page=${page}&size=${size}`,
@@ -63,5 +66,21 @@ export const API_ENDPOINTS = {
         update: (id: number) => `${API_URL}/categories/${id}`,
         delete: (id: number) => `${API_URL}/categories/${id}`,
         toggleStatus: (id: number) => `${API_URL}/categories/${id}/toggle-status`,
+    },
+    discounts: {
+        getAll: `${API_URL}/discounts/findAll`,
+        getById: (id: number) => `${API_URL}/discounts/${id}`,
+        getByCourse: (cursoId: number) => `${API_URL}/discounts/course/${cursoId}`,
+        create: `${API_URL}/discounts`,
+        update: (id: number) => `${API_URL}/discounts/${id}`,
+        delete: (id: number) => `${API_URL}/discounts/${id}`,
+        toggleStatus: (id: number) => `${API_URL}/discounts/${id}/toggle-status`,
+        validateCode: (code: string, cursoId: number) => `${API_URL}/discounts/validate/${code}/${cursoId}`,
+    },
+    admin: {
+        stats: `${API_URL}/admin/stats`,
+        users: `${API_URL}/admin/users`,
+        createUser: `${API_URL}/admin/users`,
+        toggleUserStatus: (userId: number) => `${API_URL}/admin/users/${userId}/toggle-status`,
     }
 }

@@ -66,8 +66,11 @@ public class SecurityConfig {
                 .requestMatchers("/api/courses/**").permitAll()
                 .requestMatchers("/api/payments/methods").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/reviews/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/categories/findAll").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/categories/active").permitAll()
 
                 // Endpoints protegidos por rol
+                .requestMatchers("/api/categories/**").hasRole(UserRole.Administrador.getCodigo())
                 .requestMatchers("/api/admin/**").hasRole(UserRole.Administrador.getCodigo())
                 .requestMatchers("/api/moderator/**").hasRole(UserRole.Moderador.getCodigo())
                 .requestMatchers("/api/instructor/**").hasAnyRole(UserRole.Instructor.getCodigo(), UserRole.Administrador.getCodigo())

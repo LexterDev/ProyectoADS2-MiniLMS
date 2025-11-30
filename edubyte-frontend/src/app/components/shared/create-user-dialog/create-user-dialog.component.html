@@ -1,0 +1,170 @@
+<div class="p-6">
+  <div class="flex items-center justify-between mb-6">
+    <div class="flex items-center gap-3">
+      <div class="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+        <mat-icon class="text-blue-600 dark:text-blue-400">person_add</mat-icon>
+      </div>
+      <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Crear Nuevo Usuario</h2>
+    </div>
+    <button mat-icon-button (click)="onCancel()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+    <div class="space-y-4">
+      <!-- Nombre -->
+      <div>
+        <label for="nombre" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          Nombre <span class="text-red-500">*</span>
+        </label>
+        <mat-form-field appearance="outline" class="w-full">
+          <input matInput
+                 id="nombre"
+                 formControlName="nombre"
+                 placeholder="Ingrese el nombre"
+                 class="dark:text-white">
+          @if (f['nombre'].invalid && (f['nombre'].dirty || f['nombre'].touched)) {
+            <mat-error>
+              @if (f['nombre'].errors?.['required']) {
+                El nombre es obligatorio
+              }
+              @if (f['nombre'].errors?.['minlength']) {
+                El nombre debe tener al menos 2 caracteres
+              }
+              @if (f['nombre'].errors?.['maxlength']) {
+                El nombre no puede exceder 50 caracteres
+              }
+            </mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <!-- Apellido -->
+      <div>
+        <label for="apellido" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          Apellido <span class="text-red-500">*</span>
+        </label>
+        <mat-form-field appearance="outline" class="w-full">
+          <input matInput
+                 id="apellido"
+                 formControlName="apellido"
+                 placeholder="Ingrese el apellido"
+                 class="dark:text-white">
+          @if (f['apellido'].invalid && (f['apellido'].dirty || f['apellido'].touched)) {
+            <mat-error>
+              @if (f['apellido'].errors?.['required']) {
+                El apellido es obligatorio
+              }
+              @if (f['apellido'].errors?.['minlength']) {
+                El apellido debe tener al menos 2 caracteres
+              }
+              @if (f['apellido'].errors?.['maxlength']) {
+                El apellido no puede exceder 50 caracteres
+              }
+            </mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <!-- Correo -->
+      <div>
+        <label for="correo" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          Correo Electrónico <span class="text-red-500">*</span>
+        </label>
+        <mat-form-field appearance="outline" class="w-full">
+          <input matInput
+                 id="correo"
+                 type="email"
+                 formControlName="correo"
+                 placeholder="usuario@ejemplo.com"
+                 class="dark:text-white">
+          @if (f['correo'].invalid && (f['correo'].dirty || f['correo'].touched)) {
+            <mat-error>
+              @if (f['correo'].errors?.['required']) {
+                El correo es obligatorio
+              }
+              @if (f['correo'].errors?.['email']) {
+                Ingrese un correo válido
+              }
+              @if (f['correo'].errors?.['maxlength']) {
+                El correo no puede exceder 100 caracteres
+              }
+            </mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <!-- Contraseña -->
+      <div>
+        <label for="clave" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          Contraseña <span class="text-red-500">*</span>
+        </label>
+        <mat-form-field appearance="outline" class="w-full">
+          <input matInput
+                 id="clave"
+                 [type]="passwordFieldType"
+                 formControlName="clave"
+                 placeholder="Mínimo 6 caracteres"
+                 class="dark:text-white">
+          <button mat-icon-button
+                  matSuffix
+                  type="button"
+                  (click)="togglePasswordVisibility()"
+                  class="text-gray-500 dark:text-gray-400">
+            <mat-icon>{{ passwordIcon }}</mat-icon>
+          </button>
+          @if (f['clave'].invalid && (f['clave'].dirty || f['clave'].touched)) {
+            <mat-error>
+              @if (f['clave'].errors?.['required']) {
+                La contraseña es obligatoria
+              }
+              @if (f['clave'].errors?.['minlength']) {
+                La contraseña debe tener al menos 6 caracteres
+              }
+            </mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <!-- Rol -->
+      <div>
+        <label for="rol" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          Rol <span class="text-red-500">*</span>
+        </label>
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-select id="rol" formControlName="rol" class="dark:text-white">
+            @for (role of roles; track role.value) {
+              <mat-option [value]="role.value">{{ role.label }}</mat-option>
+            }
+          </mat-select>
+          @if (f['rol'].invalid && (f['rol'].dirty || f['rol'].touched)) {
+            <mat-error>
+              @if (f['rol'].errors?.['required']) {
+                El rol es obligatorio
+              }
+            </mat-error>
+          }
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="flex justify-end gap-3 mt-6 pt-4 border-t dark:border-gray-700">
+      <button mat-stroked-button
+              type="button"
+              (click)="onCancel()"
+              class="text-gray-700 dark:text-gray-300">
+        Cancelar
+      </button>
+      <button mat-raised-button
+              color="primary"
+              type="submit"
+              [disabled]="!userForm.valid"
+              class="bg-blue-600 text-white">
+        <mat-icon class="mr-1">person_add</mat-icon>
+        Crear Usuario
+      </button>
+    </div>
+  </form>
+</div>

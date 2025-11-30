@@ -1,0 +1,28 @@
+/* Custom styles for the create user dialog */
+::ng-deep .mat-mdc-dialog-container {
+  --mdc-dialog-container-shape: 12px;
+}
+
+::ng-deep .mat-mdc-form-field {
+  width: 100%;
+}
+
+::ng-deep .mat-mdc-text-field-wrapper {
+  background-color: transparent !important;
+}
+
+::ng-deep .dark .mat-mdc-form-field {
+  --mdc-outlined-text-field-label-text-color: rgb(209 213 219);
+  --mdc-outlined-text-field-input-text-color: white;
+  --mdc-outlined-text-field-outline-color: rgb(75 85 99);
+  --mdc-outlined-text-field-hover-outline-color: rgb(107 114 128);
+  --mdc-outlined-text-field-focus-outline-color: rgb(59 130 246);
+}
+
+::ng-deep .dark .mat-mdc-select-value {
+  color: white;
+}
+
+::ng-deep .dark .mat-mdc-select-arrow {
+  color: rgb(209 213 219);
+}

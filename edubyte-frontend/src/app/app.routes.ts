@@ -5,6 +5,7 @@ import { LandingComponent } from './pages/landing/landing.component';
 import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
 import { ForgotPasswordComponent } from './auth/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './auth/reset-password/reset-password.component';
 import { CourseListComponent } from './pages/courses/course-list/course-list.component';
 import { DashboardStudentComponent } from './pages/dashboard-student/dashboard-student.component';
 import { CourseWizardComponent } from './pages/courses/course-wizard/course-wizard.component';
@@ -19,6 +20,9 @@ import { PaymentConfirmationComponent } from './components/payment-confirmation/
 import { CourseEditComponent } from './pages/instructor/course-edit/course-edit.component';
 import { ManageCourseComponent } from './pages/instructor/manage-course/manage-course.component';
 import { CategoryManagementComponent } from './pages/admin/category-management/category-management.component';
+import { DashboardAdminComponent } from './pages/admin/dashboard-admin/dashboard-admin.component';
+import { UserManagementComponent } from './pages/admin/user-management/user-management.component';
+import { CourseOverviewComponent } from './pages/admin/course-overview/course-overview.component';
 
 // Guards
 import { authGuard } from './auth/auth.guard';
@@ -43,6 +47,16 @@ export const routes: Routes = [
     {
         path: 'forgot-password',
         component: ForgotPasswordComponent,
+        canActivate: [noAuthGuard]
+    },
+    {
+        path: 'auth/forgot-password',
+        component: ForgotPasswordComponent,
+        canActivate: [noAuthGuard]
+    },
+    {
+        path: 'auth/reset-password',
+        component: ResetPasswordComponent,
         canActivate: [noAuthGuard]
     },
 
@@ -102,9 +116,27 @@ export const routes: Routes = [
         canActivate: [authGuard]
     },
     {
+        path: 'dashboard-admin',
+        component: DashboardAdminComponent,
+        title: 'Panel de Administración - EduByte',
+        canActivate: [authGuard]
+    },
+    {
         path: 'admin/categories',
         component: CategoryManagementComponent,
         title: 'Gestión de Categorías - EduByte',
+        canActivate: [authGuard]
+    },
+    {
+        path: 'admin/users',
+        component: UserManagementComponent,
+        title: 'Gestión de Usuarios - EduByte',
+        canActivate: [authGuard]
+    },
+    {
+        path: 'admin/courses',
+        component: CourseOverviewComponent,
+        title: 'Gestión de Cursos - EduByte',
         canActivate: [authGuard]
     },
     {

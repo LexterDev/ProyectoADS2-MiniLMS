@@ -81,7 +81,7 @@ onSubmit() {
               this.router.navigate(['/dashboard-instructor']);
               break;
             case 'ADMINISTRADOR':
-              this.router.navigate(['/admin/dashboard']);
+              this.router.navigate(['/dashboard-admin']);
               break;
             default:
               this.router.navigate(['/']);

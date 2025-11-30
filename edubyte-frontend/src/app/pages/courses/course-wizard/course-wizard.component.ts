@@ -2,7 +2,9 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormArray } from '@angular/forms';
 import { Router } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
 import { CoursesService } from '../../../services/courses.service';
+import { CategoryService, Category } from '../../../services/category.service';
 import { AuthService } from '../../../services/auth.service';
 import { SnackbarService } from '../../../services/snackbar.service';
 
@@ -10,7 +12,9 @@ interface CourseWizardData {
   // Step 1: Course Information
   titulo: string;
   descripcion: string;
+  esGratis: boolean;
   precio: number;
+  precioOriginal?: number | null;
   categoriaId: number;
   adjunto: {
     nombreOriginal: string;
@@ -35,13 +39,14 @@ interface CourseWizardData {
 @Component({
   selector: 'app-course-wizard',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, MatIconModule],
   templateUrl: './course-wizard.component.html',
   styleUrl: './course-wizard.component.css'
 })
 export class CourseWizardComponent implements OnInit {
   private fb = inject(FormBuilder);
   private coursesService = inject(CoursesService);
+  private categoryService = inject(CategoryService);
   private authService = inject(AuthService);
   private snackbarService = inject(SnackbarService);
   private router = inject(Router);
@@ -55,13 +60,9 @@ export class CourseWizardComponent implements OnInit {
 
   isSubmitting = false;
   imagePreview: string | null = null;
+  loadingCategories = false;
 
-  categories = [
-    { id: 1, name: 'Programación' },
-    { id: 2, name: 'Diseño' },
-    { id: 3, name: 'Marketing' },
-    { id: 4, name: 'Negocios' }
-  ];
+  categories: Category[] = [];
 
   lessonTypes = [
     { value: 'VIDEO', label: 'Video' },
@@ -73,6 +74,39 @@ export class CourseWizardComponent implements OnInit {
 
   ngOnInit(): void {
     this.initializeForms();
+    this.loadCategories();
+  }
+
+  loadCategories(): void {
+    this.loadingCategories = true;
+    this.categoryService.getActiveCategories().subscribe({
+      next: (response: any) => {
+        this.categories = response.data || [];
+        this.loadingCategories = false;
+      },
+      error: (error) => {
+        console.error('Error loading categories:', error);
+        this.snackbarService.showError('Error al cargar las categorías');
+        this.loadingCategories = false;
+      }
+    });
+  }
+
+  getCategoryColor(color: string | undefined): string {
+    if (!color) return 'bg-gray-500';
+    return `bg-${color}-500`;
+  }
+
+  toggleFreeCourse(isFree: boolean): void {
+    if (isFree) {
+      this.courseInfoForm.patchValue({
+        precio: 0,
+        precioOriginal: null
+      });
+      this.courseInfoForm.get('precio')?.disable();
+    } else {
+      this.courseInfoForm.get('precio')?.enable();
+    }
   }
 
   initializeForms(): void {
@@ -80,7 +114,9 @@ export class CourseWizardComponent implements OnInit {
     this.courseInfoForm = this.fb.group({
       titulo: ['', [Validators.required, Validators.minLength(5)]],
       descripcion: ['', [Validators.required, Validators.minLength(20)]],
+      esGratis: [false],
       precio: [0, [Validators.required, Validators.min(0)]],
+      precioOriginal: [null],
       categoriaId: [null, Validators.required],
       imageFile: [null]
     });
@@ -194,7 +230,7 @@ export class CourseWizardComponent implements OnInit {
 
   // Get final data
   getFinalData(): CourseWizardData {
-    const courseInfo = this.courseInfoForm.value;
+    const courseInfo = this.courseInfoForm.getRawValue(); // Use getRawValue to include disabled fields
     const content = this.contentForm.value;
 
     let adjuntoData = null;
@@ -211,7 +247,9 @@ export class CourseWizardComponent implements OnInit {
     return {
       titulo: courseInfo.titulo,
       descripcion: courseInfo.descripcion,
-      precio: courseInfo.precio,
+      esGratis: courseInfo.esGratis || false,
+      precio: courseInfo.esGratis ? 0 : courseInfo.precio,
+      precioOriginal: courseInfo.precioOriginal || null,
       categoriaId: courseInfo.categoriaId,
       adjunto: adjuntoData,
       secciones: content.secciones

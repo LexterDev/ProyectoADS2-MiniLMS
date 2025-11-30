@@ -53,4 +53,19 @@ export class AuthService {
     const userInfo = this.getUserInfo();
     return userInfo ? userInfo.rol : null;
   }
+
+  forgotPassword(correo: string): Observable<any> {
+    return this.http.post(this.endpoints.auth.forgotPassword, { correo });
+  }
+
+  validateResetToken(token: string): Observable<any> {
+    return this.http.get(this.endpoints.auth.validateResetToken(token));
+  }
+
+  resetPassword(token: string, nuevaClave: string): Observable<any> {
+    return this.http.post(this.endpoints.auth.resetPassword, {
+      token,
+      nuevaClave
+    });
+  }
 }
