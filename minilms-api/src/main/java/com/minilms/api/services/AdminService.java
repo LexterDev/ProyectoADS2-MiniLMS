@@ -79,4 +79,18 @@ public class AdminService {
 
         return userRepository.save(user);
     }
+
+    @Transactional
+    public User toggleUserStatus(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ApiException("Usuario no encontrado", HttpStatus.NOT_FOUND));
+
+        // Toggle between "ACT" and "INA" estados
+        String newStatusCode = user.getEstado().getCodigo().equals("ACT") ? "INA" : "ACT";
+        Estado newEstado = estadoRepository.findByCodigo(newStatusCode)
+                .orElseThrow(() -> new ApiException("Estado no encontrado: " + newStatusCode, HttpStatus.BAD_REQUEST));
+
+        user.setEstado(newEstado);
+        return userRepository.save(user);
+    }
 }

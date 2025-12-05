@@ -9,7 +9,7 @@
             Gestión de Cursos
           </h1>
           <p class="text-neutral-600 dark:text-neutral-400">
-            Supervisa todos los cursos del sistema
+            Supervisa y administra todos los cursos del sistema
           </p>
         </div>
         <a
@@ -76,13 +76,19 @@
         @for (course of filteredCourses; track course.id) {
           <div class="bg-white dark:bg-neutral-800 rounded-lg shadow-sm border border-neutral-200 dark:border-neutral-700 hover:shadow-md transition-all overflow-hidden">
             <!-- Course Header -->
-            <div class="h-2" [class]="course.estado === 'PUBLICADO' ? 'bg-green-500' : course.estado === 'BORRADOR' ? 'bg-yellow-500' : 'bg-red-500'"></div>
+            <div class="h-2"
+                 [ngClass]="{
+                   'bg-green-500': course.estadoCodigo === 'PUB',
+                   'bg-yellow-500': course.estadoCodigo === 'BOR',
+                   'bg-blue-500': course.estadoCodigo === 'REV',
+                   'bg-red-500': course.estadoCodigo === 'INA'
+                 }"></div>
 
             <div class="p-6">
-              <!-- Status Badge -->
+              <!-- Status Badge and Actions Menu -->
               <div class="flex items-center justify-between mb-3">
-                <span [class]="getStatusColor(course.estado)" class="px-2 py-1 text-xs font-semibold rounded-full">
-                  {{ course.estado }}
+                <span [class]="getStatusColor(course.estadoCodigo)" class="px-2 py-1 text-xs font-semibold rounded-full">
+                  {{ course.estadoNombre }}
                 </span>
                 <button
                   [matMenuTriggerFor]="menu"
@@ -90,14 +96,32 @@
                   <mat-icon>more_vert</mat-icon>
                 </button>
                 <mat-menu #menu="matMenu">
-                  <button mat-menu-item>
-                    <mat-icon>visibility</mat-icon>
-                    <span>Ver Detalles</span>
-                  </button>
-                  <button mat-menu-item>
-                    <mat-icon>edit</mat-icon>
-                    <span>Editar</span>
-                  </button>
+                  <!-- Review Course Action - Show for courses in review -->
+                  @if (course.estadoCodigo === 'REV') {
+                    <button mat-menu-item (click)="reviewCourse(course)">
+                      <mat-icon class="text-purple-600">visibility</mat-icon>
+                      <span>Revisar Curso</span>
+                    </button>
+                  }
+                  <!-- Status Change Actions -->
+                  @if (course.estadoCodigo !== 'PUB') {
+                    <button mat-menu-item (click)="publishCourse(course)">
+                      <mat-icon class="text-green-600">check_circle</mat-icon>
+                      <span>Publicar</span>
+                    </button>
+                  }
+                  @if (course.estadoCodigo !== 'BOR') {
+                    <button mat-menu-item (click)="setToDraft(course)">
+                      <mat-icon class="text-yellow-600">edit</mat-icon>
+                      <span>Marcar como Borrador</span>
+                    </button>
+                  }
+                  @if (course.estadoCodigo !== 'REV') {
+                    <button mat-menu-item (click)="setToReview(course)">
+                      <mat-icon class="text-blue-600">rate_review</mat-icon>
+                      <span>Enviar a Revisión</span>
+                    </button>
+                  }
                 </mat-menu>
               </div>
 
@@ -106,23 +130,24 @@
                 {{ course.titulo }}
               </h3>
 
+              <!-- Course Description -->
+              <p class="text-sm text-neutral-600 dark:text-neutral-400 mb-4 line-clamp-2">
+                {{ course.descripcion }}
+              </p>
+
               <!-- Course Info -->
               <div class="space-y-2 text-sm text-neutral-600 dark:text-neutral-400">
                 <div class="flex items-center gap-2">
                   <mat-icon class="text-base">person</mat-icon>
-                  <span>{{ course.instructor }}</span>
+                  <span>{{ getInstructorName(course) }}</span>
                 </div>
                 <div class="flex items-center gap-2">
                   <mat-icon class="text-base">category</mat-icon>
-                  <span>{{ course.categoria }}</span>
-                </div>
-                <div class="flex items-center gap-2">
-                  <mat-icon class="text-base">people</mat-icon>
-                  <span>{{ course.estudiantes }} estudiantes</span>
+                  <span>{{ course.categoriaNombre || 'Sin categoría' }}</span>
                 </div>
                 <div class="flex items-center gap-2">
                   <mat-icon class="text-base">calendar_today</mat-icon>
-                  <span>{{ formatDate(course.fechaCreacion) }}</span>
+                  <span>{{ formatDate(course.creadoEn) }}</span>
                 </div>
               </div>
 
@@ -131,7 +156,7 @@
                 <div class="flex items-center justify-between">
                   <span class="text-sm text-neutral-600 dark:text-neutral-400">Precio:</span>
                   <span class="text-lg font-bold text-primary-600 dark:text-primary-400">
-                    ${{ course.precio.toFixed(2) }}
+                    {{ formatPrice(course.precio) }}
                   </span>
                 </div>
               </div>
@@ -141,7 +166,7 @@
       </div>
 
       <!-- Results Count -->
-      <div class="mt-6 text-sm text-neutral-600 dark:text-neutral-400">
+      <div class="mt-6 text-sm text-neutral-600 dark:text-neutral-400 text-center">
         Mostrando {{ filteredCourses.length }} de {{ courses.length }} cursos
       </div>
     }

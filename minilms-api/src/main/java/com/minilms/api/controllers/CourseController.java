@@ -39,7 +39,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/courses")
-@CrossOrigin(origins = {"http://localhost:4200", "https://minilms-frontend.onrender.com"})
+@CrossOrigin(origins = {"http://localhost:4200", "https://minilms-frontend.onrender.com", "https://minilms-front.onrender.com"})
 @RequiredArgsConstructor
 @Tag(name = "Cursos", description = "Endpoints para la gestión de Cursos, Secciones y Lecciones")
 public class CourseController {

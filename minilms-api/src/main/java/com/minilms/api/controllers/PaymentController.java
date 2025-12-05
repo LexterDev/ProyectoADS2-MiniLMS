@@ -32,7 +32,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/payments")
-@CrossOrigin(origins = {"http://localhost:4200", "http://localhost:3000", "https://minilms-frontend.onrender.com"})
+@CrossOrigin(origins = {"http://localhost:4200", "http://localhost:3000", "https://minilms-frontend.onrender.com", "https://minilms-front.onrender.com"})
 @RequiredArgsConstructor
 @Tag(name = "Pagos", description = "Endpoints para la gestión de pagos y procesamiento de compras")
 public class PaymentController {

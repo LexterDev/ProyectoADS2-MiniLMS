@@ -21,7 +21,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = {"http://localhost:4200", "https://minilms-frontend.onrender.com"}) // Para Angular
+@CrossOrigin(origins = {"http://localhost:4200", "https://minilms-frontend.onrender.com", "https://minilms-front.onrender.com"}) // Para Angular
 @RequiredArgsConstructor
 public class AuthController {
 

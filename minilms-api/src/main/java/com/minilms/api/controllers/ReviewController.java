@@ -34,7 +34,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/reviews")
-@CrossOrigin(origins = {"http://localhost:4200", "http://localhost:3000", "https://minilms-frontend.onrender.com"})
+@CrossOrigin(origins = {"http://localhost:4200", "http://localhost:3000", "https://minilms-frontend.onrender.com", "https://minilms-front.onrender.com"})
 @RequiredArgsConstructor
 @Tag(name = "Reseñas", description = "Endpoints para la gestión de reseñas y calificaciones de cursos")
 public class ReviewController {

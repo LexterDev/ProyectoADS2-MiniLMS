@@ -82,5 +82,6 @@ export const API_ENDPOINTS = {
         users: `${API_URL}/admin/users`,
         createUser: `${API_URL}/admin/users`,
         toggleUserStatus: (userId: number) => `${API_URL}/admin/users/${userId}/toggle-status`,
+        courses: `${API_URL}/admin/courses`,
     }
 }

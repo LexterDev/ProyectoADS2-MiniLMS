@@ -33,9 +33,9 @@ export class CreateUserDialogComponent {
   passwordIcon: string = 'visibility';
 
   roles = [
-    { value: 'Estudiante', label: 'Estudiante' },
-    { value: 'Instructor', label: 'Instructor' },
-    { value: 'Administrador', label: 'Administrador' }
+    { value: 'ESTUDIANTE', label: 'Estudiante' },
+    { value: 'INSTRUCTOR', label: 'Instructor' },
+    { value: 'ADMINISTRADOR', label: 'Administrador' }
   ];
 
   constructor() {
@@ -44,7 +44,7 @@ export class CreateUserDialogComponent {
       apellido: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
       correo: ['', [Validators.required, Validators.email, Validators.maxLength(100)]],
       clave: ['', [Validators.required, Validators.minLength(6)]],
-      rol: ['Estudiante', [Validators.required]]
+      rol: ['ESTUDIANTE', [Validators.required]]
     });
   }
 

@@ -39,9 +39,9 @@ export class UserManagementComponent implements OnInit {
 
   roles = [
     { value: 'TODOS', label: 'Todos los Roles' },
-    { value: 'Estudiante', label: 'Estudiantes' },
-    { value: 'Instructor', label: 'Instructores' },
-    { value: 'Administrador', label: 'Administradores' }
+    { value: 'ESTUDIANTE', label: 'Estudiantes' },
+    { value: 'INSTRUCTOR', label: 'Instructores' },
+    { value: 'ADMINISTRADOR', label: 'Administradores' }
   ];
 
   ngOnInit(): void {

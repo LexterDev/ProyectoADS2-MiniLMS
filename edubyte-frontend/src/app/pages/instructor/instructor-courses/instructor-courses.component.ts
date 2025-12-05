@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule, CurrencyPipe, DatePipe, DecimalPipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 
 // Importaciones de Angular Material para el Menú de Acciones
@@ -8,6 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatChipsModule } from '@angular/material/chips';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../services/auth.service';
 import { CoursesService } from '../../../services/courses.service';
@@ -15,56 +16,36 @@ import { SnackbarService } from '../../../services/snackbar.service';
 import { SidebarInstructorComponent } from '../sidebar-instructor/sidebar-instructor.component';
 import { ConfirmationDialogComponent } from '../../../components/shared/confirmation-dialog/confirmation-dialog.component';
 
-// Definimos la estructura de un curso del instructor
-type CourseStatus = 'Publicado' | 'Borrador' | 'En revisión' | 'Rechazado';
-
-// interface InstructorCourse {
-//   id: string;
-//   adjunto: { url: string };
-//   titulo: string;
-//   status: CourseStatus;
-//   students: number;
-//   rating: number;
-//   revenue: number;
-//   lastUpdated: string;
-// }
-
 @Component({
-  selector: 'app-instructor-courses', // <-- Nombre del selector
+  selector: 'app-instructor-courses',
   standalone: true,
   imports: [
     CommonModule,
     RouterModule,
     FormsModule,
-    // Pipes para formatear la tabla
-    DatePipe,
-    CurrencyPipe,
-    // Módulos de Material
     MatMenuModule,
     MatButtonModule,
     MatIconModule,
     MatDialogModule,
     MatDividerModule,
+    MatChipsModule,
     SidebarInstructorComponent
   ],
-  templateUrl: './instructor-courses.component.html', // <-- Nombre del HTML
+  templateUrl: './instructor-courses.component.html',
 })
 export class InstructorCoursesComponent implements OnInit {
   allCourses: any[] = [];
-
-  // --- Datos de ejemplo ---
-  // allCourses: InstructorCourse[] = [
-  //   { id: '1', thumbnailUrl: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97', title: 'Curso de Desarrollo Web Moderno', status: 'Publicado', students: 125, rating: 4.8, revenue: 5250, lastUpdated: '2025-08-15' },
-  //   { id: '2', thumbnailUrl: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71', title: 'Curso de Marketing Digital Avanzado', status: 'Borrador', students: 0, rating: 0, revenue: 0, lastUpdated: '2025-09-20' },
-  //   { id: '3', thumbnailUrl: 'https://images.unsplash.com/photo-1558655146-d09347e92766', title: 'Curso de Diseño UX/UI Profesional', status: 'En revisión', students: 50, rating: 4.5, revenue: 2500, lastUpdated: '2025-07-10' },
-  //   { id: '4', thumbnailUrl: 'https://images.unsplash.com/photo-1554415707-6e8cfc93fe23', title: 'Curso de Finanzas Personales', status: 'Rechazado', students: 20, rating: 4.2, revenue: 800, lastUpdated: '2025-06-05' },
-  //   { id: '5', thumbnailUrl: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32', title: 'Curso de Fotografía para Principiantes', status: 'Publicado', students: 80, rating: 4.7, revenue: 3200, lastUpdated: '2025-05-01' }
-  // ];
-
   filteredCourses: any[] = [];
-  activeTab: string = 'Todos'; // Coincide con el texto de la pestaña
+  activeTab: string = 'Todos';
   loading: boolean = false;
   searchQuery: string = '';
+
+  statusOptions = [
+    { value: 'Todos', label: 'Todos' },
+    { value: 'PUB', label: 'Publicados' },
+    { value: 'BOR', label: 'Borradores' },
+    { value: 'REV', label: 'En Revisión' }
+  ];
 
   constructor(
     private router: Router,
@@ -78,27 +59,17 @@ export class InstructorCoursesComponent implements OnInit {
     this.getCoursesByInstructor();
   }
 
-  /**
-   * Actualiza la pestaña activa y vuelve a filtrar la lista de cursos.
-   */
   setTab(tab: string): void {
     this.activeTab = tab;
     this.applyFilters();
   }
 
-  /**
-   * Filtra la lista 'allCourses' basándose en 'activeTab' y 'searchQuery'.
-   */
   applyFilters(): void {
     let filtered = [...this.allCourses];
 
     // Apply tab filter
-    if (this.activeTab === 'Publicados') {
-      filtered = filtered.filter(course => course.estadoCodigo === 'PUBLICADO');
-    } else if (this.activeTab === 'Borrador') {
-      filtered = filtered.filter(course => course.estadoCodigo === 'BORRADOR');
-    } else if (this.activeTab === 'En revisión') {
-      filtered = filtered.filter(course => course.estadoCodigo === 'EN_REVISION');
+    if (this.activeTab !== 'Todos') {
+      filtered = filtered.filter(course => course.estadoCodigo === this.activeTab);
     }
 
     // Apply search filter
@@ -113,24 +84,21 @@ export class InstructorCoursesComponent implements OnInit {
     this.filteredCourses = filtered;
   }
 
-  /**
-   * Handler for search input
-   */
   onSearch(): void {
     this.applyFilters();
   }
 
-  /**
-   * Clear search
-   */
   clearSearch(): void {
     this.searchQuery = '';
     this.applyFilters();
   }
 
-  // --- Métodos de Acciones ---
   editCourse(courseId: string): void {
     this.router.navigate(['/instructor/edit-course', courseId]);
+  }
+
+  manageCourse(courseId: string): void {
+    this.router.navigate(['/instructor/manage-course', courseId]);
   }
 
   deleteCourse(courseId: string): void {
@@ -165,18 +133,15 @@ export class InstructorCoursesComponent implements OnInit {
     });
   }
 
-  togglePublishStatus(course: any): void {
-    const newStatus = course.estadoCodigo === 'PUBLICADO' ? 'BORRADOR' : 'PUBLICADO';
-    const newStatusName = newStatus === 'PUBLICADO' ? 'publicar' : 'despublicar';
-
+  changeCourseStatus(course: any, newStatus: string, statusLabel: string): void {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '500px',
       data: {
-        title: newStatus === 'PUBLICADO' ? 'Publicar Curso' : 'Despublicar Curso',
-        message: `¿Deseas ${newStatusName} el curso "${course.titulo}"?`,
-        confirmText: newStatus === 'PUBLICADO' ? 'Publicar' : 'Despublicar',
+        title: 'Cambiar Estado del Curso',
+        message: `¿Deseas cambiar el estado de "${course.titulo}" a ${statusLabel}?`,
+        confirmText: 'Cambiar',
         cancelText: 'Cancelar',
-        type: newStatus === 'PUBLICADO' ? 'info' : 'warning'
+        type: 'info'
       }
     });
 
@@ -195,8 +160,7 @@ export class InstructorCoursesComponent implements OnInit {
 
         this.coursesService.updateCourse(updateData).subscribe({
           next: () => {
-            const actionText = newStatus === 'PUBLICADO' ? 'publicado' : 'despublicado';
-            this.snackbarService.showSuccess(`Curso ${actionText} exitosamente`);
+            this.snackbarService.showSuccess(`Estado actualizado a ${statusLabel}`);
             this.getCoursesByInstructor();
           },
           error: (error) => {
@@ -209,8 +173,16 @@ export class InstructorCoursesComponent implements OnInit {
     });
   }
 
-  addSection(courseId: string): void {
-    this.router.navigate(['/instructor/manage-course', courseId]);
+  publishCourse(course: any): void {
+    this.changeCourseStatus(course, 'PUB', 'Publicado');
+  }
+
+  setToDraft(course: any): void {
+    this.changeCourseStatus(course, 'BOR', 'Borrador');
+  }
+
+  setToReview(course: any): void {
+    this.changeCourseStatus(course, 'REV', 'En Revisión');
   }
 
   duplicateCourse(courseId: string): void {
@@ -231,17 +203,15 @@ export class InstructorCoursesComponent implements OnInit {
       if (confirmed) {
         this.loading = true;
 
-        // Fetch the full course details including sections and lessons
         this.coursesService.getCourseById(courseId).subscribe({
           next: (response: any) => {
             const originalCourse = response.data;
 
-            // Prepare the duplicate course data
             const duplicateCourseData = {
               titulo: `${originalCourse.titulo} (Copia)`,
               descripcion: originalCourse.descripcion,
               precio: originalCourse.precio,
-              estadoCodigo: 'BORRADOR',
+              estadoCodigo: 'BOR',
               categoriaId: originalCourse.categoriaId,
               instructorId: this.getInstructorId(),
               secciones: originalCourse.secciones?.map((seccion: any) => ({
@@ -258,7 +228,6 @@ export class InstructorCoursesComponent implements OnInit {
               })) || []
             };
 
-            // Create the duplicate course using batch endpoint
             this.coursesService.createCourseBatch(duplicateCourseData).subscribe({
               next: () => {
                 this.snackbarService.showSuccess('Curso duplicado exitosamente');
@@ -300,5 +269,45 @@ export class InstructorCoursesComponent implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  getStatusColor(status: string): string {
+    switch (status) {
+      case 'PUB':
+        return 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400';
+      case 'BOR':
+        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400';
+      case 'REV':
+        return 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400';
+      default:
+        return 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400';
+    }
+  }
+
+  getStatusLabel(status: string): string {
+    switch (status) {
+      case 'PUB':
+        return 'Publicado';
+      case 'BOR':
+        return 'Borrador';
+      case 'REV':
+        return 'En Revisión';
+      default:
+        return status;
+    }
+  }
+
+  formatDate(dateString: string): string {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('es-ES', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+  }
+
+  formatPrice(price: number): string {
+    return `$${price.toFixed(2)}`;
   }
 }

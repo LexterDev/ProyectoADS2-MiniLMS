@@ -54,4 +54,15 @@ export class AdminService {
   toggleUserStatus(userId: number): Observable<any> {
     return this.http.patch(API_ENDPOINTS.admin.toggleUserStatus(userId), {});
   }
+
+  getAllCourses(): Observable<any> {
+    return this.http.get(API_ENDPOINTS.admin.courses);
+  }
+
+  changeCourseStatus(courseId: number, newStatus: string): Observable<any> {
+    return this.http.patch(
+      `${API_ENDPOINTS.admin.courses}/${courseId}/change-status?newStatus=${newStatus}`,
+      {}
+    );
+  }
 }

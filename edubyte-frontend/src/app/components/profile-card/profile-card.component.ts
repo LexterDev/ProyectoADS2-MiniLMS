@@ -53,7 +53,7 @@ export class ProfileCardComponent implements OnInit {
         info.rol = 'INSTRUCTOR';
         this.menuOptions.push({ label: 'Dashboard', route: '/dashboard-instructor' });
         this.profileImageUrl = 'instructor-default.png';
-      } else if(info.rol === 'ADMIN') {
+      } else if(info.rol === 'ADMINISTRADOR') {
         info.rol = 'ADMINISTRADOR';
         this.menuOptions.push({ label: 'Dashboard', route: '/dashboard-admin' });
         this.profileImageUrl = 'admin-default.png';
