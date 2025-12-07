@@ -10,6 +10,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -63,8 +64,13 @@ public class SecurityConfig {
                 .requestMatchers("/h2-console/**").permitAll()
                 .requestMatchers("/api/test/**").permitAll()
                 .requestMatchers("/api/courses/**").permitAll()
-                
+                .requestMatchers("/api/payments/methods").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/reviews/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/categories/findAll").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/categories/active").permitAll()
+
                 // Endpoints protegidos por rol
+                .requestMatchers("/api/categories/**").hasRole(UserRole.Administrador.getCodigo())
                 .requestMatchers("/api/admin/**").hasRole(UserRole.Administrador.getCodigo())
                 .requestMatchers("/api/moderator/**").hasRole(UserRole.Moderador.getCodigo())
                 .requestMatchers("/api/instructor/**").hasAnyRole(UserRole.Instructor.getCodigo(), UserRole.Administrador.getCodigo())
@@ -89,8 +95,8 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(Arrays.asList("http://localhost:4200", "http://localhost:3000", "https://minilms-frontend.onrender.com/"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedOriginPatterns(Arrays.asList("http://localhost:4200", "http://localhost:3000", "https://minilms-frontend.onrender.com", "https://minilms-front.onrender.com"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
         

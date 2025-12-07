@@ -1,32 +1,75 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
+interface Testimonial {
+  author: string;
+  role: string;
+  quote: string;
+  imageUrl: string;
+  rating: number;
+  course: string;
+}
+
 @Component({
   selector: 'app-testimonials',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './testimonials.component.html'
-
 })
 export class TestimonialsComponent {
 
-  // Array de testimonios (con los datos del diseño original)
-  testimonials = [
+  testimonials: Testimonial[] = [
     {
       author: 'Ana García',
-      quote: '"EduByte me ha ayudado a cambiar mi carrera. Los cursos son excelentes y los instructores muy profesionales."',
-      imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCogbwxt6jVzeOrWq4KXCxY4ghk8FLPNhk0UaFZIjKWAzOM9nO-GknPnNXKnrliEA1gskqKHcV1P8cDJI1mnOxBURNUtWAXhxEokkG9alnLBYQ7wXDAR31xQpMloy5hV_ZnYMMrYoRqPAh1pnKAvMl2f-3CWMCRp0LxoyeMBy97B67WtzP2HGfKFVTZ2nzj00eLupmUD1zoOI51lISmg0DQejXOHAJjTxa6X80ywwPCrY8c2q2iS_Cy29BqigYe6QnXkllPKIk5ZrM'
+      role: 'Desarrolladora Full Stack',
+      quote: 'EduByte me ha ayudado a cambiar completamente mi carrera. Los cursos son excelentes y los instructores muy profesionales. ¡Ahora trabajo en mi empresa soñada!',
+      imageUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop',
+      rating: 5,
+      course: 'Desarrollo Web Completo'
     },
     {
       author: 'Carlos López',
-      quote: '"La flexibilidad de EduByte es perfecta para mi estilo de vida. Puedo aprender a mi propio ritmo y desde cualquier lugar."',
-      imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuChcVBsVzPYe9BRjbX38QsSbHmh9U3yHSxtJYtSvzjw6z9kO4No1jVxL4J9byEd7PMvF2IZjlK9VtAtVyg1oJfgI8Bj4kLybzjl34IJbVRjeuSB4aqOciLRZFhKqJbtQQ6J0WAnaDMCl4XIfqysWwAQJBFKbtnLzFP7vjjd9ygyDBZU7i-0l8zQJY_Znzz0FVV73E_wCDdngFNso5ccoRPruGC_gw6UHBPHg7GkVcNaB4Squ7E77pOh7T50EqmuSPGdSVZPoKXaGB0'
+      role: 'Diseñador UX/UI',
+      quote: 'La flexibilidad de EduByte es perfecta para mi estilo de vida. Puedo aprender a mi propio ritmo y desde cualquier lugar. La calidad del contenido es impresionante.',
+      imageUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop',
+      rating: 5,
+      course: 'Diseño UX/UI Avanzado'
     },
     {
       author: 'Sofía Martínez',
-      quote: '"Recomiendo EduByte a todos los que quieran adquirir nuevas habilidades. La calidad de los cursos es excepcional."',
-      imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDVQi1nhHedf93xajeezRXRABtmbVxB4SjmiaRIR392erhXs8PJ8wl7M7MOkM42I8llEv2_RMpanx0WDQreQ_I2-5j19B_eyxqoRhnsqQ8MxRJyDCWvDV0aW05zFK_1gNaRRZb8j1be8263zb3btsh-NnUlpKWChXpmr2EFNMBqqEcx45OvkiGrmiC83xAcQNKsZVdr_s5m16yghr-B6LWUI08kBKlg3sLQNRO4uOwdsK4O_MbN6kGAuoMSSDM5Ob-rIwuHp7it21A'
+      role: 'Marketing Manager',
+      quote: 'Recomiendo EduByte a todos los que quieran adquirir nuevas habilidades. La calidad de los cursos es excepcional y los proyectos prácticos son muy útiles.',
+      imageUrl: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop',
+      rating: 5,
+      course: 'Marketing Digital'
+    },
+    {
+      author: 'Miguel Fernández',
+      role: 'Data Scientist',
+      quote: 'Los cursos de Data Science son increíbles. Aprendí Python y Machine Learning desde cero y ahora trabajo en proyectos de IA. ¡Totalmente recomendado!',
+      imageUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop',
+      rating: 5,
+      course: 'Python para Data Science'
+    },
+    {
+      author: 'Laura Rodríguez',
+      role: 'Fotógrafa Profesional',
+      quote: 'Las técnicas que aprendí aquí transformaron completamente mi fotografía. Los instructores son verdaderos expertos en el campo.',
+      imageUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=400&fit=crop',
+      rating: 5,
+      course: 'Fotografía Digital'
+    },
+    {
+      author: 'Diego Sánchez',
+      role: 'Emprendedor',
+      quote: 'Los cursos de negocios me dieron las herramientas necesarias para lanzar mi startup. La comunidad de EduByte es increíble.',
+      imageUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop',
+      rating: 5,
+      course: 'Emprendimiento y Negocios'
     }
   ];
 
+  getStarArray(rating: number): number[] {
+    return Array(rating).fill(0);
+  }
 }

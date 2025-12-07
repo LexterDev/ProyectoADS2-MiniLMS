@@ -15,5 +15,7 @@ public class InscriptionProgressDTO {
     private String fechaCompletado;
     private BigDecimal notaEvaluacion;
     private Integer progresoCurso;
+    private Long tiempoDedicado; // Tiempo en segundos
+    private String ultimaActualizacion;
 
 }

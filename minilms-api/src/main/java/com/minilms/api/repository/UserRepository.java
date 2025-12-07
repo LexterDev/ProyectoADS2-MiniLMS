@@ -1,5 +1,6 @@
 package com.minilms.api.repository;
 
+import com.minilms.api.entities.Rol;
 import com.minilms.api.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -20,4 +21,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * Corregido para usar el campo 'correo'.
      */
     boolean existsByCorreo(String correo);
+
+    /**
+     * Cuenta usuarios por rol.
+     */
+    long countByRol(Rol rol);
 }

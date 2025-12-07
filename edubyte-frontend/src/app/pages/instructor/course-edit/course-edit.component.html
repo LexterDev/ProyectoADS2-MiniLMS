@@ -1,0 +1,181 @@
+<main class="min-h-screen py-10 bg-background-light dark:bg-background-dark text-black dark:text-white">
+
+  <app-sidebar-instructor></app-sidebar-instructor>
+
+  <div class="lg:ml-64 min-h-screen px-4 md:px-10">
+
+    <!-- Header -->
+    <div class="flex flex-wrap justify-between items-center gap-4 mb-6">
+      <div>
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Editar Curso</h1>
+        <p class="text-gray-600 dark:text-gray-400 mt-1">Actualiza la información básica del curso</p>
+      </div>
+      <button (click)="cancel()" type="button"
+        class="flex items-center gap-2 px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors">
+        <span class="material-symbols-outlined text-xl">arrow_back</span>
+        <span>Volver</span>
+      </button>
+    </div>
+
+    <!-- Loading State -->
+    @if (isLoading) {
+      <div class="flex justify-center items-center py-20">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    }
+
+    <!-- Edit Form -->
+    @if (!isLoading) {
+      <div class="max-w-4xl">
+        <form [formGroup]="courseForm" (ngSubmit)="saveCourse()" class="space-y-6">
+
+          <!-- Course Image -->
+          <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 border border-primary/10 dark:border-primary/20">
+            <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Imagen del Curso</h2>
+
+            <div class="space-y-4">
+              @if (imagePreview) {
+                <div class="relative w-full aspect-video rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-700">
+                  <img [src]="imagePreview" alt="Course preview" class="w-full h-full object-cover">
+                </div>
+              }
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Cambiar imagen (opcional)
+                </label>
+                <input type="file" accept="image/*" (change)="onImageSelected($event)"
+                  class="block w-full text-sm text-gray-500 dark:text-gray-400
+                    file:mr-4 file:py-2 file:px-4
+                    file:rounded-lg file:border-0
+                    file:text-sm file:font-semibold
+                    file:bg-primary file:text-white
+                    hover:file:bg-primary/90
+                    file:cursor-pointer cursor-pointer">
+              </div>
+            </div>
+          </div>
+
+          <!-- Basic Information -->
+          <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 border border-primary/10 dark:border-primary/20">
+            <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Información Básica</h2>
+
+            <div class="space-y-4">
+              <!-- Title -->
+              <div>
+                <label for="titulo" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Título del Curso *
+                </label>
+                <input type="text" id="titulo" formControlName="titulo"
+                  class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent
+                    bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600
+                    text-gray-900 dark:text-white"
+                  [class.border-red-500]="isFieldInvalid('titulo')"
+                  placeholder="Ej: Introducción a la Programación Web">
+                @if (isFieldInvalid('titulo')) {
+                  <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ getFieldError('titulo') }}</p>
+                }
+              </div>
+
+              <!-- Description -->
+              <div>
+                <label for="descripcion" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Descripción *
+                </label>
+                <textarea id="descripcion" formControlName="descripcion" rows="4"
+                  class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent
+                    bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600
+                    text-gray-900 dark:text-white"
+                  [class.border-red-500]="isFieldInvalid('descripcion')"
+                  placeholder="Describe qué aprenderán los estudiantes en este curso..."></textarea>
+                @if (isFieldInvalid('descripcion')) {
+                  <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ getFieldError('descripcion') }}</p>
+                }
+              </div>
+
+              <!-- Price and Category Row -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Price -->
+                <div>
+                  <label for="precio" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Precio (USD) *
+                  </label>
+                  <input type="number" id="precio" formControlName="precio" min="0" step="0.01"
+                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent
+                      bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600
+                      text-gray-900 dark:text-white"
+                    [class.border-red-500]="isFieldInvalid('precio')"
+                    placeholder="0.00">
+                  @if (isFieldInvalid('precio')) {
+                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ getFieldError('precio') }}</p>
+                  }
+                </div>
+
+                <!-- Category -->
+                <div>
+                  <label for="categoriaId" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Categoría *
+                  </label>
+                  <select id="categoriaId" formControlName="categoriaId"
+                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent
+                      bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600
+                      text-gray-900 dark:text-white"
+                    [class.border-red-500]="isFieldInvalid('categoriaId')">
+                    <option [value]="null">Selecciona una categoría</option>
+                    @for (category of categories; track category.id) {
+                      <option [value]="category.id">{{ category.name }}</option>
+                    }
+                  </select>
+                  @if (isFieldInvalid('categoriaId')) {
+                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ getFieldError('categoriaId') }}</p>
+                  }
+                </div>
+              </div>
+
+              <!-- Status -->
+              <div>
+                <label for="estadoCodigo" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Estado del Curso
+                </label>
+                <select id="estadoCodigo" formControlName="estadoCodigo"
+                  class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent
+                    bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600
+                    text-gray-900 dark:text-white">
+                  <option value="BORRADOR">Borrador</option>
+                  <option value="PUBLICADO">Publicado</option>
+                </select>
+                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                  Los cursos en borrador no son visibles para los estudiantes
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex justify-end gap-4">
+            <button type="button" (click)="cancel()"
+              class="px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300
+                rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+              [disabled]="isSubmitting">
+              Cancelar
+            </button>
+            <button type="submit"
+              class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors
+                disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+              [disabled]="isSubmitting || !courseForm.valid">
+              @if (isSubmitting) {
+                <span class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></span>
+                <span>Guardando...</span>
+              } @else {
+                <span class="material-symbols-outlined text-xl">save</span>
+                <span>Guardar Cambios</span>
+              }
+            </button>
+          </div>
+
+        </form>
+      </div>
+    }
+
+  </div>
+</main>

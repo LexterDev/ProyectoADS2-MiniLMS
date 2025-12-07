@@ -1,0 +1,211 @@
+<div class="min-h-screen bg-background-light dark:bg-background-dark py-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-neutral-900 dark:text-white mb-2">
+        Panel de Administración
+      </h1>
+      <p class="text-neutral-600 dark:text-neutral-400">
+        Gestiona usuarios, cursos, categorías y visualiza estadísticas del sistema
+      </p>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <!-- Total Users -->
+      <div class="bg-white dark:bg-neutral-800 rounded-lg shadow-sm p-6 border border-neutral-200 dark:border-neutral-700">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">
+              Total Usuarios
+            </p>
+            <p class="text-3xl font-bold text-neutral-900 dark:text-white">
+              {{ stats.totalUsers }}
+            </p>
+          </div>
+          <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/20 rounded-full flex items-center justify-center">
+            <mat-icon class="text-blue-600 dark:text-blue-400">people</mat-icon>
+          </div>
+        </div>
+      </div>
+
+      <!-- Total Courses -->
+      <div class="bg-white dark:bg-neutral-800 rounded-lg shadow-sm p-6 border border-neutral-200 dark:border-neutral-700">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">
+              Total Cursos
+            </p>
+            <p class="text-3xl font-bold text-neutral-900 dark:text-white">
+              {{ stats.totalCourses }}
+            </p>
+          </div>
+          <div class="w-12 h-12 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center">
+            <mat-icon class="text-green-600 dark:text-green-400">school</mat-icon>
+          </div>
+        </div>
+      </div>
+
+      <!-- Total Categories -->
+      <div class="bg-white dark:bg-neutral-800 rounded-lg shadow-sm p-6 border border-neutral-200 dark:border-neutral-700">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">
+              Categorías
+            </p>
+            <p class="text-3xl font-bold text-neutral-900 dark:text-white">
+              {{ stats.totalCategories }}
+            </p>
+          </div>
+          <div class="w-12 h-12 bg-purple-100 dark:bg-purple-900/20 rounded-full flex items-center justify-center">
+            <mat-icon class="text-purple-600 dark:text-purple-400">category</mat-icon>
+          </div>
+        </div>
+      </div>
+
+      <!-- Active Enrollments -->
+      <div class="bg-white dark:bg-neutral-800 rounded-lg shadow-sm p-6 border border-neutral-200 dark:border-neutral-700">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">
+              Inscripciones Activas
+            </p>
+            <p class="text-3xl font-bold text-neutral-900 dark:text-white">
+              {{ stats.activeEnrollments }}
+            </p>
+          </div>
+          <div class="w-12 h-12 bg-orange-100 dark:bg-orange-900/20 rounded-full flex items-center justify-center">
+            <mat-icon class="text-orange-600 dark:text-orange-400">trending_up</mat-icon>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="mb-8">
+      <h2 class="text-xl font-bold text-neutral-900 dark:text-white mb-4">
+        Acciones Rápidas
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        @for (action of quickActions; track action.route) {
+          <button
+            (click)="navigateTo(action.route)"
+            class="bg-white dark:bg-neutral-800 rounded-lg shadow-sm p-6 border border-neutral-200 dark:border-neutral-700 hover:shadow-md transition-all text-left group">
+            <div [class]="action.color" class="w-12 h-12 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+              <mat-icon class="text-white">{{ action.icon }}</mat-icon>
+            </div>
+            <h3 class="text-lg font-semibold text-neutral-900 dark:text-white mb-2">
+              {{ action.title }}
+            </h3>
+            <p class="text-sm text-neutral-600 dark:text-neutral-400">
+              {{ action.description }}
+            </p>
+          </button>
+        }
+      </div>
+    </div>
+
+    <!-- System Overview -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <!-- Recent Activity -->
+      <div class="bg-white dark:bg-neutral-800 rounded-lg shadow-sm p-6 border border-neutral-200 dark:border-neutral-700">
+        <h3 class="text-lg font-semibold text-neutral-900 dark:text-white mb-4 flex items-center gap-2">
+          <mat-icon>schedule</mat-icon>
+          Actividad Reciente
+        </h3>
+        <div class="space-y-3">
+          <div class="flex items-center gap-3 p-3 bg-neutral-50 dark:bg-neutral-900 rounded-lg">
+            <div class="w-10 h-10 bg-blue-100 dark:bg-blue-900/20 rounded-full flex items-center justify-center">
+              <mat-icon class="text-blue-600 dark:text-blue-400 text-sm">person_add</mat-icon>
+            </div>
+            <div class="flex-1">
+              <p class="text-sm font-medium text-neutral-900 dark:text-white">
+                Nuevo usuario registrado
+              </p>
+              <p class="text-xs text-neutral-600 dark:text-neutral-400">
+                Hace 5 minutos
+              </p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 p-3 bg-neutral-50 dark:bg-neutral-900 rounded-lg">
+            <div class="w-10 h-10 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center">
+              <mat-icon class="text-green-600 dark:text-green-400 text-sm">school</mat-icon>
+            </div>
+            <div class="flex-1">
+              <p class="text-sm font-medium text-neutral-900 dark:text-white">
+                Nuevo curso publicado
+              </p>
+              <p class="text-xs text-neutral-600 dark:text-neutral-400">
+                Hace 1 hora
+              </p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 p-3 bg-neutral-50 dark:bg-neutral-900 rounded-lg">
+            <div class="w-10 h-10 bg-purple-100 dark:bg-purple-900/20 rounded-full flex items-center justify-center">
+              <mat-icon class="text-purple-600 dark:text-purple-400 text-sm">category</mat-icon>
+            </div>
+            <div class="flex-1">
+              <p class="text-sm font-medium text-neutral-900 dark:text-white">
+                Categoría actualizada
+              </p>
+              <p class="text-xs text-neutral-600 dark:text-neutral-400">
+                Hace 2 horas
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Stats -->
+      <div class="bg-white dark:bg-neutral-800 rounded-lg shadow-sm p-6 border border-neutral-200 dark:border-neutral-700">
+        <h3 class="text-lg font-semibold text-neutral-900 dark:text-white mb-4 flex items-center gap-2">
+          <mat-icon>insights</mat-icon>
+          Resumen del Sistema
+        </h3>
+        <div class="space-y-4">
+          <div>
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+                Usuarios Activos
+              </span>
+              <span class="text-sm font-bold text-neutral-900 dark:text-white">
+                92%
+              </span>
+            </div>
+            <div class="w-full bg-neutral-200 dark:bg-neutral-700 rounded-full h-2">
+              <div class="bg-blue-600 h-2 rounded-full" style="width: 92%"></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+                Cursos Publicados
+              </span>
+              <span class="text-sm font-bold text-neutral-900 dark:text-white">
+                78%
+              </span>
+            </div>
+            <div class="w-full bg-neutral-200 dark:bg-neutral-700 rounded-full h-2">
+              <div class="bg-green-600 h-2 rounded-full" style="width: 78%"></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+                Tasa de Finalización
+              </span>
+              <span class="text-sm font-bold text-neutral-900 dark:text-white">
+                65%
+              </span>
+            </div>
+            <div class="w-full bg-neutral-200 dark:bg-neutral-700 rounded-full h-2">
+              <div class="bg-purple-600 h-2 rounded-full" style="width: 65%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

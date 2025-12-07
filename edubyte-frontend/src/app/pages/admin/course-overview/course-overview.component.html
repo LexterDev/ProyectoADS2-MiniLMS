@@ -1,0 +1,175 @@
+<div class="min-h-screen bg-background-light dark:bg-background-dark py-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <!-- Header -->
+    <div class="mb-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-3xl font-bold text-neutral-900 dark:text-white mb-2">
+            Gestión de Cursos
+          </h1>
+          <p class="text-neutral-600 dark:text-neutral-400">
+            Supervisa y administra todos los cursos del sistema
+          </p>
+        </div>
+        <a
+          routerLink="/dashboard-admin"
+          class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-neutral-700 dark:text-neutral-300 bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-600 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors">
+          <mat-icon class="text-lg">arrow_back</mat-icon>
+          Volver al Dashboard
+        </a>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="bg-white dark:bg-neutral-800 rounded-lg shadow-sm border border-neutral-200 dark:border-neutral-700 p-4 mb-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Search -->
+        <div class="relative">
+          <mat-icon class="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400">search</mat-icon>
+          <input
+            type="text"
+            [(ngModel)]="searchQuery"
+            (input)="applyFilters()"
+            placeholder="Buscar por título o instructor..."
+            class="w-full pl-10 pr-10 py-2 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-700 text-neutral-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+          @if (searchQuery) {
+            <button
+              (click)="clearSearch()"
+              class="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200">
+              <mat-icon class="text-lg">close</mat-icon>
+            </button>
+          }
+        </div>
+
+        <!-- Status Filter -->
+        <div>
+          <select
+            [(ngModel)]="selectedStatus"
+            (change)="applyFilters()"
+            class="w-full px-4 py-2 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-700 text-neutral-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+            @for (status of statusOptions; track status.value) {
+              <option [value]="status.value">{{ status.label }}</option>
+            }
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Courses Grid -->
+    @if (loading) {
+      <div class="text-center py-12">
+        <p class="text-neutral-600 dark:text-neutral-400">Cargando cursos...</p>
+      </div>
+    } @else if (filteredCourses.length === 0) {
+      <div class="bg-white dark:bg-neutral-800 rounded-lg shadow-sm border border-neutral-200 dark:border-neutral-700 p-12 text-center">
+        <mat-icon class="text-6xl text-neutral-300 dark:text-neutral-600 mb-4">school</mat-icon>
+        <p class="text-lg font-medium text-neutral-900 dark:text-white mb-2">
+          No se encontraron cursos
+        </p>
+        <p class="text-neutral-600 dark:text-neutral-400">
+          Intenta ajustar los filtros de búsqueda
+        </p>
+      </div>
+    } @else {
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        @for (course of filteredCourses; track course.id) {
+          <div class="bg-white dark:bg-neutral-800 rounded-lg shadow-sm border border-neutral-200 dark:border-neutral-700 hover:shadow-md transition-all overflow-hidden">
+            <!-- Course Header -->
+            <div class="h-2"
+                 [ngClass]="{
+                   'bg-green-500': course.estadoCodigo === 'PUB',
+                   'bg-yellow-500': course.estadoCodigo === 'BOR',
+                   'bg-blue-500': course.estadoCodigo === 'REV',
+                   'bg-red-500': course.estadoCodigo === 'INA'
+                 }"></div>
+
+            <div class="p-6">
+              <!-- Status Badge and Actions Menu -->
+              <div class="flex items-center justify-between mb-3">
+                <span [class]="getStatusColor(course.estadoCodigo)" class="px-2 py-1 text-xs font-semibold rounded-full">
+                  {{ course.estadoNombre }}
+                </span>
+                <button
+                  [matMenuTriggerFor]="menu"
+                  class="p-1 hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded transition-colors">
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu">
+                  <!-- Review Course Action - Show for courses in review -->
+                  @if (course.estadoCodigo === 'REV') {
+                    <button mat-menu-item (click)="reviewCourse(course)">
+                      <mat-icon class="text-purple-600">visibility</mat-icon>
+                      <span>Revisar Curso</span>
+                    </button>
+                  }
+                  <!-- Status Change Actions -->
+                  @if (course.estadoCodigo !== 'PUB') {
+                    <button mat-menu-item (click)="publishCourse(course)">
+                      <mat-icon class="text-green-600">check_circle</mat-icon>
+                      <span>Publicar</span>
+                    </button>
+                  }
+                  @if (course.estadoCodigo !== 'BOR') {
+                    <button mat-menu-item (click)="setToDraft(course)">
+                      <mat-icon class="text-yellow-600">edit</mat-icon>
+                      <span>Marcar como Borrador</span>
+                    </button>
+                  }
+                  @if (course.estadoCodigo !== 'REV') {
+                    <button mat-menu-item (click)="setToReview(course)">
+                      <mat-icon class="text-blue-600">rate_review</mat-icon>
+                      <span>Enviar a Revisión</span>
+                    </button>
+                  }
+                </mat-menu>
+              </div>
+
+              <!-- Course Title -->
+              <h3 class="text-lg font-semibold text-neutral-900 dark:text-white mb-2 line-clamp-2">
+                {{ course.titulo }}
+              </h3>
+
+              <!-- Course Description -->
+              <p class="text-sm text-neutral-600 dark:text-neutral-400 mb-4 line-clamp-2">
+                {{ course.descripcion }}
+              </p>
+
+              <!-- Course Info -->
+              <div class="space-y-2 text-sm text-neutral-600 dark:text-neutral-400">
+                <div class="flex items-center gap-2">
+                  <mat-icon class="text-base">person</mat-icon>
+                  <span>{{ getInstructorName(course) }}</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <mat-icon class="text-base">category</mat-icon>
+                  <span>{{ course.categoriaNombre || 'Sin categoría' }}</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <mat-icon class="text-base">calendar_today</mat-icon>
+                  <span>{{ formatDate(course.creadoEn) }}</span>
+                </div>
+              </div>
+
+              <!-- Price -->
+              <div class="mt-4 pt-4 border-t border-neutral-200 dark:border-neutral-700">
+                <div class="flex items-center justify-between">
+                  <span class="text-sm text-neutral-600 dark:text-neutral-400">Precio:</span>
+                  <span class="text-lg font-bold text-primary-600 dark:text-primary-400">
+                    {{ formatPrice(course.precio) }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Results Count -->
+      <div class="mt-6 text-sm text-neutral-600 dark:text-neutral-400 text-center">
+        Mostrando {{ filteredCourses.length }} de {{ courses.length }} cursos
+      </div>
+    }
+
+  </div>
+</div>

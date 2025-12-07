@@ -1,0 +1,241 @@
+<div class="min-h-screen bg-background-light dark:bg-background-dark py-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <!-- Header -->
+    <div class="mb-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-3xl font-bold text-neutral-900 dark:text-white mb-2">
+            Gestión de Usuarios
+          </h1>
+          <p class="text-neutral-600 dark:text-neutral-400">
+            Administra usuarios, roles y estados de cuenta
+          </p>
+        </div>
+        <div class="flex gap-3">
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="openCreateUserDialog()"
+            class="bg-blue-600 text-white">
+            <mat-icon class="mr-1">person_add</mat-icon>
+            Nuevo Usuario
+          </button>
+          <a
+            routerLink="/dashboard-admin"
+            class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-neutral-700 dark:text-neutral-300 bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-600 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors">
+            <mat-icon class="text-lg">arrow_back</mat-icon>
+            Volver al Dashboard
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="bg-white dark:bg-neutral-800 rounded-lg shadow-sm border border-neutral-200 dark:border-neutral-700 p-4 mb-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Search -->
+        <div class="relative">
+          <mat-icon class="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400">search</mat-icon>
+          <input
+            type="text"
+            [(ngModel)]="searchQuery"
+            (input)="applyFilters()"
+            placeholder="Buscar por nombre o email..."
+            class="w-full pl-10 pr-10 py-2 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-700 text-neutral-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+          @if (searchQuery) {
+            <button
+              (click)="clearSearch()"
+              class="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200">
+              <mat-icon class="text-lg">close</mat-icon>
+            </button>
+          }
+        </div>
+
+        <!-- Role Filter -->
+        <div>
+          <select
+            [(ngModel)]="selectedRole"
+            (change)="applyFilters()"
+            class="w-full px-4 py-2 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-700 text-neutral-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+            @for (role of roles; track role.value) {
+              <option [value]="role.value">{{ role.label }}</option>
+            }
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Users Table -->
+    @if (loading) {
+      <div class="text-center py-12">
+        <p class="text-neutral-600 dark:text-neutral-400">Cargando usuarios...</p>
+      </div>
+    } @else if (filteredUsers.length === 0) {
+      <div class="bg-white dark:bg-neutral-800 rounded-lg shadow-sm border border-neutral-200 dark:border-neutral-700 p-12 text-center">
+        <mat-icon class="text-6xl text-neutral-300 dark:text-neutral-600 mb-4">people_outline</mat-icon>
+        <p class="text-lg font-medium text-neutral-900 dark:text-white mb-2">
+          No se encontraron usuarios
+        </p>
+        <p class="text-neutral-600 dark:text-neutral-400">
+          Intenta ajustar los filtros de búsqueda
+        </p>
+      </div>
+    } @else {
+      <div class="bg-white dark:bg-neutral-800 rounded-lg shadow-sm border border-neutral-200 dark:border-neutral-700 overflow-hidden">
+        <!-- Desktop Table -->
+        <div class="hidden md:block overflow-x-auto">
+          <table class="w-full">
+            <thead class="bg-neutral-50 dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-700">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
+                  Usuario
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
+                  Rol
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
+                  Estado
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
+                  Registro
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
+                  Último Acceso
+                </th>
+                <th class="px-6 py-3 text-right text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
+                  Acciones
+                </th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-neutral-200 dark:divide-neutral-700">
+              @for (user of filteredUsers; track user.id) {
+                <tr class="hover:bg-neutral-50 dark:hover:bg-neutral-900/50 transition-colors">
+                  <td class="px-6 py-4">
+                    <div class="flex items-center">
+                      <div class="w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-900/20 flex items-center justify-center text-primary-600 dark:text-primary-400 font-semibold">
+                        {{ user.nombre.charAt(0) }}{{ user.apellido.charAt(0) }}
+                      </div>
+                      <div class="ml-4">
+                        <div class="text-sm font-medium text-neutral-900 dark:text-white">
+                          {{ user.nombre }} {{ user.apellido }}
+                        </div>
+                        <div class="text-sm text-neutral-500 dark:text-neutral-400">
+                          {{ user.correo }}
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4">
+                    <span [class]="getRoleColor(user.rol.codigo)" class="px-2 py-1 text-xs font-semibold rounded-full">
+                      {{ getRoleLabel(user.rol.descripcion) }}
+                    </span>
+                  </td>
+                  <td class="px-6 py-4">
+                    @if (user.estado.codigo === 'ACT') {
+                      <span class="flex items-center gap-1 text-green-600 dark:text-green-400 text-sm font-medium">
+                        <mat-icon class="text-base">check_circle</mat-icon>
+                        Activo
+                      </span>
+                    } @else {
+                      <span class="flex items-center gap-1 text-red-600 dark:text-red-400 text-sm font-medium">
+                        <mat-icon class="text-base">cancel</mat-icon>
+                        Inactivo
+                      </span>
+                    }
+                  </td>
+                  <td class="px-6 py-4 text-sm text-neutral-600 dark:text-neutral-400">
+                    {{ formatDate(user.creadoEn) }}
+                  </td>
+                  <td class="px-6 py-4 text-sm text-neutral-600 dark:text-neutral-400">
+                    {{ user.actualizadoEn ? formatDate(user.actualizadoEn) : 'N/A' }}
+                  </td>
+                  <td class="px-6 py-4 text-right">
+                    <button
+                      [matMenuTriggerFor]="menu"
+                      class="p-2 hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-lg transition-colors">
+                      <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu">
+                      <button mat-menu-item (click)="toggleUserStatus(user)">
+                        <mat-icon>{{ user.estado.codigo === 'ACT' ? 'block' : 'check_circle' }}</mat-icon>
+                        <span>{{ user.estado.codigo === 'ACT' ? 'Desactivar' : 'Activar' }}</span>
+                      </button>
+                    </mat-menu>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Mobile Cards -->
+        <div class="md:hidden space-y-4 p-4">
+          @for (user of filteredUsers; track user.id) {
+            <div class="border border-neutral-200 dark:border-neutral-700 rounded-lg p-4">
+              <div class="flex items-start justify-between mb-3">
+                <div class="flex items-center gap-3">
+                  <div class="w-12 h-12 rounded-full bg-primary-100 dark:bg-primary-900/20 flex items-center justify-center text-primary-600 dark:text-primary-400 font-semibold">
+                    {{ user.nombre.charAt(0) }}{{ user.apellido.charAt(0) }}
+                  </div>
+                  <div>
+                    <div class="text-sm font-medium text-neutral-900 dark:text-white">
+                      {{ user.nombre }} {{ user.apellido }}
+                    </div>
+                    <div class="text-xs text-neutral-500 dark:text-neutral-400">
+                      {{ user.correo }}
+                    </div>
+                  </div>
+                </div>
+                <button
+                  [matMenuTriggerFor]="mobileMenu"
+                  class="p-2 hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-lg transition-colors">
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #mobileMenu="matMenu">
+                  <button mat-menu-item (click)="toggleUserStatus(user)">
+                    <mat-icon>{{ user.estado.codigo === 'ACT' ? 'block' : 'check_circle' }}</mat-icon>
+                    <span>{{ user.estado.codigo === 'ACT' ? 'Desactivar' : 'Activar' }}</span>
+                  </button>
+                </mat-menu>
+              </div>
+
+              <div class="space-y-2 text-sm">
+                <div class="flex items-center justify-between">
+                  <span class="text-neutral-600 dark:text-neutral-400">Rol:</span>
+                  <span [class]="getRoleColor(user.rol.codigo)" class="px-2 py-1 text-xs font-semibold rounded-full">
+                    {{ getRoleLabel(user.rol.descripcion) }}
+                  </span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="text-neutral-600 dark:text-neutral-400">Estado:</span>
+                  @if (user.estado.codigo === 'ACT') {
+                    <span class="flex items-center gap-1 text-green-600 dark:text-green-400 font-medium">
+                      <mat-icon class="text-base">check_circle</mat-icon>
+                      Activo
+                    </span>
+                  } @else {
+                    <span class="flex items-center gap-1 text-red-600 dark:text-red-400 font-medium">
+                      <mat-icon class="text-base">cancel</mat-icon>
+                      Inactivo
+                    </span>
+                  }
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="text-neutral-600 dark:text-neutral-400">Registro:</span>
+                  <span class="text-neutral-900 dark:text-white">{{ formatDate(user.creadoEn) }}</span>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Results Count -->
+      <div class="mt-4 text-sm text-neutral-600 dark:text-neutral-400">
+        Mostrando {{ filteredUsers.length }} de {{ users.length }} usuarios
+      </div>
+    }
+
+  </div>
+</div>

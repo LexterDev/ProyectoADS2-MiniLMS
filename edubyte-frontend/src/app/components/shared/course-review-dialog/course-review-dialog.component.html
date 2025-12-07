@@ -1,0 +1,238 @@
+<div class="course-review-dialog">
+  <!-- Header -->
+  <div class="dialog-header p-6 border-b border-neutral-200 dark:border-neutral-700">
+    <div class="flex items-start justify-between">
+      <div class="flex-1">
+        <h2 class="text-2xl font-bold text-neutral-900 dark:text-white mb-1">
+          Revisar Curso
+        </h2>
+        <p class="text-sm text-neutral-600 dark:text-neutral-400">
+          Revisa el contenido del curso antes de aprobar su publicación
+        </p>
+      </div>
+      <button
+        mat-icon-button
+        (click)="close()"
+        class="text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  @if (loading) {
+    <div class="p-12 text-center">
+      <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-primary-500 border-t-transparent"></div>
+      <p class="mt-4 text-neutral-600 dark:text-neutral-400">Cargando detalles del curso...</p>
+    </div>
+  }
+
+  <!-- Content -->
+  @if (!loading && courseDetails) {
+    <div class="dialog-content">
+      <mat-tab-group class="course-review-tabs">
+
+        <!-- Overview Tab -->
+        <mat-tab label="Información General">
+          <div class="p-6 space-y-6">
+            <!-- Course Image -->
+            @if (courseDetails.adjunto?.url) {
+              <div class="aspect-video rounded-lg overflow-hidden bg-neutral-100 dark:bg-neutral-800">
+                <img
+                  [src]="courseDetails.adjunto.url"
+                  [alt]="courseDetails.titulo"
+                  class="w-full h-full object-cover">
+              </div>
+            }
+
+            <!-- Course Info -->
+            <div class="space-y-4">
+              <div>
+                <h3 class="text-xl font-bold text-neutral-900 dark:text-white mb-2">
+                  {{ courseDetails.titulo }}
+                </h3>
+                <p class="text-neutral-600 dark:text-neutral-400">
+                  {{ courseDetails.descripcion }}
+                </p>
+              </div>
+
+              <!-- Stats Grid -->
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-4">
+                  <div class="flex items-center gap-2 text-neutral-600 dark:text-neutral-400 mb-1">
+                    <mat-icon class="text-lg">school</mat-icon>
+                    <span class="text-xs font-medium">Secciones</span>
+                  </div>
+                  <p class="text-2xl font-bold text-neutral-900 dark:text-white">
+                    {{ courseDetails.secciones?.length || 0 }}
+                  </p>
+                </div>
+
+                <div class="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-4">
+                  <div class="flex items-center gap-2 text-neutral-600 dark:text-neutral-400 mb-1">
+                    <mat-icon class="text-lg">play_lesson</mat-icon>
+                    <span class="text-xs font-medium">Lecciones</span>
+                  </div>
+                  <p class="text-2xl font-bold text-neutral-900 dark:text-white">
+                    {{ getTotalLessons() }}
+                  </p>
+                </div>
+
+                <div class="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-4">
+                  <div class="flex items-center gap-2 text-neutral-600 dark:text-neutral-400 mb-1">
+                    <mat-icon class="text-lg">schedule</mat-icon>
+                    <span class="text-xs font-medium">Duración</span>
+                  </div>
+                  <p class="text-2xl font-bold text-neutral-900 dark:text-white">
+                    {{ formatDuration(getTotalDuration()) }}
+                  </p>
+                </div>
+
+                <div class="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-4">
+                  <div class="flex items-center gap-2 text-neutral-600 dark:text-neutral-400 mb-1">
+                    <mat-icon class="text-lg">payments</mat-icon>
+                    <span class="text-xs font-medium">Precio</span>
+                  </div>
+                  <p class="text-2xl font-bold text-primary-600 dark:text-primary-400">
+                    {{ formatPrice(courseDetails.precio) }}
+                  </p>
+                </div>
+              </div>
+
+              <!-- Additional Info -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="flex items-center gap-3 p-3 bg-neutral-50 dark:bg-neutral-800 rounded-lg">
+                  <mat-icon class="text-neutral-600 dark:text-neutral-400">person</mat-icon>
+                  <div>
+                    <p class="text-xs text-neutral-500 dark:text-neutral-500">Instructor</p>
+                    <p class="text-sm font-medium text-neutral-900 dark:text-white">
+                      {{ courseDetails.instructor?.nombre }} {{ courseDetails.instructor?.apellido }}
+                    </p>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-3 p-3 bg-neutral-50 dark:bg-neutral-800 rounded-lg">
+                  <mat-icon class="text-neutral-600 dark:text-neutral-400">category</mat-icon>
+                  <div>
+                    <p class="text-xs text-neutral-500 dark:text-neutral-500">Categoría</p>
+                    <p class="text-sm font-medium text-neutral-900 dark:text-white">
+                      {{ courseDetails.categoriaNombre }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+
+        <!-- Content Tab -->
+        <mat-tab label="Contenido del Curso">
+          <div class="p-6">
+            @if (courseDetails.secciones && courseDetails.secciones.length > 0) {
+              <mat-accordion class="space-y-3">
+                @for (section of courseDetails.secciones; track section.id; let sectionIndex = $index) {
+                  <mat-expansion-panel class="border border-neutral-200 dark:border-neutral-700 rounded-lg overflow-hidden">
+                    <mat-expansion-panel-header class="bg-neutral-50 dark:bg-neutral-800">
+                      <mat-panel-title class="flex items-center gap-3">
+                        <span class="flex items-center justify-center w-8 h-8 rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400 text-sm font-bold">
+                          {{ sectionIndex + 1 }}
+                        </span>
+                        <div class="flex-1">
+                          <p class="font-semibold text-neutral-900 dark:text-white">
+                            {{ section.titulo }}
+                          </p>
+                          <p class="text-xs text-neutral-500 dark:text-neutral-400">
+                            {{ section.lecciones?.length || 0 }} lecciones • {{ formatDuration(section.duracionEstimada) }}
+                          </p>
+                        </div>
+                      </mat-panel-title>
+                    </mat-expansion-panel-header>
+
+                    <div class="p-4 space-y-2">
+                      @if (section.lecciones && section.lecciones.length > 0) {
+                        @for (lesson of section.lecciones; track lesson.id; let lessonIndex = $index) {
+                          <div class="flex items-start gap-3 p-3 bg-white dark:bg-neutral-900 rounded-lg border border-neutral-200 dark:border-neutral-700">
+                            <div class="flex items-center justify-center w-10 h-10 rounded-lg bg-neutral-100 dark:bg-neutral-800">
+                              <mat-icon class="text-neutral-600 dark:text-neutral-400">
+                                {{ getLessonTypeIcon(lesson.tipoCodigo) }}
+                              </mat-icon>
+                            </div>
+                            <div class="flex-1">
+                              <div class="flex items-start justify-between gap-2 mb-1">
+                                <h4 class="font-medium text-neutral-900 dark:text-white">
+                                  {{ lessonIndex + 1 }}. {{ lesson.titulo }}
+                                </h4>
+                                <mat-chip class="!text-xs !h-6">
+                                  {{ getLessonTypeLabel(lesson.tipoCodigo) }}
+                                </mat-chip>
+                              </div>
+                              @if (lesson.tipoCodigo === 'LECTURA' && lesson.contenido) {
+                                <p class="text-sm text-neutral-600 dark:text-neutral-400 line-clamp-2">
+                                  {{ lesson.contenido }}
+                                </p>
+                              }
+                              @if (lesson.tipoCodigo === 'VIDEO' && lesson.url) {
+                                <p class="text-sm text-neutral-600 dark:text-neutral-400">
+                                  <mat-icon class="text-sm align-middle">link</mat-icon>
+                                  Video disponible
+                                </p>
+                              }
+                            </div>
+                          </div>
+                        }
+                      } @else {
+                        <p class="text-sm text-neutral-500 dark:text-neutral-400 text-center py-4">
+                          Esta sección no tiene lecciones
+                        </p>
+                      }
+                    </div>
+                  </mat-expansion-panel>
+                }
+              </mat-accordion>
+            } @else {
+              <div class="text-center py-12">
+                <mat-icon class="text-6xl text-neutral-300 dark:text-neutral-600 mb-4">video_library</mat-icon>
+                <p class="text-neutral-600 dark:text-neutral-400">
+                  Este curso no tiene contenido aún
+                </p>
+              </div>
+            }
+          </div>
+        </mat-tab>
+
+      </mat-tab-group>
+    </div>
+
+    <!-- Footer Actions -->
+    <div class="dialog-footer p-6 border-t border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/50">
+      <div class="flex items-center justify-between gap-4">
+        <button
+          mat-stroked-button
+          (click)="close()"
+          class="flex-1 sm:flex-none">
+          Cerrar
+        </button>
+
+        <div class="flex gap-3">
+          <button
+            mat-raised-button
+            color="warn"
+            (click)="rejectCourse()"
+            class="flex items-center gap-2">
+            <mat-icon>close</mat-icon>
+            Rechazar
+          </button>
+
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="approveCourse()"
+            class="flex items-center gap-2">
+            <mat-icon>check_circle</mat-icon>
+            Aprobar y Publicar
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

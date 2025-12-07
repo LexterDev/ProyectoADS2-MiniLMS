@@ -26,8 +26,7 @@ interface Course {
     imports: [
         CommonModule,
         RouterModule,
-        CourseFiltersComponent, 
-        CourseCardComponent
+        CourseFiltersComponent
     ],
     templateUrl: './course-list.component.html'
 })

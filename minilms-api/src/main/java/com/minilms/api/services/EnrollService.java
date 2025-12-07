@@ -11,6 +11,7 @@ import com.minilms.api.config.responseApi.ApiException;
 import com.minilms.api.dto.course.CourseDTO;
 import com.minilms.api.dto.inscription.InscriptionDTO;
 import com.minilms.api.dto.inscription.InscriptionProgressDTO;
+import com.minilms.api.dto.inscription.UpdateTimeSpentDTO;
 import com.minilms.api.entities.Curso;
 import com.minilms.api.entities.Estado;
 import com.minilms.api.entities.Inscripcion;
@@ -126,5 +127,45 @@ public class EnrollService extends LmsUtils {
 
     public List<CourseDTO> findCourses() {
         return repository.findByEstudiante(getUserLoggedIn()).stream().map(InscriptionMapper::toCourseDTO).toList();
+    }
+
+    public InscriptionProgressDTO updateTimeSpent(Long cursoId, UpdateTimeSpentDTO dto) {
+        return repository.findByEstudianteIdAndCursoId(getLoggedInUserId(), cursoId).map(ins -> {
+            Leccion lesson = lessonRepository.findById(dto.getLeccionId()).orElseThrow(
+                    () -> new ApiException("No se encontró una lección con el id: " + dto.getLeccionId(),
+                            HttpStatus.NOT_FOUND));
+
+            InscripcionProgreso progress = progresoRepository
+                    .findByInscripcionIdAndLeccionId(ins.getId(), lesson.getId())
+                    .map(p -> {
+                        // Actualizar el tiempo dedicado acumulado
+                        Long tiempoActual = p.getTiempoDedicado() != null ? p.getTiempoDedicado() : 0L;
+                        p.setTiempoDedicado(tiempoActual + dto.getTiempoDedicadoSegundos());
+                        p.setUltimaActualizacion(LocalDateTime.now());
+                        return p;
+                    })
+                    .orElseGet(() -> {
+                        // Crear nuevo registro de progreso si no existe
+                        InscripcionProgreso p = new InscripcionProgreso();
+                        p.setInscripcion(ins);
+                        p.setLeccion(lesson);
+                        p.setTiempoDedicado(dto.getTiempoDedicadoSegundos());
+                        p.setUltimaActualizacion(LocalDateTime.now());
+                        p.setCompletado(false);
+                        return p;
+                    });
+
+            InscripcionProgreso saved = progresoRepository.save(progress);
+            return InscriptionMapper.toDTO(saved);
+        }).orElseThrow(
+                () -> new ApiException("No se encontró una inscripción para el curso con id: " + cursoId,
+                        HttpStatus.NOT_FOUND));
+    }
+
+    public Long getTotalTimeSpentInCourse(Long cursoId) {
+        return repository.findByEstudianteIdAndCursoId(getLoggedInUserId(), cursoId)
+                .map(ins -> progresoRepository.sumTiempoDedicadoByInscripcionId(ins.getId())
+                        .orElse(0L))
+                .orElse(0L);
     }
 }

@@ -1,10 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-// 1. ✅ ASEGÚRATE DE QUE ESTA LÍNEA ESTÉ BIEN
-// (La ruta debe ser correcta desde 'landing/stats' hasta 'stat-card')
-import { StatCardComponent } from '../../stat-card/stat-card.component';
-
 // Interfaz
 interface Stat {
   label: string;
@@ -13,10 +9,9 @@ interface Stat {
 
 @Component({
   selector: 'app-stats',
-  standalone: true, 
+  standalone: true,
   imports: [
-    CommonModule,
-    StatCardComponent // <-- 2. ✅ Y ASEGÚRATE DE QUE ESTÉ AQUÍ
+    CommonModule
   ],
   templateUrl: './stats.component.html'
 })

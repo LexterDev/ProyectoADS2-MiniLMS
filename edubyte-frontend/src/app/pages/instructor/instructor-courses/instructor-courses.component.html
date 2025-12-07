@@ -1,124 +1,225 @@
-<main class="min-h-screen py-10 bg-background-light dark:bg-background-dark text-black dark:text-white">
+<main class="min-h-screen bg-background-light dark:bg-background-dark">
 
   <app-sidebar-instructor #sidebar></app-sidebar-instructor>
 
-  <div class="lg:ml-64 min-h-screen px-4 md:px-10">
+  <div class="lg:ml-64 min-h-screen py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-    <div class="flex flex-wrap justify-between items-center gap-4 mb-6">
-      <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Mis Cursos</h1>
-      <button routerLink="/courses/create"
-        class="flex items-center gap-2 justify-center rounded-lg h-10 px-5 bg-primary text-white text-sm font-bold shadow-md hover:bg-primary/90 transition-all">
-        <span class="material-symbols-outlined">add</span>
-        <span class="truncate">Crear Nuevo Curso</span>
-      </button>
-    </div>
-
-    <div class="mb-6">
-      <div class="border-b border-primary/20 dark:border-primary/30 flex gap-2 sm:gap-8">
-        <button (click)="setTab('Todos')"
-          [ngClass]="activeTab === 'Todos' ? 'border-primary text-primary' : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary hover:border-primary/50'"
-          class="flex items-center justify-center border-b-2 px-2 sm:px-4 py-3 text-sm font-bold transition-colors">
-          Todos
-        </button>
-        <button (click)="setTab('Publicados')"
-          [ngClass]="activeTab === 'Publicados' ? 'border-primary text-primary' : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary hover:border-primary/50'"
-          class="flex items-center justify-center border-b-2 px-2 sm:px-4 py-3 text-sm font-bold transition-colors">
-          Publicados
-        </button>
-        <button (click)="setTab('Borrador')"
-          [ngClass]="activeTab === 'Borrador' ? 'border-primary text-primary' : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary hover:border-primary/50'"
-          class="flex items-center justify-center border-b-2 px-2 sm:px-4 py-3 text-sm font-bold transition-colors">
-          Borradores
-        </button>
-        <button (click)="setTab('En revisión')"
-          [ngClass]="activeTab === 'En revisión' ? 'border-primary text-primary' : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary hover:border-primary/50'"
-          class="flex items-center justify-center border-b-2 px-2 sm:px-4 py-3 text-sm font-bold transition-colors">
-          En revisión
-        </button>
+      <!-- Header -->
+      <div class="mb-6">
+        <div class="flex items-center justify-between flex-wrap gap-4">
+          <div>
+            <h1 class="text-3xl font-bold text-neutral-900 dark:text-white mb-2">
+              Mis Cursos
+            </h1>
+            <p class="text-neutral-600 dark:text-neutral-400">
+              Administra y gestiona tus cursos
+            </p>
+          </div>
+          <button
+            routerLink="/courses/create"
+            class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600 rounded-lg transition-colors shadow-sm">
+            <mat-icon>add</mat-icon>
+            Crear Nuevo Curso
+          </button>
+        </div>
       </div>
-    </div>
 
-    <div
-      class="bg-white dark:bg-background-dark rounded-lg shadow-sm overflow-x-auto border border-primary/10 dark:border-primary/20">
-      <table class="w-full text-sm text-left">
-        <thead class="text-xs text-gray-700 dark:text-gray-400 uppercase bg-primary/10 dark:bg-primary/20">
-          <tr>
-            <th class="px-6 py-3 min-w-[6rem]" scope="col">Miniatura</th>
-            <th class="px-6 py-3 min-w-[15rem]" scope="col">Título</th>
-            <th class="px-6 py-3 min-w-[8rem]" scope="col">Estado</th>
-            <th class="px-6 py-3" scope="col">Precio</th>
-            <!-- <th class="px-6 py-3" scope="col">Rating</th>
-            <th class="px-6 py-3" scope="col">Ingresos</th> -->
-            <th class="px-6 py-3 min-w-[10rem]" scope="col">Fecha creación</th>
-            <th class="px-6 py-3 text-center" scope="col">Acciones</th>
-          </tr>
-        </thead>
-        <tbody class="text-gray-800 dark:text-gray-300">
-
-          @for (course of allCourses; track course.id) {
-          <tr class="border-b border-primary/20 dark:border-primary/30 hover:bg-primary/5 dark:hover:bg-primary/10">
-
-            <td class="px-6 py-4">
-              <div class="bg-center bg-no-repeat aspect-video bg-cover rounded w-20"
-                [style.background-image]="'url(' + (course.adjunto?.url || 'default-product-card.png') + ')'"></div>
-            </td>
-
-            <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-              {{ course.titulo }}
-            </td>
-
-            <td class="px-6 py-4">
-              @switch (course.estadoCodigo) {
-              @case ('PUB') {
-              <span
-                class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">Publicado</span>
-              }
-              @case ('BOR') {
-              <span
-                class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-300">Borrador</span>
-              }
-              }
-            </td>
-
-            <td class="px-6 py-4">{{ course.precio | currency:'USD' }}</td>
-            <!-- <td class="px-6 py-4">{{ course.rating | number:'1.1-1' }}</td>
-              <td class="px-6 py-4">{{ course.revenue | currency:'USD':'symbol':'1.0-0' }}</td> -->
-            <td class="px-6 py-4">{{ course.creadoEn | date:'dd/MM/yyyy' }}</td>
-
-            <td class="px-6 py-4 text-center">
-              <button mat-icon-button [matMenuTriggerFor]="menu"
-                class="text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary">
-                <span class="material-symbols-outlined">more_vert</span>
-              </button>
-              <mat-menu #menu="matMenu" xPosition="before">
-                <a [routerLink]="['/instructor/add-section', course.id]">
-                  <button mat-menu-item >
-                    <span class="material-symbols-outlined text-sm mr-2">add</span>
-                    Agregar Secciones
-                  </button>
-                </a>
-                <button mat-menu-item (click)="editCourse(course.id)">
-                  <span class="material-symbols-outlined text-sm mr-2">edit</span>
-                  Editar
-                </button>
-                <button mat-menu-item class="text-red-600 dark:text-red-500" (click)="deleteCourse(course.id)">
-                  <span class="material-symbols-outlined text-sm mr-2">delete</span>
-                  Eliminar
-                </button>
-              </mat-menu>
-            </td>
-          </tr>
-          } @empty {
-          <tr>
-            <td colspan="8" class="text-center py-10 text-gray-500 dark:text-gray-400">
-              No se encontraron cursos que coincidan con tus filtros.
-            </td>
-          </tr>
+      <!-- Search & Filters -->
+      <div class="bg-white dark:bg-neutral-800 rounded-lg shadow-sm border border-neutral-200 dark:border-neutral-700 p-4 mb-6">
+        <div class="relative">
+          <mat-icon class="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400">search</mat-icon>
+          <input
+            type="text"
+            [(ngModel)]="searchQuery"
+            (input)="onSearch()"
+            placeholder="Buscar por título o descripción..."
+            class="w-full pl-10 pr-10 py-2 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-700 text-neutral-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+          @if (searchQuery) {
+            <button
+              (click)="clearSearch()"
+              class="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200">
+              <mat-icon class="text-lg">close</mat-icon>
+            </button>
           }
+        </div>
+      </div>
 
-        </tbody>
-      </table>
+      <!-- Tabs -->
+      <div class="mb-6">
+        <div class="border-b border-neutral-200 dark:border-neutral-700 flex gap-2 sm:gap-6">
+          @for (status of statusOptions; track status.value) {
+            <button
+              (click)="setTab(status.value)"
+              [ngClass]="activeTab === status.value
+                ? 'border-primary-600 text-primary-600 dark:border-primary-500 dark:text-primary-500'
+                : 'border-transparent text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-300 hover:border-neutral-300 dark:hover:border-neutral-600'"
+              class="flex items-center justify-center border-b-2 px-3 sm:px-4 py-3 text-sm font-semibold transition-colors whitespace-nowrap">
+              {{ status.label }}
+            </button>
+          }
+        </div>
+      </div>
+
+      <!-- Courses Grid -->
+      @if (loading) {
+        <div class="text-center py-12">
+          <p class="text-neutral-600 dark:text-neutral-400">Cargando cursos...</p>
+        </div>
+      } @else if (filteredCourses.length === 0) {
+        <div class="bg-white dark:bg-neutral-800 rounded-lg shadow-sm border border-neutral-200 dark:border-neutral-700 p-12 text-center">
+          <mat-icon class="text-6xl text-neutral-300 dark:text-neutral-600 mb-4">school</mat-icon>
+          <p class="text-lg font-medium text-neutral-900 dark:text-white mb-2">
+            No se encontraron cursos
+          </p>
+          <p class="text-neutral-600 dark:text-neutral-400 mb-6">
+            @if (searchQuery) {
+              No hay cursos que coincidan con tu búsqueda
+            } @else if (activeTab !== 'Todos') {
+              No tienes cursos en este estado
+            } @else {
+              Aún no has creado ningún curso
+            }
+          </p>
+          <button
+            routerLink="/courses/create"
+            class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600 rounded-lg transition-colors">
+            <mat-icon>add</mat-icon>
+            Crear Mi Primer Curso
+          </button>
+        </div>
+      } @else {
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          @for (course of filteredCourses; track course.id) {
+            <div class="bg-white dark:bg-neutral-800 rounded-lg shadow-sm border border-neutral-200 dark:border-neutral-700 hover:shadow-md transition-all overflow-hidden">
+              <!-- Course Image -->
+              <div class="relative aspect-video bg-neutral-200 dark:bg-neutral-700">
+                @if (course.adjunto?.url) {
+                  <img
+                    [src]="course.adjunto.url"
+                    [alt]="course.titulo"
+                    class="w-full h-full object-cover">
+                } @else {
+                  <div class="w-full h-full flex items-center justify-center">
+                    <mat-icon class="text-6xl text-neutral-400">school</mat-icon>
+                  </div>
+                }
+                <!-- Status Badge Overlay -->
+                <div class="absolute top-3 left-3">
+                  <span [class]="getStatusColor(course.estadoCodigo)" class="px-3 py-1 text-xs font-semibold rounded-full">
+                    {{ getStatusLabel(course.estadoCodigo) }}
+                  </span>
+                </div>
+                <!-- Actions Menu -->
+                <div class="absolute top-3 right-3">
+                  <button
+                    [matMenuTriggerFor]="menu"
+                    class="p-2 bg-white/90 dark:bg-neutral-800/90 hover:bg-white dark:hover:bg-neutral-800 rounded-full transition-colors">
+                    <mat-icon>more_vert</mat-icon>
+                  </button>
+                  <mat-menu #menu="matMenu">
+                    <!-- Status Change Actions -->
+                    @if (course.estadoCodigo !== 'PUB') {
+                      <button mat-menu-item (click)="publishCourse(course)">
+                        <mat-icon class="text-green-600">check_circle</mat-icon>
+                        <span>Publicar</span>
+                      </button>
+                    }
+                    @if (course.estadoCodigo !== 'BOR') {
+                      <button mat-menu-item (click)="setToDraft(course)">
+                        <mat-icon class="text-yellow-600">edit</mat-icon>
+                        <span>Marcar como Borrador</span>
+                      </button>
+                    }
+                    @if (course.estadoCodigo !== 'REV') {
+                      <button mat-menu-item (click)="setToReview(course)">
+                        <mat-icon class="text-blue-600">rate_review</mat-icon>
+                        <span>Enviar a Revisión</span>
+                      </button>
+                    }
+                    <mat-divider></mat-divider>
+                    <!-- Course Management Actions -->
+                    <button mat-menu-item (click)="editCourse(course.id)">
+                      <mat-icon>edit</mat-icon>
+                      <span>Editar Información</span>
+                    </button>
+                    <button mat-menu-item (click)="manageCourse(course.id)">
+                      <mat-icon>video_library</mat-icon>
+                      <span>Gestionar Contenido</span>
+                    </button>
+                    <button mat-menu-item (click)="duplicateCourse(course.id)">
+                      <mat-icon>content_copy</mat-icon>
+                      <span>Duplicar Curso</span>
+                    </button>
+                    <mat-divider></mat-divider>
+                    <button mat-menu-item class="text-red-600" (click)="deleteCourse(course.id)">
+                      <mat-icon>delete</mat-icon>
+                      <span>Eliminar</span>
+                    </button>
+                  </mat-menu>
+                </div>
+              </div>
+
+              <!-- Course Content -->
+              <div class="p-5">
+                <!-- Course Title -->
+                <h3 class="text-lg font-semibold text-neutral-900 dark:text-white mb-2 line-clamp-2 min-h-[3.5rem]">
+                  {{ course.titulo }}
+                </h3>
+
+                <!-- Course Description -->
+                <p class="text-sm text-neutral-600 dark:text-neutral-400 mb-4 line-clamp-2 min-h-[2.5rem]">
+                  {{ course.descripcion }}
+                </p>
+
+                <!-- Course Meta Info -->
+                <div class="space-y-2 text-sm text-neutral-600 dark:text-neutral-400 mb-4">
+                  <div class="flex items-center gap-2">
+                    <mat-icon class="text-base">category</mat-icon>
+                    <span>{{ course.categoriaNombre || 'Sin categoría' }}</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <mat-icon class="text-base">calendar_today</mat-icon>
+                    <span>Creado: {{ formatDate(course.creadoEn) }}</span>
+                  </div>
+                </div>
+
+                <!-- Price -->
+                <div class="pt-4 border-t border-neutral-200 dark:border-neutral-700">
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm text-neutral-600 dark:text-neutral-400">Precio:</span>
+                    <span class="text-xl font-bold text-primary-600 dark:text-primary-400">
+                      {{ formatPrice(course.precio) }}
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="mt-4 pt-4 border-t border-neutral-200 dark:border-neutral-700 flex gap-2">
+                  <button
+                    (click)="editCourse(course.id)"
+                    class="flex-1 px-3 py-2 text-xs font-medium text-primary-700 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20 hover:bg-primary-100 dark:hover:bg-primary-900/40 rounded-lg transition-colors">
+                    <mat-icon class="text-sm">edit</mat-icon>
+                    Editar
+                  </button>
+                  <button
+                    (click)="manageCourse(course.id)"
+                    class="flex-1 px-3 py-2 text-xs font-medium text-neutral-700 dark:text-neutral-300 bg-neutral-100 dark:bg-neutral-700 hover:bg-neutral-200 dark:hover:bg-neutral-600 rounded-lg transition-colors">
+                    <mat-icon class="text-sm">video_library</mat-icon>
+                    Contenido
+                  </button>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+
+        <!-- Results Count -->
+        <div class="mt-6 text-sm text-neutral-600 dark:text-neutral-400 text-center">
+          Mostrando {{ filteredCourses.length }} de {{ allCourses.length }} cursos
+        </div>
+      }
+
     </div>
-
   </div>
 </main>
